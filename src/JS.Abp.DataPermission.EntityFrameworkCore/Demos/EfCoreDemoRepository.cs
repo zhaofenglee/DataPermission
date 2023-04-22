@@ -23,9 +23,9 @@ namespace JS.Abp.DataPermission.Demos
         public async Task<Demo> GetAsync(Guid id, CancellationToken cancellationToken = default)
         {
             var query = await GetQueryableAsync();
-            query = DataPermissionExtensions.EntityFilter(query,  await dataPermissionStore.GetAllAsync());
+            query = DataPermissionExtensions.EntityFilter(query,  await dataPermissionStore.GetAllAsync());//add
             var item =  await query.FirstOrDefaultAsync(e => e.Id == id, GetCancellationToken(cancellationToken));
-            var checkPermission =await dataPermissionStore.CheckPermissionAsync(id.ToString(), item);
+            var checkPermission =await dataPermissionStore.CheckPermissionAsync(id.ToString(), item);//add
             return item;
         }
         public async Task<List<Demo>> GetListAsync(
@@ -58,7 +58,7 @@ namespace JS.Abp.DataPermission.Demos
             string name = null,
             string displayName = null)
         {
-            query = DataPermissionExtensions.EntityFilter(query,  dataPermissionStore.GetAll());
+            query = DataPermissionExtensions.EntityFilter(query,  dataPermissionStore.GetAll());//add
             return query
                     .WhereIf(!string.IsNullOrWhiteSpace(filterText), e => e.Name.Contains(filterText) || e.DisplayName.Contains(filterText))
                     .WhereIf(!string.IsNullOrWhiteSpace(name), e => e.Name.Contains(name))

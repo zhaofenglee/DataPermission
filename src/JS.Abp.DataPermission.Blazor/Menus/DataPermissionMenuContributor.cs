@@ -27,7 +27,7 @@ public class DataPermissionMenuContributor : IMenuContributor
         //Add main menu items.
         var l = context.GetLocalizer<DataPermissionResource>();
 
-        context.Menu.AddItem(new ApplicationMenuItem(DataPermissionMenus.Prefix, displayName: "Sample Page", "/DataPermission", icon: "fa fa-globe"));
+        //context.Menu.AddItem(new ApplicationMenuItem(DataPermissionMenus.Prefix, displayName: "Sample Page", "/DataPermission", icon: "fa fa-globe"));
 
         await Task.CompletedTask;
     }
