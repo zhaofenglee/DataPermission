@@ -1,0 +1,40 @@
+@page
+@using Microsoft.AspNetCore.Mvc.Localization
+@using JS.Abp.DataPermission.Localization
+@using JS.Abp.DataPermission.Web.Pages.DataPermission.PermissionExtensions
+@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal
+@using JS.Abp.DataPermission.PermissionExtensions;
+@using System.Globalization
+@inject IHtmlLocalizer<DataPermissionResource> L
+@model EditModalModel
+@{
+    Layout = null;
+}
+
+<form data-ajaxForm="true" asp-page="/DataPermission/PermissionExtensions/EditModal" autocomplete="off">
+    <abp-modal id="PermissionExtensionEditModal">
+        <abp-modal-header title="@L["Update"].Value"></abp-modal-header>
+
+        <abp-modal-body>
+                    <abp-input asp-for="Id" />
+                    <abp-input asp-for="PermissionExtension.ConcurrencyStamp" hidden="true" suppress-label="true"/>
+                    
+            <abp-input asp-for="PermissionExtension.ObjectName"  />
+
+            <abp-input asp-for="PermissionExtension.RoleId"  />
+
+            <abp-input asp-for="PermissionExtension.ExcludedRoleId"  />
+
+            <abp-select asp-for="PermissionExtension.PermissionType"  />
+
+            <abp-input asp-for="PermissionExtension.LambdaString" text-area />
+
+            <abp-input asp-for="PermissionExtension.IsActive"  />
+
+                    
+                
+        </abp-modal-body>
+
+        <abp-modal-footer buttons="@(AbpModalButtons.Cancel|AbpModalButtons.Save)"></abp-modal-footer>
+    </abp-modal>
+</form>

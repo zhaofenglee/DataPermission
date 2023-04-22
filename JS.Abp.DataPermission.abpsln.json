@@ -1,0 +1,7 @@
+{
+  "modules": {
+    "JS.Abp.DataPermission": {
+      "path": "JS.Abp.DataPermission.abpmdl.json"
+    }
+  }
+}

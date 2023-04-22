@@ -1,0 +1,7 @@
+{
+  "culture": "de-DE",
+  "texts": {
+    "SamplePageMessage": "Eine Beispielseite für das DataPermission-Modul",
+    "Menu:DataPermission": "DataPermission"
+  }
+}

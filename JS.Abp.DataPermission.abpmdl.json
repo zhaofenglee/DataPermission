@@ -1,0 +1,111 @@
+{
+  "folders": {
+    "items": {
+      "src": {},
+      "test": {},
+      "host": {}
+    }
+  },
+  "packages": {
+    "JS.Abp.DataPermission.Domain.Shared": {
+      "path": "src/JS.Abp.DataPermission.Domain.Shared/JS.Abp.DataPermission.Domain.Shared.abppkg.json",
+      "folder": "src"
+    },
+    "JS.Abp.DataPermission.Domain": {
+      "path": "src/JS.Abp.DataPermission.Domain/JS.Abp.DataPermission.Domain.abppkg.json",
+      "folder": "src"
+    },
+    "JS.Abp.DataPermission.Application.Contracts": {
+      "path": "src/JS.Abp.DataPermission.Application.Contracts/JS.Abp.DataPermission.Application.Contracts.abppkg.json",
+      "folder": "src"
+    },
+    "JS.Abp.DataPermission.Application": {
+      "path": "src/JS.Abp.DataPermission.Application/JS.Abp.DataPermission.Application.abppkg.json",
+      "folder": "src"
+    },
+    "JS.Abp.DataPermission.EntityFrameworkCore": {
+      "path": "src/JS.Abp.DataPermission.EntityFrameworkCore/JS.Abp.DataPermission.EntityFrameworkCore.abppkg.json",
+      "folder": "src"
+    },
+    "JS.Abp.DataPermission.MongoDB": {
+      "path": "src/JS.Abp.DataPermission.MongoDB/JS.Abp.DataPermission.MongoDB.abppkg.json",
+      "folder": "src"
+    },
+    "JS.Abp.DataPermission.HttpApi": {
+      "path": "src/JS.Abp.DataPermission.HttpApi/JS.Abp.DataPermission.HttpApi.abppkg.json",
+      "folder": "src"
+    },
+    "JS.Abp.DataPermission.HttpApi.Client": {
+      "path": "src/JS.Abp.DataPermission.HttpApi.Client/JS.Abp.DataPermission.HttpApi.Client.abppkg.json",
+      "folder": "src"
+    },
+    "JS.Abp.DataPermission.TestBase": {
+      "path": "test/JS.Abp.DataPermission.TestBase/JS.Abp.DataPermission.TestBase.abppkg.json",
+      "folder": "test"
+    },
+    "JS.Abp.DataPermission.EntityFrameworkCore.Tests": {
+      "path": "test/JS.Abp.DataPermission.EntityFrameworkCore.Tests/JS.Abp.DataPermission.EntityFrameworkCore.Tests.abppkg.json",
+      "folder": "test"
+    },
+    "JS.Abp.DataPermission.MongoDB.Tests": {
+      "path": "test/JS.Abp.DataPermission.MongoDB.Tests/JS.Abp.DataPermission.MongoDB.Tests.abppkg.json",
+      "folder": "test"
+    },
+    "JS.Abp.DataPermission.Domain.Tests": {
+      "path": "test/JS.Abp.DataPermission.Domain.Tests/JS.Abp.DataPermission.Domain.Tests.abppkg.json",
+      "folder": "test"
+    },
+    "JS.Abp.DataPermission.Application.Tests": {
+      "path": "test/JS.Abp.DataPermission.Application.Tests/JS.Abp.DataPermission.Application.Tests.abppkg.json",
+      "folder": "test"
+    },
+    "JS.Abp.DataPermission.HttpApi.Host": {
+      "path": "host/JS.Abp.DataPermission.HttpApi.Host/JS.Abp.DataPermission.HttpApi.Host.abppkg.json",
+      "folder": "host"
+    },
+    "JS.Abp.DataPermission.Web": {
+      "path": "src/JS.Abp.DataPermission.Web/JS.Abp.DataPermission.Web.abppkg.json",
+      "folder": "src"
+    },
+    "JS.Abp.DataPermission.HttpApi.Client.ConsoleTestApp": {
+      "path": "test/JS.Abp.DataPermission.HttpApi.Client.ConsoleTestApp/JS.Abp.DataPermission.HttpApi.Client.ConsoleTestApp.abppkg.json",
+      "folder": "test"
+    },
+    "JS.Abp.DataPermission.Web.Host": {
+      "path": "host/JS.Abp.DataPermission.Web.Host/JS.Abp.DataPermission.Web.Host.abppkg.json",
+      "folder": "host"
+    },
+    "JS.Abp.DataPermission.AuthServer": {
+      "path": "host/JS.Abp.DataPermission.AuthServer/JS.Abp.DataPermission.AuthServer.abppkg.json",
+      "folder": "host"
+    },
+    "JS.Abp.DataPermission.Host.Shared": {
+      "path": "host/JS.Abp.DataPermission.Host.Shared/JS.Abp.DataPermission.Host.Shared.abppkg.json",
+      "folder": "host"
+    },
+    "JS.Abp.DataPermission.Web.Unified": {
+      "path": "host/JS.Abp.DataPermission.Web.Unified/JS.Abp.DataPermission.Web.Unified.abppkg.json",
+      "folder": "host"
+    },
+    "JS.Abp.DataPermission.Blazor": {
+      "path": "src/JS.Abp.DataPermission.Blazor/JS.Abp.DataPermission.Blazor.abppkg.json",
+      "folder": "src"
+    },
+    "JS.Abp.DataPermission.Blazor.Host": {
+      "path": "host/JS.Abp.DataPermission.Blazor.Host/JS.Abp.DataPermission.Blazor.Host.abppkg.json",
+      "folder": "host"
+    },
+    "JS.Abp.DataPermission.Blazor.Server": {
+      "path": "src/JS.Abp.DataPermission.Blazor.Server/JS.Abp.DataPermission.Blazor.Server.abppkg.json",
+      "folder": "src"
+    },
+    "JS.Abp.DataPermission.Blazor.WebAssembly": {
+      "path": "src/JS.Abp.DataPermission.Blazor.WebAssembly/JS.Abp.DataPermission.Blazor.WebAssembly.abppkg.json",
+      "folder": "src"
+    },
+    "JS.Abp.DataPermission.Blazor.Server.Host": {
+      "path": "host/JS.Abp.DataPermission.Blazor.Server.Host/JS.Abp.DataPermission.Blazor.Server.Host.abppkg.json",
+      "folder": "host"
+    }
+  }
+}

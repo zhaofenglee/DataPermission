@@ -1,0 +1,338 @@
+@page "/DataPermission/PermissionExtensions"
+
+
+
+@attribute [Authorize(DataPermissionPermissions.PermissionExtensions.Default)]
+@using global::JS.Abp.DataPermission.PermissionExtensions
+@using global::JS.Abp.DataPermission.Localization
+@using global::JS.Abp.DataPermission.Shared
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Localization
+@using Microsoft.AspNetCore.Components.Web
+@using Blazorise
+@using Blazorise.Components
+@using Blazorise.DataGrid
+@using Volo.Abp.BlazoriseUI
+@using Volo.Abp.BlazoriseUI.Components
+@using Volo.Abp.ObjectMapping
+@using Volo.Abp.AspNetCore.Components.Messages
+@using Volo.Abp.AspNetCore.Components.Web.Theming.Layout
+@using global::JS.Abp.DataPermission.Permissions
+@using Microsoft.AspNetCore.Components
+@using Volo.Abp.AspNetCore.Components.Web
+@using Volo.Abp.Http.Client
+@inherits DataPermissionComponentBase
+@inject IPermissionExtensionsAppService PermissionExtensionsAppService
+@inject IUiMessageService UiMessageService
+@inject IRemoteServiceConfigurationProvider RemoteServiceConfigurationProvider
+@inject NavigationManager NavigationManager
+@using JS.Abp.DataPermission.PermissionTypes
+
+
+@* ************************* PAGE HEADER ************************* *@
+<PageHeader Title="@L["PermissionExtensions"]" BreadcrumbItems="BreadcrumbItems" Toolbar="Toolbar">
+
+</PageHeader>
+
+@* ************************* SEARCH ************************* *@
+<Card>
+    <CardBody>
+        <Form id="PermissionExtensionSearchForm" class="mb-3">
+            <Addons>
+                <Addon AddonType="AddonType.Body">
+                    <TextEdit @bind-Text="@Filter.FilterText"
+                              Autofocus="true"
+                              Placeholder="@L["Search"]">
+                    </TextEdit>
+                </Addon>
+                <Addon AddonType="AddonType.End">
+                    <SubmitButton Form="PermissionExtensionSearchForm" Clicked="GetPermissionExtensionsAsync">
+                        <Icon Name="IconName.Search" Class="me-1"></Icon>@L["Search"]
+                    </SubmitButton>
+                </Addon>
+            </Addons>
+        </Form>
+    </CardBody>
+</Card>
+
+@* ************************* DATA GRID ************************* *@
+<Card>
+    <CardBody>
+        <DataGrid TItem="PermissionExtensionDto"
+                  Data="PermissionExtensionList"
+                  ReadData="OnDataGridReadAsync"
+                  TotalItems="TotalCount"
+                  ShowPager="true"
+                  Responsive="true"
+                  PageSize="PageSize">
+            <DataGridColumns>
+                <DataGridEntityActionsColumn TItem="PermissionExtensionDto" @ref="@EntityActionsColumn">
+                    <DisplayTemplate>
+                        <EntityActions TItem="PermissionExtensionDto" EntityActionsColumn="@EntityActionsColumn">
+                            <EntityAction TItem="PermissionExtensionDto"
+                                          Visible="@CanEditPermissionExtension"
+                                          Clicked="async () => await OpenEditPermissionExtensionModalAsync(context)"
+                                          Text="@L["Edit"]"></EntityAction>
+                            <EntityAction TItem="PermissionExtensionDto"
+                                          Visible="@CanDeletePermissionExtension"
+                                          Clicked="() => DeletePermissionExtensionAsync(context)"
+                                          ConfirmationMessage="@(()=> L["DeleteConfirmationMessage"])"
+                                          Text="@L["Delete"]"></EntityAction>
+                        </EntityActions>
+                    </DisplayTemplate>
+                </DataGridEntityActionsColumn>
+               
+              <DataGridColumn TItem="PermissionExtensionDto"
+                      Field="ObjectName"
+                      Caption="@L["ObjectName"]">
+              </DataGridColumn>
+
+
+                <DataGridColumn TItem="PermissionExtensionDto"
+                                Field="PermissionType"
+                                Caption="@L["PermissionType"]">
+                    <DisplayTemplate>
+                        @L[$"Enum:PermissionType.{context.PermissionType.ToString("d")}"]
+                    </DisplayTemplate>
+                </DataGridColumn>
+                
+                <DataGridColumn TItem="PermissionExtensionDto"
+                                Field="RoleName"
+                                Caption="@L["RoleName"]">
+                </DataGridColumn>
+                
+                @* <DataGridColumn TItem="PermissionExtensionDto" *@
+                @*                 Field="ExcludedRoleId" *@
+                @*                 Caption="@L["ExcludedRoleId"]"> *@
+                @* </DataGridColumn> *@
+                
+
+
+                <DataGridColumn TItem="PermissionExtensionDto"
+                      Field="LambdaString"
+                      Caption="@L["LambdaString"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="PermissionExtensionDto"
+                      Field="IsActive"
+                      Caption="@L["IsActive"]">
+                    <DisplayTemplate>
+                        @if (context.IsActive)
+                        {
+                            <Icon TextColor="TextColor.Success" Name="@IconName.Check" />
+                        }
+                        else
+                        {
+                            <Icon TextColor="TextColor.Danger" Name="@IconName.Times" />
+                        }
+                    </DisplayTemplate>
+              </DataGridColumn>
+
+
+            </DataGridColumns>
+        </DataGrid>
+    </CardBody>
+</Card>
+
+@* ************************* CREATE MODAL ************************* *@
+<Modal @ref="CreatePermissionExtensionModal" Closing="@CreatePermissionExtensionModal.CancelClosingModalWhenFocusLost">
+    <ModalContent Centered="true">
+        <Form id="CreatePermissionExtensionForm">
+            <ModalHeader>
+                <ModalTitle>@L["NewPermissionExtension"]</ModalTitle>
+                <CloseButton Clicked="CloseCreatePermissionExtensionModalAsync" />
+            </ModalHeader>
+            <ModalBody>
+                <Validations @ref="@NewPermissionExtensionValidations"
+                            Mode="ValidationMode.Auto"
+                            Model="@NewPermissionExtension"
+                            ValidateOnLoad="false">
+                     
+                    
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["ObjectName"] *</FieldLabel>
+                            <TextEdit @bind-Text="@NewPermissionExtension.ObjectName" MaxLength="PermissionExtensionConsts.ObjectNameMaxLength">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+                    
+                    <Field>
+                        <FieldLabel>@L["PermissionType"]</FieldLabel>
+                        <Select TValue="PermissionType" @bind-SelectedValue="@NewPermissionExtension.PermissionType">
+                            @foreach (var itemValue in Enum.GetValues(typeof(PermissionType)))
+                            {
+                                <SelectItem TValue="PermissionType" Value="@((PermissionType) itemValue)">
+                                    @L[$"Enum:PermissionType.{((PermissionType) itemValue).ToString("d")}"]
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+                    
+                    
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["RoleName"] *</FieldLabel>
+                            <Select TValue="Guid" @bind-SelectedValue="@NewPermissionExtension.RoleId">
+                                 <SelectItem TValue="Guid" Value=@Guid.Empty></SelectItem>
+                                @foreach (var item in PermissionRoleList)
+                                {
+                                    <SelectItem TValue="Guid" Value=@item.Id>@L[item.Name]</SelectItem>
+                                }
+                            </Select>
+                        </Field>
+                    </Validation>
+                    
+                    @* <Validation> *@
+                    @*     <Field> *@
+                    @*         <FieldLabel>@L["ExcludedRole"] </FieldLabel> *@
+                    @*         <Select TValue="Guid?" @bind-SelectedValue="@NewPermissionExtension.ExcludedRoleId"> *@
+                    @*              <SelectItem TValue="Guid?" Value=@null></SelectItem> *@
+                    @*             @foreach (var item in PermissionRoleList) *@
+                    @*             { *@
+                    @*                 <SelectItem TValue="Guid?" Value=@item.Id>@L[item.Name]</SelectItem> *@
+                    @*             } *@
+                    @*         </Select> *@
+                    @*     </Field> *@
+                    @* </Validation> *@
+                    
+                   
+
+                   
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["LambdaString"] *</FieldLabel>
+                            <MemoEdit @bind-Text="@NewPermissionExtension.LambdaString" >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </MemoEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Field>
+                        <Check TValue="bool" @bind-Checked="@NewPermissionExtension.IsActive">@L["IsActive"]</Check>
+                    </Field>
+
+                    
+                    
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                        Clicked="CloseCreatePermissionExtensionModalAsync">
+                    @L["Cancel"]
+                </Button>
+                <SubmitButton Form="CreatePermissionExtensionForm" Clicked="CreatePermissionExtensionAsync" />
+            </ModalFooter>
+        </Form>
+    </ModalContent>
+</Modal>
+
+@* ************************* EDIT MODAL ************************* *@
+<Modal @ref="EditPermissionExtensionModal" Closing="@EditPermissionExtensionModal.CancelClosingModalWhenFocusLost">
+    <ModalContent Centered="true">
+        <Form id="EditPermissionExtensionForm">
+            <ModalHeader>
+                <ModalTitle>@L["Update"]</ModalTitle>
+                <CloseButton Clicked="CloseEditPermissionExtensionModalAsync" />
+            </ModalHeader>
+            <ModalBody>
+                <Validations @ref="@EditingPermissionExtensionValidations"
+                            Mode="ValidationMode.Auto"
+                            Model="@EditingPermissionExtension"
+                            ValidateOnLoad="false">
+                     
+                    
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["ObjectName"] *</FieldLabel>
+                            <TextEdit @bind-Text="@EditingPermissionExtension.ObjectName" MaxLength="PermissionExtensionConsts.ObjectNameMaxLength">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+
+
+
+
+                    <Field>
+                        <FieldLabel>@L["PermissionType"]</FieldLabel>
+                        <Select TValue="PermissionType" @bind-SelectedValue="@EditingPermissionExtension.PermissionType">
+                            @foreach (var itemValue in Enum.GetValues(typeof(PermissionType)))
+                            {
+                                <SelectItem TValue="PermissionType" Value="@((PermissionType) itemValue)">
+                                    @L[$"Enum:PermissionType.{((PermissionType) itemValue).ToString("d")}"]
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+                    
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["RoleName"] *</FieldLabel>
+                            <Select TValue="Guid" @bind-SelectedValue="@EditingPermissionExtension.RoleId">
+                                @foreach (var item in PermissionRoleList)
+                                {
+                                    <SelectItem TValue="Guid" Value=@item.Id>@L[item.Name]</SelectItem>
+                                }
+                            </Select>
+                        </Field>
+                    </Validation>
+                    
+                                        
+                    @* <Validation> *@
+                    @*     <Field> *@
+                    @*         <FieldLabel>@L["ExcludedRole"] </FieldLabel> *@
+                    @*         <Select TValue="Guid?" @bind-SelectedValue="@EditingPermissionExtension.ExcludedRoleId"> *@
+                    @*             <SelectItem TValue="Guid?" Value=@null></SelectItem> *@
+                    @*             @foreach (var item in PermissionRoleList) *@
+                    @*             { *@
+                    @*                 <SelectItem TValue="Guid?" Value=@item.Id>@L[item.Name]</SelectItem> *@
+                    @*             } *@
+                    @*         </Select> *@
+                    @*     </Field> *@
+                    @* </Validation> *@
+                    
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["LambdaString"] *</FieldLabel>
+                            <MemoEdit @bind-Text="@EditingPermissionExtension.LambdaString" >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </MemoEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Field>
+                        <Check TValue="bool" @bind-Checked="@EditingPermissionExtension.IsActive">@L["IsActive"]</Check>
+                    </Field>
+
+                    
+                    
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                        Clicked="CloseEditPermissionExtensionModalAsync">
+                    @L["Cancel"]
+                </Button>
+                <SubmitButton Form="CreatePermissionExtensionForm" Clicked="UpdatePermissionExtensionAsync" />
+            </ModalFooter>
+        </Form>
+    </ModalContent>
+</Modal>

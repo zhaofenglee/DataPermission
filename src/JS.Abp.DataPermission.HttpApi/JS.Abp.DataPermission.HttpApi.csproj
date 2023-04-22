@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\common.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <RootNamespace>JS.Abp.DataPermission</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="7.1.1" />
+    <ProjectReference Include="..\JS.Abp.DataPermission.Application.Contracts\JS.Abp.DataPermission.Application.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>

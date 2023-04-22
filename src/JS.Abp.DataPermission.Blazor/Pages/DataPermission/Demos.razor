@@ -1,0 +1,209 @@
+@page "/DataPermission/Demos"
+
+
+
+@attribute [Authorize(DataPermissionPermissions.Demos.Default)]
+@using global::JS.Abp.DataPermission.Demos
+@using global::JS.Abp.DataPermission.Localization
+@using global::JS.Abp.DataPermission.Shared
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Localization
+@using Microsoft.AspNetCore.Components.Web
+@using Blazorise
+@using Blazorise.Components
+@using Blazorise.DataGrid
+@using Volo.Abp.BlazoriseUI
+@using Volo.Abp.BlazoriseUI.Components
+@using Volo.Abp.ObjectMapping
+@using Volo.Abp.AspNetCore.Components.Messages
+@using Volo.Abp.AspNetCore.Components.Web.Theming.Layout
+@using global::JS.Abp.DataPermission.Permissions
+@using JS.Abp.DataPermission.Services
+@using Microsoft.AspNetCore.Components
+@using Volo.Abp.AspNetCore.Components.Web
+@using Volo.Abp.Http.Client
+@inherits DataPermissionComponentBase
+@inject IDemosAppService DemosAppService
+@inject IUiMessageService UiMessageService
+@inject IRemoteServiceConfigurationProvider RemoteServiceConfigurationProvider
+@inject NavigationManager NavigationManager
+@inject IPermissionApplicationService PermissionApplicationService
+
+@* ************************* PAGE HEADER ************************* *@
+<PageHeader Title="@L["Demos"]" BreadcrumbItems="BreadcrumbItems" Toolbar="Toolbar">
+
+</PageHeader>
+
+@* ************************* SEARCH ************************* *@
+<Card>
+    <CardBody>
+        <Form id="DemoSearchForm" class="mb-3">
+            <Addons>
+                <Addon AddonType="AddonType.Body">
+                    <TextEdit @bind-Text="@Filter.FilterText"
+                              Autofocus="true"
+                              Placeholder="@L["Search"]">
+                    </TextEdit>
+                </Addon>
+                <Addon AddonType="AddonType.End">
+                    <SubmitButton Form="DemoSearchForm" Clicked="GetDemosAsync">
+                        <Icon Name="IconName.Search" Class="me-1"></Icon>@L["Search"]
+                    </SubmitButton>
+                </Addon>
+            </Addons>
+        </Form>
+    </CardBody>
+</Card>
+
+@* ************************* DATA GRID ************************* *@
+<Card>
+    <CardBody>
+        <DataGrid TItem="DemoDto"
+                  Data="DemoList"
+                  ReadData="OnDataGridReadAsync"
+                  TotalItems="TotalCount"
+                  ShowPager="true"
+                  Responsive="true"
+                  PageSize="PageSize">
+            <DataGridColumns>
+                <DataGridEntityActionsColumn TItem="DemoDto" @ref="@EntityActionsColumn">
+                    <DisplayTemplate>
+                        <EntityActions TItem="DemoDto" EntityActionsColumn="@EntityActionsColumn">
+                            <EntityAction TItem="DemoDto"
+                                          Visible="true"
+                                          Clicked="async () => await OpenEditDemoModalAsync(context)"
+                                          Text="@L["Edit"]"></EntityAction>
+                            <EntityAction TItem="DemoDto"
+                                          Visible="@CanDeleteDemo"
+                                          Clicked="() => DeleteDemoAsync(context)"
+                                          ConfirmationMessage="@(()=> L["DeleteConfirmationMessage"])"
+                                          Text="@L["Delete"]"></EntityAction>
+                        </EntityActions>
+                    </DisplayTemplate>
+                </DataGridEntityActionsColumn>
+               
+              <DataGridColumn TItem="DemoDto"
+                      Field="Name"
+                      Caption="@L["Name"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="DemoDto"
+                      Field="DisplayName"
+                      Caption="@L["DisplayName"]">
+              </DataGridColumn>
+
+            </DataGridColumns>
+        </DataGrid>
+    </CardBody>
+</Card>
+
+@* ************************* CREATE MODAL ************************* *@
+<Modal @ref="CreateDemoModal" Closing="@CreateDemoModal.CancelClosingModalWhenFocusLost">
+    <ModalContent Centered="true">
+        <Form id="CreateDemoForm">
+            <ModalHeader>
+                <ModalTitle>@L["NewDemo"]</ModalTitle>
+                <CloseButton Clicked="CloseCreateDemoModalAsync" />
+            </ModalHeader>
+            <ModalBody>
+                <Validations @ref="@NewDemoValidations"
+                            Mode="ValidationMode.Auto"
+                            Model="@NewDemo"
+                            ValidateOnLoad="false">
+                     
+                    
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["Name"]</FieldLabel>
+                            <TextEdit @bind-Text="@NewDemo.Name" MaxLength="DemoConsts.NameMaxLength">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["DisplayName"]</FieldLabel>
+                            <TextEdit @bind-Text="@NewDemo.DisplayName" MaxLength="DemoConsts.DisplayNameMaxLength">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    
+                    
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                        Clicked="CloseCreateDemoModalAsync">
+                    @L["Cancel"]
+                </Button>
+                <SubmitButton Form="CreateDemoForm" Clicked="CreateDemoAsync" />
+            </ModalFooter>
+        </Form>
+    </ModalContent>
+</Modal>
+
+@* ************************* EDIT MODAL ************************* *@
+<Modal @ref="EditDemoModal" Closing="@EditDemoModal.CancelClosingModalWhenFocusLost">
+    <ModalContent Centered="true">
+        <Form id="EditDemoForm">
+            <ModalHeader>
+                <ModalTitle>@L["Update"]</ModalTitle>
+                <CloseButton Clicked="CloseEditDemoModalAsync" />
+            </ModalHeader>
+            <ModalBody>
+                <Validations @ref="@EditingDemoValidations"
+                            Mode="ValidationMode.Auto"
+                            Model="@EditingDemo"
+                            ValidateOnLoad="false">
+                     
+                    
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["Name"]</FieldLabel>
+                            <TextEdit @bind-Text="@EditingDemo.Name" MaxLength="DemoConsts.NameMaxLength">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["DisplayName"]</FieldLabel>
+                            <TextEdit @bind-Text="@EditingDemo.DisplayName" MaxLength="DemoConsts.DisplayNameMaxLength">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    
+                    
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                        Clicked="CloseEditDemoModalAsync">
+                    @L["Cancel"]
+                </Button>
+                @if (CanEditDemo)//add permission
+                {
+                    <SubmitButton Form="CreateDemoForm" Clicked="UpdateDemoAsync" />
+                }
+            </ModalFooter>
+        </Form>
+    </ModalContent>
+</Modal>

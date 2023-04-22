@@ -1,0 +1,30 @@
+@page
+@using Microsoft.AspNetCore.Mvc.Localization
+@using JS.Abp.DataPermission.Localization
+@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal
+@using JS.Abp.DataPermission.Web.Pages.DataPermission.Demos
+@using JS.Abp.DataPermission.Demos;
+@using System.Globalization
+@inject IHtmlLocalizer<DataPermissionResource> L
+@model CreateModalModel
+@{
+    Layout = null;
+}
+
+<form data-ajaxForm="true" asp-page="/DataPermission/Demos/CreateModal" autocomplete="off">
+    <abp-modal id="DemoCreateModal">
+        <abp-modal-header title="@L["NewDemo"].Value"></abp-modal-header>
+
+        <abp-modal-body>
+                    
+            <abp-input asp-for="Demo.Name"  />
+
+            <abp-input asp-for="Demo.DisplayName"  />
+
+                    
+                
+        </abp-modal-body>
+
+        <abp-modal-footer buttons="@(AbpModalButtons.Cancel|AbpModalButtons.Save)"></abp-modal-footer>
+    </abp-modal>
+</form>
