@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using JS.Abp.DataPermission.PermissionExtensions;
 using JS.Abp.DataPermission.PermissionTypes;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Options;
 using Volo.Abp.Caching;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Repositories;
@@ -20,14 +21,14 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
     private readonly IDistributedCache<List<DataPermissionResult>> _cache;
     private readonly IDistributedCache<PermissionCacheItem,PermissionCacheKey> _cacheItem;
     protected IRepository<PermissionExtension, Guid> PermissionExtensionRepository { get; }
-    private readonly IIdentityRoleRepository IdentityRoleRepository;
-    private readonly IIdentityUserRepository IdentityUserRepository;
+    protected DataPermissionOptions Options { get; }
+    private readonly IIdentityUserRepository _identityUserRepository;
     
     public DataPermissionStore(ICurrentUser currentUser, 
         IRepository<PermissionExtension, Guid> permissionExtensionRepository,
         IDistributedCache<List<DataPermissionResult>> cache,
         IDistributedCache<PermissionCacheItem,PermissionCacheKey> cacheItem,
-        IIdentityRoleRepository identityRoleRepository,
+        IOptions<DataPermissionOptions> options,
         IIdentityUserRepository identityUserRepository
         )
     {
@@ -35,8 +36,8 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
         PermissionExtensionRepository = permissionExtensionRepository;
         _cache = cache;
         _cacheItem = cacheItem;
-        IdentityRoleRepository = identityRoleRepository;
-        IdentityUserRepository = identityUserRepository;
+        Options = options.Value;
+        _identityUserRepository = identityUserRepository;
     }
 
     public virtual List<DataPermissionResult> GetAll()
@@ -52,7 +53,7 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
             async () => await GetFromDatabaseAsync(),
             () => new DistributedCacheEntryOptions
             {
-                AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(10)
+                AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(Options.CacheExpirationTime)
             }
         );
     }
@@ -108,7 +109,7 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
                 UserId = _currentUser?.Id??Guid.Empty
             }, cacheItem, new DistributedCacheEntryOptions
             {
-                AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(10)
+                AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(Options.CacheExpirationTime)
             });
         }
         
@@ -121,7 +122,7 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
         var permissions = (await GetAllAsync()).Where(c=>c.UserId==_currentUser?.Id&&c.ObjectName==typeof(T).Name&&c.PermissionType==permissionType).ToList();
         if (permissions.Any())
         {
-            return DataPermissionExtensions.CheckItem(item,permissions.FirstOrDefault(),PermissionType.UpdateAndDelete);
+            return DataPermissionExtensions.CheckItem(item,permissions.FirstOrDefault()!,PermissionType.UpdateAndDelete);
         }
         else
         {
@@ -136,11 +137,11 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
         if (permissionList.Any())
         {
             var result = new List<DataPermissionResult>();
-            var userLists = await IdentityUserRepository.GetListAsync();
+            var userLists = await _identityUserRepository.GetListAsync();
             //获取所有用户角色
             foreach (var user in userLists)
             {
-                var roles = await IdentityUserRepository.GetRolesAsync(user.Id);
+                var roles = await _identityUserRepository.GetRolesAsync(user.Id);
                 if (roles.Any())
                 {
                     //查找角色权限

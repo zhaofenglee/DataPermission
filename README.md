@@ -10,6 +10,14 @@
 ## 缓存
 * 目前缓存时间为 10 分钟，如果“PermissionExtension”对象变更时会自动清除
 * 行级数据权限缓存时间为 10 分钟，权限变更后重新查询权限会进行覆盖
+* 可以通过配置方式修改默认缓存时间
+````csharp
+  Configure<DataPermissionOptions>(options =>
+  {
+  options.CacheExpirationTime = 60;
+  });
+````
+
 
 ## 准备工作
 
@@ -54,11 +62,17 @@
 
 ## 如何使用
 * 以下是参考Demo的使用方法，具体使用方法请参考Demo
-### 1.在需要进行权限控制的仓储加入下述代码
+
+### 1.配置需要控制的实体名称，类型，及对应的Lambda表达式
+* 查询表达式默认是在原有的查询表达式上进行过滤，表达式需要注意格式，如：“x.Name != "Abc"”，x.为固定格式，Name为实体属性，Abc为过滤条件，实例的含义是当前角色仅允许查询Name不等于Abc的数据
+* 修改和删除表达式需要注意格式，如：“x.Name == "Abc"”，x.为固定格式，Name为实体属性，Abc为过滤条件，实例的含义是当前角色仅允许修改和删除Name等于Abc的数据
+* 数据权限控制已提供Blazor页面，其他前端框架请自行实现
+
+### 2.在需要进行权限控制的仓储加入下述代码
 ````csharp
  protected IDataPermissionStore dataPermissionStore => LazyServiceProvider.LazyGetRequiredService<IDataPermissionStore>();
 ````
-### 2.在过滤条件前添加 `query = DataPermissionExtensions.EntityFilter(query,  dataPermissionStore.GetAll());`
+### 3.在过滤条件前添加 `query = DataPermissionExtensions.EntityFilter(query,  dataPermissionStore.GetAll());`
 ````csharp
 protected virtual IQueryable<Demo> ApplyFilter(
             IQueryable<Demo> query,
@@ -73,10 +87,10 @@ protected virtual IQueryable<Demo> ApplyFilter(
                     .WhereIf(!string.IsNullOrWhiteSpace(displayName), e => e.DisplayName.Contains(displayName));
         }
 ````
-### 3.进行上述操作后查询过滤功能就可以使用
+### 4.进行上述操作后查询过滤功能就可以使用
 
-### 4.如果需要进行修改和删除的权限控制，有两个实现方法
-#### 4.1需要在查询单条数据方法前加入 ` var checkPermission =await dataPermissionStore.GetPermissionAsync(id.ToString(), item);`
+### 5.如果需要进行修改和删除的权限控制，有两个实现方法
+#### 5.1需要在查询单条数据方法前加入 ` var checkPermission =await dataPermissionStore.GetPermissionAsync(id.ToString(), item);`
 * 这一步是为了查询当前用户是否有该数据修改和删除权限，用于后面判断是否可以进行修改和删除操作
 ````csharp
  public async Task<Demo> GetAsync(Guid id, CancellationToken cancellationToken = default)
@@ -101,7 +115,7 @@ var demo = await DemosAppService.GetAsync(input.Id);
 CanEditDemo =  PermissionApplicationService.GetAsync(demo.Id.ToString(),DataPermissionPermissions.Demos.Edit, PermissionType.Update).Result.IsGranted;//add
 ````
 
-#### 4.2直接在服务上进行判断 
+#### 5.2直接在服务上进行判断 
 * 这一步是把传入的对象判断是否有权限，如果没有权限则抛出异常，需要注意是传入的对象Name必须和实体名字一致
 ````csharp
  public async Task<Demo> UpdateAsync(Guid id, UpdateDemoDto input, CancellationToken cancellationToken = default)
