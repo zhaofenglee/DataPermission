@@ -57,36 +57,46 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
         );
     }
 
-    public virtual async Task<bool> CheckPermissionAsync<T>(string id, T item)
+    public virtual async Task<bool> GetPermissionAsync<T>(string id, T item)
     { 
-        PermissionCacheItem cacheItem = new PermissionCacheItem()
+        
+        PermissionCacheItem cacheItem = await  _cacheItem.GetAsync(new PermissionCacheKey()
         {
-            Id = id,
-            ObjectName = typeof(T).Name,
-            UserId = _currentUser?.Id
-        };
-        var permissions = (await GetAllAsync()).Where(c=>c.UserId==_currentUser?.Id&&c.ObjectName==typeof(T).Name).ToList();
+            EntityId = id,
+            UserId = _currentUser?.Id??Guid.Empty
+        });
+        if (cacheItem==null)
+        {
+            cacheItem = new PermissionCacheItem()
+            {
+                Id = id,
+                ObjectName = typeof(T).Name,
+                UserId = _currentUser?.Id
+            };
+        }
+       
+        var permissions = (await GetAllAsync()).Where(c=>c.UserId==_currentUser?.Id&&c.ObjectName==typeof(T).Name&&c.PermissionType!=PermissionType.Read).ToList();
         if (permissions.Any())
         {
-            foreach (var items in permissions)
+            foreach (var permission in permissions)
             {
-                switch (items.PermissionType)
+                switch (permission.PermissionType)
                 {
                     case PermissionType.UpdateAndDelete:
-                        var canUpdateAndDelete = DataPermissionExtensions.CheckItem(item,items,PermissionType.UpdateAndDelete);
+                        var canUpdateAndDelete = DataPermissionExtensions.CheckItem(item,permission,PermissionType.UpdateAndDelete);
                         cacheItem.CanUpdate = canUpdateAndDelete;
                         cacheItem.CanDelete = canUpdateAndDelete;
                         break;
                     case PermissionType.Create:
-                        var canCreate = DataPermissionExtensions.CheckItem(item,items,PermissionType.Create);
+                        var canCreate = DataPermissionExtensions.CheckItem(item,permission,PermissionType.Create);
                         cacheItem.CanCreate = canCreate;
                         break;
                     case PermissionType.Update:
-                        var canUpdate = DataPermissionExtensions.CheckItem(item,items,PermissionType.Update);
+                        var canUpdate = DataPermissionExtensions.CheckItem(item,permission,PermissionType.Update);
                         cacheItem.CanUpdate = canUpdate;
                         break;
                     case PermissionType.Delete:
-                        var canDelete = DataPermissionExtensions.CheckItem(item,items,PermissionType.Delete);
+                        var canDelete = DataPermissionExtensions.CheckItem(item,permission,PermissionType.Delete);
                         cacheItem.CanDelete = canDelete;
                         break;
                 }
@@ -104,6 +114,20 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
         
        
         return true;
+    }
+
+    public async Task<bool> CheckPermissionAsync<T>(T item, PermissionType permissionType)
+    {
+        var permissions = (await GetAllAsync()).Where(c=>c.UserId==_currentUser?.Id&&c.ObjectName==typeof(T).Name&&c.PermissionType==permissionType).ToList();
+        if (permissions.Any())
+        {
+            return DataPermissionExtensions.CheckItem(item,permissions.FirstOrDefault(),PermissionType.UpdateAndDelete);
+        }
+        else
+        {
+            return true;
+        }
+        
     }
 
     private async Task<List<DataPermissionResult>> GetFromDatabaseAsync()

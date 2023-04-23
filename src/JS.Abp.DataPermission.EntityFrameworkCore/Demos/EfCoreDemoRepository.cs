@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
 using JS.Abp.DataPermission.EntityFrameworkCore;
+using JS.Abp.DataPermission.PermissionTypes;
 
 namespace JS.Abp.DataPermission.Demos
 {
@@ -25,7 +26,7 @@ namespace JS.Abp.DataPermission.Demos
             var query = await GetQueryableAsync();
             query = DataPermissionExtensions.EntityFilter(query,  await dataPermissionStore.GetAllAsync());//add
             var item =  await query.FirstOrDefaultAsync(e => e.Id == id, GetCancellationToken(cancellationToken));
-            var checkPermission =await dataPermissionStore.CheckPermissionAsync(id.ToString(), item);//add
+            var getPermission =await dataPermissionStore.GetPermissionAsync(id.ToString(), item);//add
             return item;
         }
         public async Task<List<Demo>> GetListAsync(

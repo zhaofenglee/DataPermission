@@ -7,5 +7,5 @@ namespace JS.Abp.DataPermission.Services;
 
 public interface IPermissionApplicationService : IApplicationService
 {
-    Task<GetPermissionResultDto> GetAsync([NotNull]string id,[NotNull]string policyName,[NotNull] PermissionType permissionType);
+    Task<GetPermissionResultDto> GetAsync(string id,string policyName ="",PermissionType permissionType=PermissionType.Update);
 }

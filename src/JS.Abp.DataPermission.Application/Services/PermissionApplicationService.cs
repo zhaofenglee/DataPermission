@@ -21,15 +21,18 @@ public class PermissionApplicationService : ApplicationService, IPermissionAppli
     }
     public async Task<GetPermissionResultDto> GetAsync(string id, string policyName, PermissionType permissionType)
     {
-        var result = await AuthorizationService.IsGrantedAnyAsync(policyName);
-        if (result == false)
+        if (!policyName.IsNullOrWhiteSpace())
         {
-            return new GetPermissionResultDto()
+            var result = await AuthorizationService.IsGrantedAnyAsync(policyName);
+            if (result == false)
             {
-                IsGranted = false
-            };
+                return new GetPermissionResultDto()
+                {
+                    IsGranted = false
+                };
+            }
         }
-       var dataPermissionResults =  await _cache.GetAsync(new PermissionCacheKey()
+        var dataPermissionResults =  await _cache.GetAsync(new PermissionCacheKey()
        {
            EntityId = id,
            UserId = CurrentUser?.Id??Guid.Empty

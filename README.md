@@ -73,29 +73,47 @@ protected virtual IQueryable<Demo> ApplyFilter(
                     .WhereIf(!string.IsNullOrWhiteSpace(displayName), e => e.DisplayName.Contains(displayName));
         }
 ````
-### 3.进行上述操作后查询过滤功能就可以使用了，如果需要进行修改和删除的权限控制，需要在查询单条数据方法前加入 ` var checkPermission =await dataPermissionStore.CheckPermissionAsync(id.ToString(), item);`
-* 这一步是为了判断当前用户是否有该数据修改和删除权限
+### 3.进行上述操作后查询过滤功能就可以使用
+
+### 4.如果需要进行修改和删除的权限控制，有两个实现方法
+#### 4.1需要在查询单条数据方法前加入 ` var checkPermission =await dataPermissionStore.GetPermissionAsync(id.ToString(), item);`
+* 这一步是为了查询当前用户是否有该数据修改和删除权限，用于后面判断是否可以进行修改和删除操作
 ````csharp
  public async Task<Demo> GetAsync(Guid id, CancellationToken cancellationToken = default)
         {
             var query = await GetQueryableAsync();
             query = DataPermissionExtensions.EntityFilter(query,  await dataPermissionStore.GetAllAsync());//add
             var item =  await query.FirstOrDefaultAsync(e => e.Id == id, GetCancellationToken(cancellationToken));
-            var checkPermission =await dataPermissionStore.CheckPermissionAsync(id.ToString(), item);//add
+            var getPermission =await dataPermissionStore.GetPermissionAsync(id.ToString(), item);//add
             return item;
         }
 ````
 
-### 4.在需要进行权限控制的服务引入服务“IPermissionApplicationService”
+* 在需要进行权限控制的服务引入服务“IPermissionApplicationService”
 ````csharp
  protected IPermissionApplicationService permissionApplicationService => LazyServiceProvider.LazyGetRequiredService<IPermissionApplicationService>();
 ````
-## 5.在需要进行权限控制的方法前加入 `await permissionApplicationService.CheckPermissionAsync(id.ToString(), “abp权限名称”, PermissionType.Update);`
-* 权限判断规则是：如果当前用户是否有“abp权限”权限，没有直接为false，再判断是否有行权限
+* 在需要进行权限控制的方法前加入 `await permissionApplicationService.CheckPermissionAsync(id.ToString(), “abp权限名称”, PermissionType.Update);`
+* 权限判断规则是：如果当前用户是否有“abp权限”权限，没有直接为false，再判断是否有行权限，若无须判断abp权限名称传入空值可跳过
 * 在UI上控制还是在服务上进行控制可以根据实际情况进行选择，以下是以Blazor为例
 ````csharp
 var demo = await DemosAppService.GetAsync(input.Id);
 CanEditDemo =  PermissionApplicationService.GetAsync(demo.Id.ToString(),DataPermissionPermissions.Demos.Edit, PermissionType.Update).Result.IsGranted;//add
+````
+
+#### 4.2直接在服务上进行判断 
+* 这一步是把传入的对象判断是否有权限，如果没有权限则抛出异常，需要注意是传入的对象Name必须和实体名字一致
+````csharp
+ public async Task<Demo> UpdateAsync(Guid id, UpdateDemoDto input, CancellationToken cancellationToken = default)
+        {
+            var item = await GetAsync(id, cancellationToken);
+            var checkPermission =await dataPermissionStore.CheckPermissionAsync(item, PermissionType.Update);//add
+            //Todo:无权的操作
+            ObjectMapper.Map(input, item);
+            await ValidateAsync(item);
+            await Repository.UpdateAsync(item, autoSave: true);
+            return item;
+        }
 ````
 
 ## Samples
