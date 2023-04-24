@@ -1,11 +1,12 @@
 # 数据权限
 
 ## 实现原理
-* 行数据查询权限是通过仓储对于数据查询进行过滤
-* 行数据权限修改和删除是通过仓储查询单个行对象是判断是否有权限，应该先查询一次数据，在判断是否有权限，如果没有权限则抛出异常或在UI进行处理
+* 行数据查询权限是通过仓储数据查询条件进行过滤
+* 行数据权限修改和删除是通过仓储查询单个行对象再判断是否有权限，如果没有权限则抛出异常或在UI进行处理（有更好的方法也欢迎大家提出）
 * 通过设置 角色 和对应实体 实现查询可以根据自定义Lambda表达式过滤查询数据
-* 通过设置 角色 和对应实体 实现修改，删除
-* 目前不支持新增，新增的数据权限建议使用内置的数据权限
+* 通过设置 角色 和对应实体 实现修改，删除，需要查询后再判断是否有权限
+* 目前新增，需要再新增之前进行权限判断，如果没有权限则抛出异常，如：
+  “var checkPermission =await dataPermissionStore.CheckPermissionAsync(item, PermissionType.Create);”
 
 ## 缓存
 * 目前缓存时间为 10 分钟，如果“PermissionExtension”对象变更时会自动清除
@@ -68,11 +69,14 @@
 * 修改和删除表达式需要注意格式，如：“x.Name == "Abc"”，x.为固定格式，Name为实体属性，Abc为过滤条件，实例的含义是当前角色仅允许修改和删除Name等于Abc的数据
 * 数据权限控制已提供Blazor页面，其他前端框架请自行实现
 
+![GIF 2023-4-24 19-37-41.gif](docs/images/GIF 2023-4-24 19-37-41.gif)
+
 ### 2.在需要进行权限控制的仓储加入下述代码
 ````csharp
  protected IDataPermissionStore dataPermissionStore => LazyServiceProvider.LazyGetRequiredService<IDataPermissionStore>();
 ````
 ### 3.在过滤条件前添加 `query = DataPermissionExtensions.EntityFilter(query,  dataPermissionStore.GetAll());`
+* abp7.2 可以直接使用“query = dataPermissionStore.EntityFilter(query);//add”
 ````csharp
 protected virtual IQueryable<Demo> ApplyFilter(
             IQueryable<Demo> query,
@@ -102,6 +106,8 @@ protected virtual IQueryable<Demo> ApplyFilter(
             return item;
         }
 ````
+
+![GIF 2023-4-24 20-01-33.gif](docs/images/GIF 2023-4-24 20-01-33.gif)
 
 * 在需要进行权限控制的服务引入服务“IPermissionApplicationService”
 ````csharp
@@ -133,3 +139,5 @@ CanEditDemo =  PermissionApplicationService.GetAsync(demo.Id.ToString(),DataPerm
 ## Samples
 
 See the [sample projects](https://github.com/zhaofenglee/DataPermission/tree/master/host/JS.Abp.DataPermission.Blazor.Server.Host)
+
+

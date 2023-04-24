@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
 using JS.Abp.DataPermission.EntityFrameworkCore;
-using JS.Abp.DataPermission.PermissionTypes;
 
 namespace JS.Abp.DataPermission.Demos
 {
@@ -24,9 +23,9 @@ namespace JS.Abp.DataPermission.Demos
         public async Task<Demo> GetAsync(Guid id, CancellationToken cancellationToken = default)
         {
             var query = await GetQueryableAsync();
-            query = DataPermissionExtensions.EntityFilter(query,  await dataPermissionStore.GetAllAsync());//add
-            var item =  await query.FirstOrDefaultAsync(e => e.Id == id, GetCancellationToken(cancellationToken));
-            var getPermission =await dataPermissionStore.GetPermissionAsync(id.ToString(), item);//add
+            query = dataPermissionStore.EntityFilter(query); //add
+            var item = await query.FirstOrDefaultAsync(e => e.Id == id, GetCancellationToken(cancellationToken));
+            var getPermission = await dataPermissionStore.GetPermissionAsync(id.ToString(), item); //add
             return item;
         }
         public async Task<List<Demo>> GetListAsync(
@@ -59,7 +58,7 @@ namespace JS.Abp.DataPermission.Demos
             string name = null,
             string displayName = null)
         {
-            query = DataPermissionExtensions.EntityFilter(query,  dataPermissionStore.GetAll());//add
+            query = dataPermissionStore.EntityFilter(query);//add
             return query
                     .WhereIf(!string.IsNullOrWhiteSpace(filterText), e => e.Name.Contains(filterText) || e.DisplayName.Contains(filterText))
                     .WhereIf(!string.IsNullOrWhiteSpace(name), e => e.Name.Contains(name))

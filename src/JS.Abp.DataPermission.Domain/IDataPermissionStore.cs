@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using JS.Abp.DataPermission.PermissionTypes;
 
@@ -7,7 +8,22 @@ namespace JS.Abp.DataPermission;
 
 public interface IDataPermissionStore
 {
+    /// <summary>
+    /// 根据当前用户过滤实体
+    /// </summary>
+    /// <param name="query"></param>
+    /// <typeparam name="TEntity"></typeparam>
+    /// <returns></returns>
+    IQueryable<TEntity> EntityFilter<TEntity>(IQueryable<TEntity> query);
+    /// <summary>
+    /// 获取所有权限控制规则，带缓存
+    /// </summary>
+    /// <returns></returns>
     List<DataPermissionResult> GetAll();
+    /// <summary>
+    /// 获取所有权限控制规则，带缓存
+    /// </summary>
+    /// <returns></returns>
     Task<List<DataPermissionResult>> GetAllAsync();
     /// <summary>
     /// 查询当前数据是否有权限

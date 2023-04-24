@@ -40,6 +40,10 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
         _identityUserRepository = identityUserRepository;
     }
 
+    public virtual IQueryable<TEntity> EntityFilter<TEntity>(IQueryable<TEntity> query)
+    {
+        return DataPermissionExtensions.EntityFilter(query,  GetAll());
+    }
     public virtual List<DataPermissionResult> GetAll()
     {
         var result= AsyncHelper.RunSync(()=>{   return  GetAllAsync();   });
@@ -60,25 +64,26 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
 
     public virtual async Task<bool> GetPermissionAsync<T>(string id, T item)
     { 
-        
+       
         PermissionCacheItem cacheItem = await  _cacheItem.GetAsync(new PermissionCacheKey()
         {
             EntityId = id,
             UserId = _currentUser?.Id??Guid.Empty
         });
-        if (cacheItem==null)
-        {
-            cacheItem = new PermissionCacheItem()
-            {
-                Id = id,
-                ObjectName = typeof(T).Name,
-                UserId = _currentUser?.Id
-            };
-        }
-       
+
         var permissions = (await GetAllAsync()).Where(c=>c.UserId==_currentUser?.Id&&c.ObjectName==typeof(T).Name&&c.PermissionType!=PermissionType.Read).ToList();
         if (permissions.Any())
         {
+            if (cacheItem==null)
+            {
+                cacheItem = new PermissionCacheItem()
+                {
+                    Id = id,
+                    ObjectName = typeof(T).Name,
+                    UserId = _currentUser?.Id
+                };
+            }
+            
             foreach (var permission in permissions)
             {
                 switch (permission.PermissionType)
@@ -111,6 +116,17 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
             {
                 AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(Options.CacheExpirationTime)
             });
+        }
+        else
+        {
+            if (cacheItem!=null)
+            {
+               await _cacheItem.RemoveAsync(new PermissionCacheKey()
+               {
+                   EntityId = id,
+                   UserId = _currentUser?.Id??Guid.Empty
+               });
+            }
         }
         
        
