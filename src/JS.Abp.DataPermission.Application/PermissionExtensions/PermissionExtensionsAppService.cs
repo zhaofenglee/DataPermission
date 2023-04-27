@@ -49,7 +49,11 @@ namespace JS.Abp.DataPermission.PermissionExtensions
             var dtos = items.Select(queryResultItem =>
             {
                 var dto = ObjectMapper.Map<PermissionExtension, PermissionExtensionDto>(queryResultItem);
-                dto.RoleName =  _identityRoleRepository.GetAsync(queryResultItem.RoleId).Result.Name;
+                if (queryResultItem.RoleId!=Guid.Empty)
+                {
+                    dto.RoleName =  _identityRoleRepository.GetAsync(queryResultItem.RoleId).Result.Name;
+                }
+                
                 return dto;
             }).ToList();
             return new PagedResultDto<PermissionExtensionDto>

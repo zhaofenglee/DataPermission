@@ -21,9 +21,10 @@
                     
             <abp-input asp-for="PermissionExtension.ObjectName"  />
 
-            <abp-input asp-for="PermissionExtension.RoleId"  />
+            @* <abp-input asp-for="PermissionExtension.RoleId"  /> *@
 
-            <abp-input asp-for="PermissionExtension.ExcludedRoleId"  />
+                      <abp-select asp-for="PermissionExtension.RoleId" asp-items="@Model.RoleList" label="RoleName"/>
+                    @* <abp-input asp-for="PermissionExtension.ExcludedRoleId"  /> *@
 
             <abp-select asp-for="PermissionExtension.PermissionType"  />
 

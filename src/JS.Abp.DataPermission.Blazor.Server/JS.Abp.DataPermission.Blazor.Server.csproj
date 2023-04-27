@@ -5,6 +5,7 @@
     <PropertyGroup>
         <TargetFramework>net7.0</TargetFramework>
         <Nullable>enable</Nullable>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
 
     <ItemGroup>

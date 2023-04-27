@@ -10,6 +10,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>JS.Abp.DataPermission.Web</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>

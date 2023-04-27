@@ -34,6 +34,7 @@
 *(Optional)  JS.Abp.DataPermission.Blazor
 *(Optional)  JS.Abp.DataPermission.Blazor.Server
 *(Optional)  JS.Abp.DataPermission.Blazor.WebAssembly
+*(Optional)  JS.Abp.DataPermission.Web
 
 ### 2.添加“依赖”属性以配置模块
 * [DependsOn(typeof(DataPermissionApplicationModule))]
@@ -48,6 +49,7 @@
 *(Optional)  [DependsOn(typeof(DataPermissionBlazorModule))]
 *(Optional)  [DependsOn(typeof(DataPermissionBlazorServerModule))]
 *(Optional)  [DependsOn(typeof(DataPermissionBlazorWebAssemblyModule))]
+*(Optional)  [DependsOn(typeof(DataPermissionWebModule))]
 
 ### 3. 在你的Dbcontext添加 ` builder.ConfigureDataPermission();` 
 
@@ -69,7 +71,7 @@
 * 修改和删除表达式需要注意格式，如：“x.Name == "Abc"”，x.为固定格式，Name为实体属性，Abc为过滤条件，实例的含义是当前角色仅允许修改和删除Name等于Abc的数据
 * 数据权限控制已提供Blazor页面，其他前端框架请自行实现
 
-![GIF 2023-4-24 19-37-41.gif](docs/images/GIF 2023-4-24 19-37-41.gif)
+![GIF 2023-4-24 19-37-41.gif](./docs/images/GIF 2023-4-24 19-37-41.gif)
 
 ### 2.在需要进行权限控制的仓储加入下述代码
 ````csharp
@@ -107,7 +109,7 @@ protected virtual IQueryable<Demo> ApplyFilter(
         }
 ````
 
-![GIF 2023-4-24 20-01-33.gif](docs/images/GIF 2023-4-24 20-01-33.gif)
+![GIF 2023-4-24 20-01-33.gif](./docs/images/GIF 2023-4-24 20-01-33.gif)
 
 * 在需要进行权限控制的服务引入服务“IPermissionApplicationService”
 ````csharp

@@ -17,6 +17,7 @@ namespace JS.Abp.DataPermission.Web.Pages.DataPermission.PermissionExtensions
     {
         public string? ObjectNameFilter { get; set; }
         public string? RoleIdFilter { get; set; }
+        public string? RoleNameFilter { get; set; }
         public string? ExcludedRoleIdFilter { get; set; }
         public PermissionType? PermissionTypeFilter { get; set; }
         public string? LambdaStringFilter { get; set; }

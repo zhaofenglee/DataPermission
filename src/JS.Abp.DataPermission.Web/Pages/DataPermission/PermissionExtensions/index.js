@@ -21,7 +21,8 @@ $(function () {
             filterText: $("#FilterText").val(),
             objectName: $("#ObjectNameFilter").val(),
 			roleId: $("#RoleIdFilter").val(),
-			excludedRoleId: $("#ExcludedRoleIdFilter").val(),
+            roleName: $("#RoleNameFilter").val(),
+			// excludedRoleId: $("#ExcludedRoleIdFilter").val(),
 			permissionType: $("#PermissionTypeFilter").val(),
 			lambdaString: $("#LambdaStringFilter").val(),
             isActive: (function () {
@@ -76,8 +77,8 @@ $(function () {
                 }
             },
 			{ data: "objectName" },
-			{ data: "roleId" },
-			{ data: "excludedRoleId" },
+			{ data: "roleName" },
+			// { data: "excludedRoleId" },
             {
                 data: "permissionType",
                 render: function (permissionType) {
@@ -136,7 +137,7 @@ $(function () {
                             { name: 'downloadToken', value: result.token },
                             { name: 'filterText', value: input.filterText }, 
                             { name: 'objectName', value: input.objectName }, 
-                            { name: 'roleId', value: input.roleId }, 
+                            { name: 'RoleName', value: input.roleName }, 
                             { name: 'excludedRoleId', value: input.excludedRoleId }, 
                             { name: 'permissionType', value: input.permissionType }, 
                             { name: 'lambdaString', value: input.lambdaString }, 
