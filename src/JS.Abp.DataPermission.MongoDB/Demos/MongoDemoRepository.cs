@@ -14,6 +14,7 @@ namespace JS.Abp.DataPermission.Demos
 {
     public class MongoDemoRepository : MongoDbRepository<DataPermissionMongoDbContext, Demo, Guid>, IDemoRepository
     {
+        protected IDataPermissionStore dataPermissionStore => LazyServiceProvider.LazyGetRequiredService<IDataPermissionStore>();
         public MongoDemoRepository(IMongoDbContextProvider<DataPermissionMongoDbContext> dbContextProvider)
             : base(dbContextProvider)
         {
@@ -21,8 +22,9 @@ namespace JS.Abp.DataPermission.Demos
 
         public async Task<Demo> GetAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            var query = await GetMongoQueryableAsync();
-            var item = await query.FirstOrDefaultAsync(e => e.Id == id, GetCancellationToken(cancellationToken));
+            var query = ApplyFilter(await GetMongoQueryableAsync(cancellationToken));
+            var item = query.FirstOrDefault(e => e.Id == id);
+            await dataPermissionStore.GetPermissionAsync(item); //add
             return item;
         }
 
@@ -54,10 +56,11 @@ namespace JS.Abp.DataPermission.Demos
 
         protected virtual IQueryable<Demo> ApplyFilter(
             IQueryable<Demo> query,
-            string filterText,
+            string filterText = null,
             string name = null,
             string displayName = null)
         {
+            query = dataPermissionStore.EntityFilter(query);//add
             return query
                 .WhereIf(!string.IsNullOrWhiteSpace(filterText), e => e.Name.Contains(filterText) || e.DisplayName.Contains(filterText))
                     .WhereIf(!string.IsNullOrWhiteSpace(name), e => e.Name.Contains(name))
