@@ -29,7 +29,6 @@ public class DataPermissionMenuContributor : IMenuContributor
         var moduleMenu = new ApplicationMenuItem(
             DataPermissionMenus.Prefix,
             displayName: "DataPermission",
-            "~/DataPermission",
             icon: "fa fa-globe");
 
         //Add main menu items.

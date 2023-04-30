@@ -25,7 +25,9 @@ namespace JS.Abp.DataPermission.Demos
             var query = await GetQueryableAsync();
             query = dataPermissionStore.EntityFilter(query); //add
             var item = await query.FirstOrDefaultAsync(e => e.Id == id, GetCancellationToken(cancellationToken));
-            var getPermission = await dataPermissionStore.GetPermissionAsync(id.ToString(), item); //add
+            //await dataPermissionStore.GetPermissionAsync(id.ToString(), item); //add
+            //or
+            await dataPermissionStore.GetPermissionAsync(item); //add
             return item;
         }
         public async Task<List<Demo>> GetListAsync(

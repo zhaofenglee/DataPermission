@@ -5,8 +5,8 @@
 * 行数据权限修改和删除是通过仓储查询单个行对象再判断是否有权限，如果没有权限则抛出异常或在UI进行处理（有更好的方法也欢迎大家提出）
 * 通过设置 角色 和对应实体 实现查询可以根据自定义Lambda表达式过滤查询数据
 * 通过设置 角色 和对应实体 实现修改，删除，需要查询后再判断是否有权限
-* 目前新增，需要再新增之前进行权限判断，如果没有权限则抛出异常，如：
-  “var checkPermission =await dataPermissionStore.CheckPermissionAsync(item, PermissionType.Create);”
+* 通过设置 角色 和对应实体 实现创建，目前新增需要在创建之前进行权限判断，如果没有权限则抛出异常，如：
+  “var checkPermission = await dataPermissionStore.CheckPermissionAsync(item, PermissionType.Create);”
 
 ## 缓存
 * 目前缓存时间为 10 分钟，如果“PermissionExtension”对象变更时会自动清除
@@ -41,7 +41,7 @@
 * [DependsOn(typeof(DataPermissionApplicationContractsModule))]
 * [DependsOn(typeof(DataPermissionDomainModule))]
 * [DependsOn(typeof(DataPermissionDomainSharedModule))]
-* [DependsOn(typeof(DataPermissionEntityFrameworkCoreModule))]
+* [DependsOn(typeof(DataPermissionEntityFrameworkCoreModule))] OR [DependsOn(typeof(DataPermissionMongoDbModule))]
 * [DependsOn(typeof(DataPermissionHttpApiModule))]
 * [DependsOn(typeof(DataPermissionHttpApiClientModule))]
 
@@ -51,6 +51,7 @@
 *(Optional)  [DependsOn(typeof(DataPermissionBlazorWebAssemblyModule))]
 *(Optional)  [DependsOn(typeof(DataPermissionWebModule))]
 
+### *若使用MongoDb，以下步骤可以忽略
 ### 3. 在你的Dbcontext添加 ` builder.ConfigureDataPermission();` 
 
 ### 4. 添加 EF Core 迁移并更新数据库
@@ -68,10 +69,10 @@
 
 ### 1.配置需要控制的实体名称，类型，及对应的Lambda表达式
 * 查询表达式默认是在原有的查询表达式上进行过滤，表达式需要注意格式，如：“x.Name != "Abc"”，x.为固定格式，Name为实体属性，Abc为过滤条件，实例的含义是当前角色仅允许查询Name不等于Abc的数据
-* 修改和删除表达式需要注意格式，如：“x.Name == "Abc"”，x.为固定格式，Name为实体属性，Abc为过滤条件，实例的含义是当前角色仅允许修改和删除Name等于Abc的数据
+* 创建，修改和删除表达式需要注意格式，如：“x.Name == "Abc"”，x.为固定格式，Name为实体属性，Abc为过滤条件，实例的含义是当前角色仅允许创建，修改和删除Name等于Abc的数据
 * 数据权限控制已提供Blazor页面，其他前端框架请自行实现
 
-![GIF 2023-4-24 19-37-41.gif](./docs/images/GIF 2023-4-24 19-37-41.gif)
+![2023-4-24 19-37-41](/docs/images/GIF 2023-4-24 19-37-41.gif)
 
 ### 2.在需要进行权限控制的仓储加入下述代码
 ````csharp
@@ -96,7 +97,7 @@ protected virtual IQueryable<Demo> ApplyFilter(
 ### 4.进行上述操作后查询过滤功能就可以使用
 
 ### 5.如果需要进行修改和删除的权限控制，有两个实现方法
-#### 5.1需要在查询单条数据方法前加入 ` var checkPermission =await dataPermissionStore.GetPermissionAsync(id.ToString(), item);`
+#### 5.1需要在查询单条数据方法前加入 ` await dataPermissionStore.GetPermissionAsync(id.ToString(), item);`
 * 这一步是为了查询当前用户是否有该数据修改和删除权限，用于后面判断是否可以进行修改和删除操作
 ````csharp
  public async Task<Demo> GetAsync(Guid id, CancellationToken cancellationToken = default)
@@ -104,12 +105,12 @@ protected virtual IQueryable<Demo> ApplyFilter(
             var query = await GetQueryableAsync();
             query = DataPermissionExtensions.EntityFilter(query,  await dataPermissionStore.GetAllAsync());//add
             var item =  await query.FirstOrDefaultAsync(e => e.Id == id, GetCancellationToken(cancellationToken));
-            var getPermission =await dataPermissionStore.GetPermissionAsync(id.ToString(), item);//add
+            await dataPermissionStore.GetPermissionAsync(id.ToString(), item);//add
             return item;
         }
 ````
 
-![GIF 2023-4-24 20-01-33.gif](./docs/images/GIF 2023-4-24 20-01-33.gif)
+![2023-4-24 20-01-33](/docs/images/GIF 2023-4-24 20-01-33.gif)
 
 * 在需要进行权限控制的服务引入服务“IPermissionApplicationService”
 ````csharp
@@ -138,8 +139,17 @@ CanEditDemo =  PermissionApplicationService.GetAsync(demo.Id.ToString(),DataPerm
         }
 ````
 
+
+### 6.创建权限控制方法，可以在插入数据库前对传入对象进行判断
+````csharp
+//add permission check
+if (!dataPermissionStore.CheckPermission(demo, PermissionType.Create))
+            {
+                throw new UserFriendlyException(
+                    "The current user does not have permission to create data!"
+                );
+            }
+````
 ## Samples
 
 See the [sample projects](https://github.com/zhaofenglee/DataPermission/tree/master/host/JS.Abp.DataPermission.Blazor.Server.Host)
-
-
