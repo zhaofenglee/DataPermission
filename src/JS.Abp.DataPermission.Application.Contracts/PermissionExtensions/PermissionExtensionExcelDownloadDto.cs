@@ -16,7 +16,7 @@ namespace JS.Abp.DataPermission.PermissionExtensions
         public PermissionType? PermissionType { get; set; }
         public string? LambdaString { get; set; }
         public bool? IsActive { get; set; }
-
+        public string? Description { get; set; }
         public PermissionExtensionExcelDownloadDto()
         {
 

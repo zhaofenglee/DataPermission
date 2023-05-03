@@ -44,6 +44,7 @@ public static class DataPermissionDbContextModelCreatingExtensions
     b.Property(x => x.PermissionType).HasColumnName(nameof(PermissionExtension.PermissionType));
     b.Property(x => x.LambdaString).HasColumnName(nameof(PermissionExtension.LambdaString)).IsRequired();
     b.Property(x => x.IsActive).HasColumnName(nameof(PermissionExtension.IsActive));
+    b.Property(x => x.Description).HasColumnName(nameof(PermissionExtension.Description)).HasMaxLength(PermissionExtensionConsts.DescriptionMaxLength);
 });
 
         }

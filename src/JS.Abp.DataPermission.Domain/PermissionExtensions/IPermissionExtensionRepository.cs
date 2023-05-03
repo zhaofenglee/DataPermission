@@ -17,6 +17,7 @@ namespace JS.Abp.DataPermission.PermissionExtensions
             PermissionType? permissionType = null,
             string lambdaString = null,
             bool? isActive = null,
+            string description = null,
             string sorting = null,
             int maxResultCount = int.MaxValue,
             int skipCount = 0,
@@ -31,6 +32,7 @@ namespace JS.Abp.DataPermission.PermissionExtensions
             PermissionType? permissionType = null,
             string lambdaString = null,
             bool? isActive = null,
+            string description = null,
             CancellationToken cancellationToken = default);
     }
 }

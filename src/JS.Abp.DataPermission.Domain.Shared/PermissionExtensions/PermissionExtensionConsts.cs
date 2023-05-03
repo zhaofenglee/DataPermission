@@ -10,5 +10,6 @@ namespace JS.Abp.DataPermission.PermissionExtensions
         }
 
         public const int ObjectNameMaxLength = 128;
+        public const int DescriptionMaxLength = 128;
     }
 }

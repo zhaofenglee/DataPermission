@@ -28,12 +28,13 @@ namespace JS.Abp.DataPermission.PermissionExtensions
             PermissionType? permissionType = null,
             string lambdaString = null,
             bool? isActive = null,
+            string description = null,
             string sorting = null,
             int maxResultCount = int.MaxValue,
             int skipCount = 0,
             CancellationToken cancellationToken = default)
         {
-            var query = ApplyFilter((await GetQueryableAsync()), filterText, objectName, roleId, excludedRoleId, permissionType, lambdaString, isActive);
+            var query = ApplyFilter((await GetQueryableAsync()), filterText, objectName, roleId, excludedRoleId, permissionType, lambdaString, isActive,description);
             query = query.OrderBy(string.IsNullOrWhiteSpace(sorting) ? PermissionExtensionConsts.GetDefaultSorting(false) : sorting);
             return await query.PageBy(skipCount, maxResultCount).ToListAsync(cancellationToken);
         }
@@ -46,9 +47,10 @@ namespace JS.Abp.DataPermission.PermissionExtensions
             PermissionType? permissionType = null,
             string lambdaString = null,
             bool? isActive = null,
+            string description = null,
             CancellationToken cancellationToken = default)
         {
-            var query = ApplyFilter((await GetDbSetAsync()), filterText, objectName, roleId, excludedRoleId, permissionType, lambdaString, isActive);
+            var query = ApplyFilter((await GetDbSetAsync()), filterText, objectName, roleId, excludedRoleId, permissionType, lambdaString, isActive,description);
             return await query.LongCountAsync(GetCancellationToken(cancellationToken));
         }
 
@@ -60,16 +62,18 @@ namespace JS.Abp.DataPermission.PermissionExtensions
             Guid? excludedRoleId = null,
             PermissionType? permissionType = null,
             string lambdaString = null,
-            bool? isActive = null)
+            bool? isActive = null,
+            string description = null)
         {
             return query
-                    .WhereIf(!string.IsNullOrWhiteSpace(filterText), e => e.ObjectName.Contains(filterText) || e.LambdaString.Contains(filterText))
+                    .WhereIf(!string.IsNullOrWhiteSpace(filterText), e => e.ObjectName.Contains(filterText) || e.LambdaString.Contains(filterText)|| e.Description.Contains(filterText))
                     .WhereIf(!string.IsNullOrWhiteSpace(objectName), e => e.ObjectName.Contains(objectName))
                     .WhereIf(roleId.HasValue, e => e.RoleId == roleId)
                     .WhereIf(excludedRoleId.HasValue, e => e.ExcludedRoleId == excludedRoleId)
                     .WhereIf(permissionType.HasValue, e => e.PermissionType == permissionType)
                     .WhereIf(!string.IsNullOrWhiteSpace(lambdaString), e => e.LambdaString.Contains(lambdaString))
-                    .WhereIf(isActive.HasValue, e => e.IsActive == isActive);
+                    .WhereIf(isActive.HasValue, e => e.IsActive == isActive)
+                    .WhereIf(!string.IsNullOrWhiteSpace(description), e => e.Description.Contains(description));
         }
     }
 }

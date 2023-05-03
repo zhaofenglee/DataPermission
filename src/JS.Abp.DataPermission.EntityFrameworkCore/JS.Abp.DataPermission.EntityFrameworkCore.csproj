@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Volo.Abp.EntityFrameworkCore" Version="7.1.1" />
+    <PackageReference Include="Volo.Abp.EntityFrameworkCore" Version="7.2.1" />
     <ProjectReference Include="..\JS.Abp.DataPermission.Domain\JS.Abp.DataPermission.Domain.csproj" />
   </ItemGroup>
 

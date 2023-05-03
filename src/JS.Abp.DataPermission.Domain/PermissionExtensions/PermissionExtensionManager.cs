@@ -21,7 +21,7 @@ namespace JS.Abp.DataPermission.PermissionExtensions
         }
 
         public async Task<PermissionExtension> CreateAsync(
-        string objectName, Guid roleId, PermissionType permissionType, string lambdaString, bool isActive, Guid? excludedRoleId = null)
+        string objectName, Guid roleId, PermissionType permissionType, string lambdaString, bool isActive,string description, Guid? excludedRoleId = null)
         {
             Check.NotNullOrWhiteSpace(objectName, nameof(objectName));
             Check.Length(objectName, nameof(objectName), PermissionExtensionConsts.ObjectNameMaxLength);
@@ -30,7 +30,7 @@ namespace JS.Abp.DataPermission.PermissionExtensions
 
             var permissionExtension = new PermissionExtension(
              GuidGenerator.Create(),
-             objectName, roleId, permissionType, lambdaString, isActive, excludedRoleId
+             objectName, roleId, permissionType, lambdaString, isActive, description,excludedRoleId
              );
 
             return await _permissionExtensionRepository.InsertAsync(permissionExtension);
@@ -38,7 +38,7 @@ namespace JS.Abp.DataPermission.PermissionExtensions
 
         public async Task<PermissionExtension> UpdateAsync(
             Guid id,
-            string objectName, Guid roleId, PermissionType permissionType, string lambdaString, bool isActive, Guid? excludedRoleId = null, [CanBeNull] string concurrencyStamp = null
+            string objectName, Guid roleId, PermissionType permissionType, string lambdaString, bool isActive, string description,Guid? excludedRoleId = null, [CanBeNull] string concurrencyStamp = null
         )
         {
             Check.NotNullOrWhiteSpace(objectName, nameof(objectName));
@@ -53,6 +53,7 @@ namespace JS.Abp.DataPermission.PermissionExtensions
             permissionExtension.PermissionType = permissionType;
             permissionExtension.LambdaString = lambdaString;
             permissionExtension.IsActive = isActive;
+            permissionExtension.Description = description;
             permissionExtension.ExcludedRoleId = excludedRoleId;
 
             permissionExtension.SetConcurrencyStampIfNotNull(concurrencyStamp);
