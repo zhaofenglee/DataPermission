@@ -61,6 +61,9 @@
                 <abp-input asp-for="LambdaStringFilter" label="@L["LambdaString"].Value" />
             </abp-column>
             <abp-column size="_3">
+                <abp-input asp-for="DescriptionFilter" label="@L["Description"].Value" />
+            </abp-column>
+            <abp-column size="_3">
                 <abp-select asp-for="IsActiveFilter" label="@L["IsActive"].Value" />
             </abp-column>
         </abp-row>
@@ -73,8 +76,9 @@
 					<th>@L["RoleName"]</th>
 					@* <th>@L["ExcludedRoleId"]</th> *@
 					<th>@L["PermissionType"]</th>
-					<th>@L["LambdaString"]</th>
-					<th>@L["IsActive"]</th>
+                    <th>@L["LambdaString"]</th>
+                    <th>@L["Description"]</th>
+                    <th>@L["IsActive"]</th>
 
 				</tr>
             </thead>

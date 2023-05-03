@@ -23,7 +23,7 @@ namespace JS.Abp.DataPermission.Web.Pages.DataPermission.PermissionExtensions
         public string? LambdaStringFilter { get; set; }
         [SelectItems(nameof(IsActiveBoolFilterItems))]
         public string IsActiveFilter { get; set; }
-
+        public string? DescriptionFilter { get; set; }
         public List<SelectListItem> IsActiveBoolFilterItems { get; set; } =
             new List<SelectListItem>
             {

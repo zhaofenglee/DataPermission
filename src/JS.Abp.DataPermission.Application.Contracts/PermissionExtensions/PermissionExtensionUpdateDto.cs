@@ -19,5 +19,7 @@ namespace JS.Abp.DataPermission.PermissionExtensions
         public bool IsActive { get; set; }
 
         public string ConcurrencyStamp { get; set; }
+        [StringLength(PermissionExtensionConsts.DescriptionMaxLength)]
+        public string? Description { get; set; }
     }
 }

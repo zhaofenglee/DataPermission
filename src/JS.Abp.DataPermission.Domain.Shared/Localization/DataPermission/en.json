@@ -54,6 +54,7 @@
     "MinName": "Min Name",
     "MinDisplayName": "Min Display Name",
     "MaxName": "Max Name",
-    "MaxDisplayName": "Max Display Name"
+    "MaxDisplayName": "Max Display Name",
+    "Description": "Description"
   }
 }

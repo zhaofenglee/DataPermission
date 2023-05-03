@@ -43,8 +43,8 @@ namespace JS.Abp.DataPermission.PermissionExtensions
 
         public virtual async Task<PagedResultDto<PermissionExtensionDto>> GetListAsync(GetPermissionExtensionsInput input)
         {
-            var totalCount = await _permissionExtensionRepository.GetCountAsync(input.FilterText, input.ObjectName, input.RoleId, input.ExcludedRoleId, input.PermissionType, input.LambdaString, input.IsActive);
-            var items = await _permissionExtensionRepository.GetListAsync(input.FilterText, input.ObjectName, input.RoleId, input.ExcludedRoleId, input.PermissionType, input.LambdaString, input.IsActive, input.Sorting, input.MaxResultCount, input.SkipCount);
+            var totalCount = await _permissionExtensionRepository.GetCountAsync(input.FilterText, input.ObjectName, input.RoleId, input.ExcludedRoleId, input.PermissionType, input.LambdaString, input.IsActive,input.Description);
+            var items = await _permissionExtensionRepository.GetListAsync(input.FilterText, input.ObjectName, input.RoleId, input.ExcludedRoleId, input.PermissionType, input.LambdaString, input.IsActive,input.Description, input.Sorting, input.MaxResultCount, input.SkipCount);
             //var permissionExtensionDtos = ObjectMapper.Map<List<PermissionExtension>, List<PermissionExtensionDto>>(items);
             var dtos = items.Select(queryResultItem =>
             {
@@ -79,7 +79,7 @@ namespace JS.Abp.DataPermission.PermissionExtensions
         {
 
             var permissionExtension = await _permissionExtensionManager.CreateAsync(
-            input.ObjectName, input.RoleId, input.PermissionType, input.LambdaString, input.IsActive, input.ExcludedRoleId
+            input.ObjectName, input.RoleId, input.PermissionType, input.LambdaString, input.IsActive,input.Description, input.ExcludedRoleId
             );
 
             return ObjectMapper.Map<PermissionExtension, PermissionExtensionDto>(permissionExtension);
@@ -91,7 +91,7 @@ namespace JS.Abp.DataPermission.PermissionExtensions
 
             var permissionExtension = await _permissionExtensionManager.UpdateAsync(
             id,
-            input.ObjectName, input.RoleId, input.PermissionType, input.LambdaString, input.IsActive, input.ExcludedRoleId, input.ConcurrencyStamp
+            input.ObjectName, input.RoleId, input.PermissionType, input.LambdaString, input.IsActive,input.Description, input.ExcludedRoleId, input.ConcurrencyStamp
             );
 
             return ObjectMapper.Map<PermissionExtension, PermissionExtensionDto>(permissionExtension);
@@ -106,7 +106,7 @@ namespace JS.Abp.DataPermission.PermissionExtensions
                 throw new AbpAuthorizationException("Invalid download token: " + input.DownloadToken);
             }
 
-            var items = await _permissionExtensionRepository.GetListAsync(input.FilterText, input.ObjectName, input.RoleId, input.ExcludedRoleId, input.PermissionType, input.LambdaString, input.IsActive);
+            var items = await _permissionExtensionRepository.GetListAsync(input.FilterText, input.ObjectName, input.RoleId, input.ExcludedRoleId, input.PermissionType, input.LambdaString, input.IsActive,input.Description);
 
             var memoryStream = new MemoryStream();
             await memoryStream.SaveAsAsync(ObjectMapper.Map<List<PermissionExtension>, List<PermissionExtensionExcelDto>>(items));

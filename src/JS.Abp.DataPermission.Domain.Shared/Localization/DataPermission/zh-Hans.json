@@ -55,6 +55,7 @@
     "MinDisplayName": "Min Display Name",
     "MaxName": "Max Name",
     "MaxDisplayName": "Max Display Name",
-    "RoleName": "角色名称"
+    "RoleName": "角色名称",
+    "Description": "描述"
   }
 }
