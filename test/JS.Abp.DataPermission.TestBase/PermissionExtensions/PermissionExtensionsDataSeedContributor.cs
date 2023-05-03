@@ -35,7 +35,8 @@ namespace JS.Abp.DataPermission.PermissionExtensions
                 excludedRoleId: Guid.Parse("e7a0e05f-2cca-4d95-a51d-32c433b21a33"),
                 permissionType: default,
                 lambdaString: "52405753f73641bdb43a5261",
-                isActive: true
+                isActive: true,
+                description:null
             ));
 
             await _permissionExtensionRepository.InsertAsync(new PermissionExtension
@@ -46,7 +47,8 @@ namespace JS.Abp.DataPermission.PermissionExtensions
                 excludedRoleId: Guid.Parse("2832d88e-33e9-47ed-9b54-8b8804ca6e12"),
                 permissionType: default,
                 lambdaString: "08676f6",
-                isActive: true
+                isActive: true,
+                description:null
             ));
 
             await _unitOfWorkManager.Current.SaveChangesAsync();
