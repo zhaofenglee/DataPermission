@@ -5,10 +5,11 @@
     <PropertyGroup>
         <TargetFramework>net7.0</TargetFramework>
         <Nullable>enable</Nullable>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Volo.Abp.AspNetCore.Components.Server.Theming" Version="7.1.1" />
+        <PackageReference Include="Volo.Abp.AspNetCore.Components.Server.Theming" Version="7.2.1" />
     </ItemGroup>
 
     <ItemGroup>

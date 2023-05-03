@@ -16,5 +16,7 @@ namespace JS.Abp.DataPermission.PermissionExtensions
         [Required]
         public string LambdaString { get; set; }
         public bool IsActive { get; set; } = true;
+        [StringLength(PermissionExtensionConsts.DescriptionMaxLength)]
+        public string? Description { get; set; }
     }
 }

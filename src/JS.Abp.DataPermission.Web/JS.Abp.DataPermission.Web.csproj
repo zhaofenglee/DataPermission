@@ -10,11 +10,12 @@
     <OutputType>Library</OutputType>
     <RootNamespace>JS.Abp.DataPermission.Web</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Volo.Abp.AutoMapper" Version="7.1.1" />
-    <PackageReference Include="Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared" Version="7.1.1" />
+    <PackageReference Include="Volo.Abp.AutoMapper" Version="7.2.1" />
+    <PackageReference Include="Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared" Version="7.2.1" />
   </ItemGroup>
 
   <ItemGroup>

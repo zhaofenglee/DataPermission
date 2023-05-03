@@ -48,17 +48,20 @@
             <abp-column size="_3">
                 <abp-input asp-for="ObjectNameFilter" label="@L["ObjectName"].Value" />
             </abp-column>
-            <abp-column size="_3">
-                <abp-input asp-for="RoleIdFilter" label="@L["RoleId"].Value" />
-            </abp-column>
-            <abp-column size="_3">
-                <abp-input asp-for="ExcludedRoleIdFilter" label="@L["ExcludedRoleId"].Value" />
-            </abp-column>
+            @* <abp-column size="_3"> *@
+            @*     <abp-input asp-for="RoleNameFilter" label="@L["RoleName"].Value" /> *@
+            @* </abp-column> *@
+            @* <abp-column size="_3"> *@
+            @*     <abp-input asp-for="ExcludedRoleIdFilter" label="@L["ExcludedRoleId"].Value" /> *@
+            @* </abp-column> *@
             <abp-column size="_3">
                 <abp-select asp-for="PermissionTypeFilter" label="@L["PermissionType"].Value" />
             </abp-column>
             <abp-column size="_3">
                 <abp-input asp-for="LambdaStringFilter" label="@L["LambdaString"].Value" />
+            </abp-column>
+            <abp-column size="_3">
+                <abp-input asp-for="DescriptionFilter" label="@L["Description"].Value" />
             </abp-column>
             <abp-column size="_3">
                 <abp-select asp-for="IsActiveFilter" label="@L["IsActive"].Value" />
@@ -70,11 +73,12 @@
 				<tr>
 					<th>@L["Actions"]</th>
 					<th>@L["ObjectName"]</th>
-					<th>@L["RoleId"]</th>
-					<th>@L["ExcludedRoleId"]</th>
+					<th>@L["RoleName"]</th>
+					@* <th>@L["ExcludedRoleId"]</th> *@
 					<th>@L["PermissionType"]</th>
-					<th>@L["LambdaString"]</th>
-					<th>@L["IsActive"]</th>
+                    <th>@L["LambdaString"]</th>
+                    <th>@L["Description"]</th>
+                    <th>@L["IsActive"]</th>
 
 				</tr>
             </thead>

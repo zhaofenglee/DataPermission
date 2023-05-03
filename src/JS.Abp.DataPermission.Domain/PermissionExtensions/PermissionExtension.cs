@@ -27,13 +27,14 @@ namespace JS.Abp.DataPermission.PermissionExtensions
         public virtual string LambdaString { get; set; }
 
         public virtual bool IsActive { get; set; }
-
+        [CanBeNull]
+        public virtual string? Description { get; set; }
         public PermissionExtension()
         {
 
         }
 
-        public PermissionExtension(Guid id, string objectName, Guid roleId, PermissionType permissionType, string lambdaString, bool isActive, Guid? excludedRoleId = null)
+        public PermissionExtension(Guid id, string objectName, Guid roleId, PermissionType permissionType, string lambdaString, bool isActive,string description, Guid? excludedRoleId = null)
         {
 
             Id = id;
@@ -45,6 +46,7 @@ namespace JS.Abp.DataPermission.PermissionExtensions
             PermissionType = permissionType;
             LambdaString = lambdaString;
             IsActive = isActive;
+            Description = description;
             ExcludedRoleId = excludedRoleId;
         }
 

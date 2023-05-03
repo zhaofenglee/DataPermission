@@ -12,15 +12,15 @@
     "Permission:DataPermission": "数据权限控制",
     "Permission:Create": "创建",
     "Permission:Edit": "编辑",
-    "Permission:Delete": "修改",
+    "Permission:Delete": "删除",
     "PermissionExtensions": "数据权限控制",
     "NewPermissionExtension": "新建数据权限",
     "Actions": "操作",
-    "SuccessfullyDeleted": "Successfully deleted",
+    "SuccessfullyDeleted": "成功删除",
     "DeleteConfirmationMessage": "Are you sure you want to delete this record?",
     "Search": "查询",
     "Pick": "Pick",
-    "SeeAdvancedFilters": "Advanced filters",
+    "SeeAdvancedFilters": "高级过滤",
     "ItemAlreadyAdded": "This item is already added.",
     "ExportToExcel": "导出Excel",
     "ObjectName": "实体名称",
@@ -55,6 +55,7 @@
     "MinDisplayName": "Min Display Name",
     "MaxName": "Max Name",
     "MaxDisplayName": "Max Display Name",
-    "RoleName": "角色名称"
+    "RoleName": "角色名称",
+    "Description": "描述"
   }
 }

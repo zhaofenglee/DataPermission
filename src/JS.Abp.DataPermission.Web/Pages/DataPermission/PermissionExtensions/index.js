@@ -21,7 +21,8 @@ $(function () {
             filterText: $("#FilterText").val(),
             objectName: $("#ObjectNameFilter").val(),
 			roleId: $("#RoleIdFilter").val(),
-			excludedRoleId: $("#ExcludedRoleIdFilter").val(),
+            roleName: $("#RoleNameFilter").val(),
+			// excludedRoleId: $("#ExcludedRoleIdFilter").val(),
 			permissionType: $("#PermissionTypeFilter").val(),
 			lambdaString: $("#LambdaStringFilter").val(),
             isActive: (function () {
@@ -30,7 +31,8 @@ $(function () {
                     return '';
                 }
                 return value === 'true';
-            })()
+            })(),
+            description: $("#DescriptionFilter").val(),
         };
     };
 
@@ -76,8 +78,8 @@ $(function () {
                 }
             },
 			{ data: "objectName" },
-			{ data: "roleId" },
-			{ data: "excludedRoleId" },
+			{ data: "roleName" },
+			// { data: "excludedRoleId" },
             {
                 data: "permissionType",
                 render: function (permissionType) {
@@ -98,12 +100,14 @@ $(function () {
                 }
             },
 			{ data: "lambdaString" },
+            { data: "description" },
             {
                 data: "isActive",
                 render: function (isActive) {
                     return isActive ? '<i class="fa fa-check"></i>' : '<i class="fa fa-times"></i>';
                 }
-            }
+            },
+        
         ]
     }));
 
@@ -136,12 +140,13 @@ $(function () {
                             { name: 'downloadToken', value: result.token },
                             { name: 'filterText', value: input.filterText }, 
                             { name: 'objectName', value: input.objectName }, 
-                            { name: 'roleId', value: input.roleId }, 
+                            { name: 'RoleName', value: input.roleName }, 
                             { name: 'excludedRoleId', value: input.excludedRoleId }, 
                             { name: 'permissionType', value: input.permissionType }, 
                             { name: 'lambdaString', value: input.lambdaString }, 
-                            { name: 'isActive', value: input.isActive }
-                            ]);
+                            { name: 'isActive', value: input.isActive },
+                            { name: 'description', value: input.description },
+                        ]);
                             
                     var downloadWindow = window.open(url, '_blank');
                     downloadWindow.focus();

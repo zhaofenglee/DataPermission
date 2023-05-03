@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
+using JS.Abp.DataPermission.PermissionTypes;
 using Volo.Abp;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Domain.Services;
@@ -13,7 +14,7 @@ namespace JS.Abp.DataPermission.Demos
     public class DemoManager : DomainService
     {
         private readonly IDemoRepository _demoRepository;
-
+        protected IDataPermissionStore dataPermissionStore => LazyServiceProvider.LazyGetRequiredService<IDataPermissionStore>();//add
         public DemoManager(IDemoRepository demoRepository)
         {
             _demoRepository = demoRepository;
@@ -29,7 +30,13 @@ namespace JS.Abp.DataPermission.Demos
              GuidGenerator.Create(),
              name, displayName
              );
-
+            //add permission check
+            if (!dataPermissionStore.CheckPermission(demo, PermissionType.Create))
+            {
+                throw new UserFriendlyException(
+                    "The current user does not have permission to create data!"
+                );
+            }
             return await _demoRepository.InsertAsync(demo);
         }
 
