@@ -19,10 +19,11 @@ public class DataPermissionApplicationAutoMapperProfile : Profile
         CreateMap<PermissionExtension, PermissionExtensionDto>()
             .ForMember(dest => dest.RoleName, opt => opt.Ignore());
         CreateMap<PermissionExtension, PermissionExtensionExcelDto>();
-
+        CreateMap<PermissionCacheItem, PermissionItemDto>();
         CreateMap<IdentityRole, PermissionRoleDto>();
         
-        CreateMap<Demo, DemoDto>();
+        CreateMap<Demo, DemoDto>()
+            .ForMember(dest => dest.Permission, opt => opt.Ignore());
         CreateMap<Demo, DemoExcelDto>();
     }
 }

@@ -42,7 +42,15 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
 
     public virtual IQueryable<TEntity> EntityFilter<TEntity>(IQueryable<TEntity> query)
     {
-        return DataPermissionExtensions.EntityFilter(query,  GetAll());
+        if (_currentUser?.Id == null )
+        { 
+            return query;
+        }
+        else
+        {
+            return DataPermissionExtensions.EntityFilter(query, GetAll().Where(c=>c.UserId==(Guid )_currentUser.Id).ToList());
+
+        }
     }
     public virtual List<DataPermissionResult> GetAll()
     {
@@ -276,35 +284,7 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
            
             
             return result;
-            // if (_currentUser?.Id!=null)
-            // {
-            //     foreach (var item in permissionList.Where(c=>c.IsActive))
-            //     {
-            //         result.Add(new DataPermissionResult()
-            //         {
-            //             PermissionType = item.PermissionType,
-            //             ObjectName = item.ObjectName,
-            //             LambdaString = item.LambdaString,
-            //             UserId = (Guid)_currentUser.Id
-            //         });
-            //     }
-            //     
-            //     // return new List<DataPermissionResult>()
-            //     // {
-            //     //     new DataPermissionResult()
-            //     //     {
-            //     //         PermissionType = PermissionType.Read,ObjectName = "SerialNo",LambdaString = "x.Name != \"test1\" && x.Name != \"test2\" || x.Name == \"test\" && x.CreatorId==\"CurrentUser\"",UserId = (Guid)_currentUser.Id
-            //     //     },
-            //     //     new DataPermissionResult()
-            //     //     {
-            //     //         PermissionType = PermissionType.UpdateAndDelete,ObjectName = "SerialNo",LambdaString = "x.Name == \"test\" && x.CreatorId==\"CurrentUser\"",UserId = (Guid)_currentUser.Id
-            //     //     },
-            //     // };
-            // }
-            // else
-            // {
-            //     return new List<DataPermissionResult>();
-            // }
+            
         }
         else
         {

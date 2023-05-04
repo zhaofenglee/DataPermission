@@ -11,6 +11,7 @@ using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 using JS.Abp.DataPermission.Permissions;
 using JS.Abp.DataPermission.Demos;
+using JS.Abp.DataPermission.PermissionExtensions;
 using MiniExcelLibs;
 using Volo.Abp.Content;
 using Volo.Abp.Authorization;
@@ -27,7 +28,7 @@ namespace JS.Abp.DataPermission.Demos
         private readonly IDistributedCache<DemoExcelDownloadTokenCacheItem, string> _excelDownloadTokenCache;
         private readonly IDemoRepository _demoRepository;
         private readonly DemoManager _demoManager;
-
+        protected IDataPermissionStore dataPermissionStore => LazyServiceProvider.LazyGetRequiredService<IDataPermissionStore>();
         public DemosAppService(IDemoRepository demoRepository, DemoManager demoManager, IDistributedCache<DemoExcelDownloadTokenCacheItem, string> excelDownloadTokenCache)
         {
             _excelDownloadTokenCache = excelDownloadTokenCache;
@@ -40,16 +41,26 @@ namespace JS.Abp.DataPermission.Demos
             var totalCount = await _demoRepository.GetCountAsync(input.FilterText, input.Name, input.DisplayName);
             var items = await _demoRepository.GetListAsync(input.FilterText, input.Name, input.DisplayName, input.Sorting, input.MaxResultCount, input.SkipCount);
 
+            var dtos = items.Select(queryResultItem =>
+            {
+                var dto = ObjectMapper.Map<Demo, DemoDto>(queryResultItem);
+                dto.Permission = ObjectMapper.Map<PermissionCacheItem, PermissionItemDto>(dataPermissionStore.GetPermissionAsync(queryResultItem).Result);
+                return dto;
+            }).ToList();
+            
             return new PagedResultDto<DemoDto>
             {
                 TotalCount = totalCount,
-                Items = ObjectMapper.Map<List<Demo>, List<DemoDto>>(items)
+                Items = dtos,//ObjectMapper.Map<List<Demo>, List<DemoDto>>(items)
             };
         }
 
         public virtual async Task<DemoDto> GetAsync(Guid id)
         {
-            return ObjectMapper.Map<Demo, DemoDto>(await _demoRepository.GetAsync(id));
+            var demo = await _demoRepository.GetAsync(id);
+            var item =  ObjectMapper.Map<Demo, DemoDto>(demo);
+            item.Permission = ObjectMapper.Map<PermissionCacheItem, PermissionItemDto>( await dataPermissionStore.GetPermissionAsync(demo));
+            return item;
         }
 
         [Authorize(DataPermissionPermissions.Demos.Delete)]

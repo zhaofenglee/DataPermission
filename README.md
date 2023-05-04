@@ -76,7 +76,7 @@
 * 创建，修改和删除表达式需要注意格式，如：“x.Name == "Abc"”，x.为固定格式，Name为实体属性，Abc为过滤条件，实例的含义是当前角色仅允许创建，修改和删除Name等于Abc的数据
 * 数据权限控制已提供Blazor页面，其他前端框架请自行实现
 
-![2023-4-24 19-37-41](/docs/images/GIF 2023-4-24 19-37-41.gif)
+![PermissionControl](/docs/images/PermissionControl.gif)
 
 ### 2.在需要进行权限控制的仓储加入下述代码
 ````csharp
@@ -114,7 +114,7 @@ protected virtual IQueryable<Demo> ApplyFilter(
         }
 ````
 
-![2023-4-24 20-01-33](/docs/images/GIF 2023-4-24 20-01-33.gif)
+![Demo](/docs/images/Demo.gif)
 
 * 在需要进行权限控制的服务引入服务“IPermissionApplicationService”
 ````csharp
@@ -153,6 +153,28 @@ if (!dataPermissionStore.CheckPermission(demo, PermissionType.Create))
                     "The current user does not have permission to create data!"
                 );
             }
+````
+
+### 7.在服务上返回数据对应的权限
+````csharp
+//创建一个数据权限的Dto
+public class PermissionItemDto
+{
+    public bool CanUpdate { get; set; }
+    public bool CanDelete { get; set; }
+}
+//在查询返回的Dto中加入
+public PermissionItemDto Permission { get; set; } = new PermissionItemDto();
+//AutoMapper中需要先忽略Permission
+ .ForMember(dest => dest.Permission, opt => opt.Ignore());
+
+//在查询结果返回前把权限取出
+ var dtos = items.Select(queryResultItem =>
+            {
+                var dto = ObjectMapper.Map<Demo, DemoDto>(queryResultItem);
+                dto.Permission = ObjectMapper.Map<PermissionCacheItem, PermissionItemDto>(dataPermissionStore.GetPermissionAsync(queryResultItem).Result);//add
+                return dto;
+            }).ToList();
 ````
 ## Samples
 
