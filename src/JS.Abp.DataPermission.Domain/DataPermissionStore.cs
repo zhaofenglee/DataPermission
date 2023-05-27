@@ -258,32 +258,51 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
         if (permissionList.Any())
         {
             var result = new List<DataPermissionResult>();
-            var userLists = await _identityUserRepository.GetListAsync();
-            //获取所有用户角色
-            foreach (var user in userLists)
+            foreach (var item in permissionList.Where(c => c.IsActive))
             {
-                var roles = await _identityUserRepository.GetRolesAsync(user.Id);
-                if (roles.Any())
+                var userLists = await _identityUserRepository.GetListAsync(roleId: item.RoleId);
+                //获取所有用户角色
+                foreach (var user in userLists.Where(c => c.IsActive))
                 {
-                    //查找角色权限
-                    foreach (var role in roles)
+                    result.Add(new DataPermissionResult()
                     {
-                        foreach (var item in permissionList.Where(c=>c.IsActive&&c.RoleId==role.Id))
-                        {
-                            result.Add(new DataPermissionResult()
-                            {
-                                PermissionType = item.PermissionType,
-                                ObjectName = item.ObjectName,
-                                LambdaString = item.LambdaString,
-                                UserId = user.Id
-                            });
-                        }
-                    }
+                        PermissionType = item.PermissionType,
+                        ObjectName = item.ObjectName,
+                        LambdaString = item.LambdaString,
+                        UserId = user.Id
+                    });
                 }
+              
             }
-           
-            
+
             return result;
+            // var result = new List<DataPermissionResult>();
+            // var userLists = await _identityUserRepository.GetListAsync();
+            // //获取所有用户角色
+            // foreach (var user in userLists)
+            // {
+            //     var roles = await _identityUserRepository.GetRolesAsync(user.Id);
+            //     if (roles.Any())
+            //     {
+            //         //查找角色权限
+            //         foreach (var role in roles)
+            //         {
+            //             foreach (var item in permissionList.Where(c=>c.IsActive&&c.RoleId==role.Id))
+            //             {
+            //                 result.Add(new DataPermissionResult()
+            //                 {
+            //                     PermissionType = item.PermissionType,
+            //                     ObjectName = item.ObjectName,
+            //                     LambdaString = item.LambdaString,
+            //                     UserId = user.Id
+            //                 });
+            //             }
+            //         }
+            //     }
+            // }
+            //
+            //
+            // return result;
             
         }
         else
