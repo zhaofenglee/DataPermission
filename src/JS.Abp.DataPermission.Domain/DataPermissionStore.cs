@@ -42,7 +42,15 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
 
     public virtual IQueryable<TEntity> EntityFilter<TEntity>(IQueryable<TEntity> query)
     {
-        return DataPermissionExtensions.EntityFilter(query,  GetAll());
+        if (_currentUser?.Id == null )
+        { 
+            return query;
+        }
+        else
+        {
+            return DataPermissionExtensions.EntityFilter(query, GetAll().Where(c=>c.UserId==(Guid )_currentUser.Id).ToList());
+
+        }
     }
     public virtual List<DataPermissionResult> GetAll()
     {
@@ -250,61 +258,52 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
         if (permissionList.Any())
         {
             var result = new List<DataPermissionResult>();
-            var userLists = await _identityUserRepository.GetListAsync();
-            //获取所有用户角色
-            foreach (var user in userLists)
+            foreach (var item in permissionList.Where(c => c.IsActive))
             {
-                var roles = await _identityUserRepository.GetRolesAsync(user.Id);
-                if (roles.Any())
+                var userLists = await _identityUserRepository.GetListAsync(roleId: item.RoleId);
+                //获取所有用户角色
+                foreach (var user in userLists.Where(c => c.IsActive))
                 {
-                    //查找角色权限
-                    foreach (var role in roles)
+                    result.Add(new DataPermissionResult()
                     {
-                        foreach (var item in permissionList.Where(c=>c.IsActive&&c.RoleId==role.Id))
-                        {
-                            result.Add(new DataPermissionResult()
-                            {
-                                PermissionType = item.PermissionType,
-                                ObjectName = item.ObjectName,
-                                LambdaString = item.LambdaString,
-                                UserId = user.Id
-                            });
-                        }
-                    }
+                        PermissionType = item.PermissionType,
+                        ObjectName = item.ObjectName,
+                        LambdaString = item.LambdaString,
+                        UserId = user.Id
+                    });
                 }
+              
             }
-           
-            
+
             return result;
-            // if (_currentUser?.Id!=null)
+            // var result = new List<DataPermissionResult>();
+            // var userLists = await _identityUserRepository.GetListAsync();
+            // //获取所有用户角色
+            // foreach (var user in userLists)
             // {
-            //     foreach (var item in permissionList.Where(c=>c.IsActive))
+            //     var roles = await _identityUserRepository.GetRolesAsync(user.Id);
+            //     if (roles.Any())
             //     {
-            //         result.Add(new DataPermissionResult()
+            //         //查找角色权限
+            //         foreach (var role in roles)
             //         {
-            //             PermissionType = item.PermissionType,
-            //             ObjectName = item.ObjectName,
-            //             LambdaString = item.LambdaString,
-            //             UserId = (Guid)_currentUser.Id
-            //         });
+            //             foreach (var item in permissionList.Where(c=>c.IsActive&&c.RoleId==role.Id))
+            //             {
+            //                 result.Add(new DataPermissionResult()
+            //                 {
+            //                     PermissionType = item.PermissionType,
+            //                     ObjectName = item.ObjectName,
+            //                     LambdaString = item.LambdaString,
+            //                     UserId = user.Id
+            //                 });
+            //             }
+            //         }
             //     }
-            //     
-            //     // return new List<DataPermissionResult>()
-            //     // {
-            //     //     new DataPermissionResult()
-            //     //     {
-            //     //         PermissionType = PermissionType.Read,ObjectName = "SerialNo",LambdaString = "x.Name != \"test1\" && x.Name != \"test2\" || x.Name == \"test\" && x.CreatorId==\"CurrentUser\"",UserId = (Guid)_currentUser.Id
-            //     //     },
-            //     //     new DataPermissionResult()
-            //     //     {
-            //     //         PermissionType = PermissionType.UpdateAndDelete,ObjectName = "SerialNo",LambdaString = "x.Name == \"test\" && x.CreatorId==\"CurrentUser\"",UserId = (Guid)_currentUser.Id
-            //     //     },
-            //     // };
             // }
-            // else
-            // {
-            //     return new List<DataPermissionResult>();
-            // }
+            //
+            //
+            // return result;
+            
         }
         else
         {
