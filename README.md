@@ -1,5 +1,9 @@
 # 数据权限
 
+## 7.2.X更新说明
+#### 1.增加基于组织权限控制
+表达式配置为”x.CreatorId=="OrganizationUser"“ 会自动寻找当前组织所有下级成员
+
 ## 7.2.1更新说明
 #### 1.DataPermissionExtensions增加了描述字段，可以添加备注信息
 #### 2.DataPermissionStore增加了权限判断方法，可以根据自己业务场景使用

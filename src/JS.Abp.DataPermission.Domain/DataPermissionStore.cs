@@ -23,13 +23,14 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
     protected IRepository<PermissionExtension, Guid> PermissionExtensionRepository { get; }
     protected DataPermissionOptions Options { get; }
     private readonly IIdentityUserRepository _identityUserRepository;
-    
+    private readonly IOrganizationUnitRepository _organizationUnitRepository;
     public DataPermissionStore(ICurrentUser currentUser, 
         IRepository<PermissionExtension, Guid> permissionExtensionRepository,
         IDistributedCache<List<DataPermissionResult>> cache,
         IDistributedCache<PermissionCacheItem,PermissionCacheKey> cacheItem,
         IOptions<DataPermissionOptions> options,
-        IIdentityUserRepository identityUserRepository
+        IIdentityUserRepository identityUserRepository,
+        IOrganizationUnitRepository organizationUnitRepository
         )
     {
         _currentUser = currentUser;
@@ -38,6 +39,7 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
         _cacheItem = cacheItem;
         Options = options.Value;
         _identityUserRepository = identityUserRepository;
+        _organizationUnitRepository = organizationUnitRepository;
     }
 
     public virtual IQueryable<TEntity> EntityFilter<TEntity>(IQueryable<TEntity> query)
@@ -264,11 +266,52 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
                 //获取所有用户角色
                 foreach (var user in userLists.Where(c => c.IsActive))
                 {
+                    //如果包含CurrentUser 要替换成当前用户
+                    string lambdaString =  item.LambdaString.Replace("CurrentUser", user.Id.ToString());
+                    if (item.LambdaString.Contains("OrganizationUser"))
+                    {
+                        //如果包含OrganizationUser要按整个组织设置查询权限
+                        var oulist = await _identityUserRepository.GetOrganizationUnitsAsync(user.Id,true);
+                        if (oulist.Any())
+                        {
+                          
+                            string newLambdaString = "";
+                            foreach (var ou in oulist)
+                            {
+                                var menbers =await _organizationUnitRepository.GetUnaddedUsersAsync(ou);
+                                if (menbers.Any())
+                                {
+                                    foreach (var menber in menbers)
+                                    {
+                                        if (newLambdaString == "")
+                                        {
+                                            newLambdaString =$"({lambdaString.Replace("OrganizationUser", menber.Id.ToString())})";
+                                        }
+                                        else
+                                        {
+                                            newLambdaString +=$"||({lambdaString.Replace("OrganizationUser", menber.Id.ToString())})";
+                                        }
+                                       
+                                    }
+                                    
+                                }
+                            }
+
+                            if (newLambdaString != "")
+                            {
+                                lambdaString = $"({newLambdaString}||({lambdaString.Replace("OrganizationUser", user.Id.ToString())}))";
+                            }
+                            else
+                            {
+                                lambdaString = $"({lambdaString.Replace("OrganizationUser", user.Id.ToString())})";
+                            }
+                        }
+                    }
                     result.Add(new DataPermissionResult()
                     {
                         PermissionType = item.PermissionType,
                         ObjectName = item.ObjectName,
-                        LambdaString = item.LambdaString,
+                        LambdaString = lambdaString,
                         UserId = user.Id
                     });
                 }
