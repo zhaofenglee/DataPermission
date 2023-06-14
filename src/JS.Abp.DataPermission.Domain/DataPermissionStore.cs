@@ -23,15 +23,15 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
     protected IRepository<PermissionExtension, Guid> PermissionExtensionRepository { get; }
     protected DataPermissionOptions Options { get; }
     private readonly IIdentityUserRepository _identityUserRepository;
-    private readonly IOrganizationUnitRepository _organizationUnitRepository;
+    private readonly IOrganizationStore _organizationStore;
     public DataPermissionStore(ICurrentUser currentUser, 
         IRepository<PermissionExtension, Guid> permissionExtensionRepository,
         IDistributedCache<List<DataPermissionResult>> cache,
         IDistributedCache<PermissionCacheItem,PermissionCacheKey> cacheItem,
         IOptions<DataPermissionOptions> options,
         IIdentityUserRepository identityUserRepository,
-        IOrganizationUnitRepository organizationUnitRepository
-        )
+        IOrganizationStore organizationStore
+    )
     {
         _currentUser = currentUser;
         PermissionExtensionRepository = permissionExtensionRepository;
@@ -39,7 +39,7 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
         _cacheItem = cacheItem;
         Options = options.Value;
         _identityUserRepository = identityUserRepository;
-        _organizationUnitRepository = organizationUnitRepository;
+        _organizationStore = organizationStore;
     }
 
     public virtual IQueryable<TEntity> EntityFilter<TEntity>(IQueryable<TEntity> query)
@@ -271,40 +271,26 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
                     if (item.LambdaString.Contains("OrganizationUser"))
                     {
                         //如果包含OrganizationUser要按整个组织设置查询权限
-                        var oulist = await _identityUserRepository.GetOrganizationUnitsAsync(user.Id,true);
-                        if (oulist.Any())
+                        string newLambdaString = "";
+                        var menbers = await _organizationStore.GetMenberInOrganizationUnitAsync(user.Id);
+                        if (menbers.Any())
                         {
-                          
-                            string newLambdaString = "";
-                            foreach (var ou in oulist)
+                            foreach (var menber in menbers)
                             {
-                                var menbers =await _organizationUnitRepository.GetUnaddedUsersAsync(ou);
-                                if (menbers.Any())
+                                if (newLambdaString == "")
                                 {
-                                    foreach (var menber in menbers)
-                                    {
-                                        if (newLambdaString == "")
-                                        {
-                                            newLambdaString =$"({lambdaString.Replace("OrganizationUser", menber.Id.ToString())})";
-                                        }
-                                        else
-                                        {
-                                            newLambdaString +=$"||({lambdaString.Replace("OrganizationUser", menber.Id.ToString())})";
-                                        }
-                                       
-                                    }
-                                    
+                                    newLambdaString =$"({lambdaString.Replace("OrganizationUser", menber)})";
                                 }
+                                else
+                                {
+                                    newLambdaString +=$"||({lambdaString.Replace("OrganizationUser", menber)})";
+                                }
+                                       
                             }
-
-                            if (newLambdaString != "")
-                            {
-                                lambdaString = $"({newLambdaString}||({lambdaString.Replace("OrganizationUser", user.Id.ToString())}))";
-                            }
-                            else
-                            {
-                                lambdaString = $"({lambdaString.Replace("OrganizationUser", user.Id.ToString())})";
-                            }
+                        }
+                        if (newLambdaString != "")
+                        {
+                            lambdaString = $"({newLambdaString})";
                         }
                     }
                     result.Add(new DataPermissionResult()
