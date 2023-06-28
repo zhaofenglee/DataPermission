@@ -256,15 +256,15 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
 
     private async Task<List<DataPermissionResult>> GetFromDatabaseAsync()
     {
-        var permissionList = await PermissionExtensionRepository.GetListAsync();
+        var permissionList = await PermissionExtensionRepository.GetListAsync(c => c.IsActive);
         if (permissionList.Any())
         {
             var result = new List<DataPermissionResult>();
-            foreach (var item in permissionList.Where(c => c.IsActive))
+            foreach (var item in permissionList)
             {
-                var userLists = await _identityUserRepository.GetListAsync(roleId: item.RoleId);
+                var userLists = await _identityUserRepository.GetListAsync(roleId: item.RoleId,notActive:false);
                 //获取所有用户角色
-                foreach (var user in userLists.Where(c => c.IsActive))
+                foreach (var user in userLists)
                 {
                     //如果包含CurrentUser 要替换成当前用户
                     string lambdaString =  item.LambdaString.Replace("CurrentUser", user.Id.ToString());
@@ -272,10 +272,10 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
                     {
                         //如果包含OrganizationUser要按整个组织设置查询权限
                         string newLambdaString = "";
-                        var menbers = await _organizationStore.GetMenberInOrganizationUnitAsync(user.Id);
-                        if (menbers.Any())
+                        var members = await _organizationStore.GetMenberInOrganizationUnitAsync(user.Id);
+                        if (members.Any())
                         {
-                            foreach (var menber in menbers)
+                            foreach (var menber in members)
                             {
                                 if (newLambdaString == "")
                                 {
