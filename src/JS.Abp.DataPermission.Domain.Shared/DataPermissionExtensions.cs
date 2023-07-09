@@ -43,7 +43,6 @@ public static class DataPermissionExtensions
     /// <returns></returns>
     public static bool CheckItem<T>(T item, DataPermissionResult dataPermission,PermissionType permissionType)
     {
-        dataPermission.LambdaString = dataPermission.LambdaString.Replace("CurrentUser", dataPermission.UserId.ToString());
         var func = (Func<T, bool>)DynamicExpressionParser.ParseLambda(
             typeof(Func<T, bool>),
             new[]

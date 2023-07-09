@@ -24,4 +24,10 @@ public class PermissionController: AbpController,IPermissionApplicationService
     {
         return _permissionApplicationService.GetAsync(id, policyName, permissionType);
     }
+    [HttpGet]
+    [Route("data-filter")]
+    public virtual Task<DataPermissionResult> GetDataFilterAsync(GetDataFilterInput input)
+    {
+        return _permissionApplicationService.GetDataFilterAsync(input);
+    }
 }

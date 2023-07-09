@@ -14,12 +14,12 @@ public class DataPermissionMenuContributor : IMenuContributor
         if (context.Menu.Name == StandardMenus.Main)
         {
             await ConfigureMainMenuAsync(context);
+            var moduleMenu = AddModuleMenuItem(context);
+            AddMenuItemPermissionExtensions(context, moduleMenu);
+            AddMenuItemDemos(context, moduleMenu);
         }
 
-        var moduleMenu = AddModuleMenuItem(context);
-        AddMenuItemPermissionExtensions(context, moduleMenu);
-
-        AddMenuItemDemos(context, moduleMenu);
+       
     }
 
     private static async Task ConfigureMainMenuAsync(MenuConfigurationContext context)

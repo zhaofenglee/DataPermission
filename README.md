@@ -1,5 +1,29 @@
 # 数据权限
 
+## 7.2.3更新说明
+#### 1.增加基于组织权限控制
+表达式配置为”x.CreatorId=="OrganizationUser"“ 会自动寻找当前组织所有下级成员
+
+* 支持重写获取组织成员方法（默认取abp组织）
+````csharp
+context.Services.Replace(ServiceDescriptor.Singleton<IOrganizationStore, MyOrganizationStore>());
+
+public class MyOrganizationStore:OrganizationStore
+{
+public MyOrganizationStore(IIdentityUserRepository identityUserRepository, IOrganizationUnitRepository organizationUnitRepository) : base(identityUserRepository, organizationUnitRepository)
+{
+
+    }
+    public override async Task<List<string>> GetMenberInOrganizationUnitAsync(Guid id)
+    {
+        List<string> result = new List<string>();
+        result.Add(id.ToString());
+        return result;
+    }
+
+
+}
+`````
 ## 7.2.1更新说明
 #### 1.DataPermissionExtensions增加了描述字段，可以添加备注信息
 #### 2.DataPermissionStore增加了权限判断方法，可以根据自己业务场景使用

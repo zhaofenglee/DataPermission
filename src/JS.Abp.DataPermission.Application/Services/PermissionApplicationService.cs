@@ -8,18 +8,23 @@ using Microsoft.AspNetCore.Authorization;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Authorization;
 using Volo.Abp.Caching;
+using Volo.Abp.Users;
 
 namespace JS.Abp.DataPermission.Services;
 
 public class PermissionApplicationService : ApplicationService, IPermissionApplicationService
 {
     private readonly IDistributedCache<PermissionCacheItem, PermissionCacheKey> _cache;
-    
-    public PermissionApplicationService(IDistributedCache<PermissionCacheItem,PermissionCacheKey>  cache)
+    private readonly IDataPermissionStore _dataPermissionStore;
+    private readonly ICurrentUser _currentUser;
+    public PermissionApplicationService(IDistributedCache<PermissionCacheItem,PermissionCacheKey>  cache, 
+        IDataPermissionStore dataPermissionStore,ICurrentUser currentUser)
     {
         _cache = cache;
+        _dataPermissionStore = dataPermissionStore;
+        _currentUser = currentUser;
     }
-    public async Task<GetPermissionResultDto> GetAsync(string id, string policyName, PermissionType permissionType)
+    public virtual async Task<GetPermissionResultDto> GetAsync(string id, string policyName, PermissionType permissionType)
     {
         if (!policyName.IsNullOrWhiteSpace())
         {
@@ -100,5 +105,22 @@ public class PermissionApplicationService : ApplicationService, IPermissionAppli
            };
        }
         
+    }
+
+    public virtual async Task<DataPermissionResult> GetDataFilterAsync(GetDataFilterInput input)
+    {
+        if (_currentUser.Id == null)
+        {
+            return new DataPermissionResult();;
+        }
+        var permission = (await _dataPermissionStore.GetAllAsync()).FirstOrDefault(x => x.UserId == _currentUser.Id&&x.PermissionType==input.PermissionType&&x.ObjectName==input.ObjectName);
+        if (permission == null)
+        {
+            return new DataPermissionResult();
+        }
+        else
+        {
+            return permission;
+        }
     }
 }

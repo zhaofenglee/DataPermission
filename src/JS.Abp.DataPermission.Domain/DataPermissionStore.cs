@@ -23,14 +23,15 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
     protected IRepository<PermissionExtension, Guid> PermissionExtensionRepository { get; }
     protected DataPermissionOptions Options { get; }
     private readonly IIdentityUserRepository _identityUserRepository;
-    
+    private readonly IOrganizationStore _organizationStore;
     public DataPermissionStore(ICurrentUser currentUser, 
         IRepository<PermissionExtension, Guid> permissionExtensionRepository,
         IDistributedCache<List<DataPermissionResult>> cache,
         IDistributedCache<PermissionCacheItem,PermissionCacheKey> cacheItem,
         IOptions<DataPermissionOptions> options,
-        IIdentityUserRepository identityUserRepository
-        )
+        IIdentityUserRepository identityUserRepository,
+        IOrganizationStore organizationStore
+    )
     {
         _currentUser = currentUser;
         PermissionExtensionRepository = permissionExtensionRepository;
@@ -38,6 +39,7 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
         _cacheItem = cacheItem;
         Options = options.Value;
         _identityUserRepository = identityUserRepository;
+        _organizationStore = organizationStore;
     }
 
     public virtual IQueryable<TEntity> EntityFilter<TEntity>(IQueryable<TEntity> query)
@@ -254,21 +256,48 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
 
     private async Task<List<DataPermissionResult>> GetFromDatabaseAsync()
     {
-        var permissionList = await PermissionExtensionRepository.GetListAsync();
+        var permissionList = await PermissionExtensionRepository.GetListAsync(c => c.IsActive);
         if (permissionList.Any())
         {
             var result = new List<DataPermissionResult>();
-            foreach (var item in permissionList.Where(c => c.IsActive))
+            foreach (var item in permissionList)
             {
-                var userLists = await _identityUserRepository.GetListAsync(roleId: item.RoleId);
+                var userLists = await _identityUserRepository.GetListAsync(roleId: item.RoleId,notActive:false);
                 //获取所有用户角色
-                foreach (var user in userLists.Where(c => c.IsActive))
+                foreach (var user in userLists)
                 {
+                    //如果包含CurrentUser 要替换成当前用户
+                    string lambdaString =  item.LambdaString.Replace("CurrentUser", user.Id.ToString());
+                    if (item.LambdaString.Contains("OrganizationUser"))
+                    {
+                        //如果包含OrganizationUser要按整个组织设置查询权限
+                        string newLambdaString = "";
+                        var members = await _organizationStore.GetMenberInOrganizationUnitAsync(user.Id);
+                        if (members.Any())
+                        {
+                            foreach (var menber in members)
+                            {
+                                if (newLambdaString == "")
+                                {
+                                    newLambdaString =$"({lambdaString.Replace("OrganizationUser", menber)})";
+                                }
+                                else
+                                {
+                                    newLambdaString +=$"||({lambdaString.Replace("OrganizationUser", menber)})";
+                                }
+                                       
+                            }
+                        }
+                        if (newLambdaString != "")
+                        {
+                            lambdaString = $"({newLambdaString})";
+                        }
+                    }
                     result.Add(new DataPermissionResult()
                     {
                         PermissionType = item.PermissionType,
                         ObjectName = item.ObjectName,
-                        LambdaString = item.LambdaString,
+                        LambdaString = lambdaString,
                         UserId = user.Id
                     });
                 }
