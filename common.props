@@ -1,8 +1,8 @@
 <Project>
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
-    <Version>7.2.3</Version>
-    <VoloAbpPackageVersion>7.2.3</VoloAbpPackageVersion>
+    <Version>7.3.0</Version>
+    <VoloAbpPackageVersion>7.3.0</VoloAbpPackageVersion>
     <Description>Abp DataPermission Module</Description>
     <Authors>zhaofenglee</Authors>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
@@ -28,7 +28,7 @@
     </PropertyGroup>
   </Target>
 
-  <Target Name="CopyPackage" AfterTargets="Pack">
+  <Target Name="CopyPackage" AfterTargets="Pack" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <Copy
             SourceFiles="$(OutputPath)..\$(PackageId).$(PackageVersion).nupkg"
             DestinationFolder="..\..\packageshare\"/>
