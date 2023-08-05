@@ -49,6 +49,12 @@ namespace JS.Abp.DataPermission.PermissionExtensions
         {
             return _permissionExtensionsAppService.UpdateAsync(id, input);
         }
+        [HttpPost]
+        [Route("copy/{id}")]
+        public virtual Task<PermissionExtensionDto> CopyAsync(Guid id)
+        {
+            return _permissionExtensionsAppService.CopyAsync(id);
+        }
 
         [HttpDelete]
         [Route("{id}")]
@@ -74,7 +80,7 @@ namespace JS.Abp.DataPermission.PermissionExtensions
         [Route("permission-role")]
         public Task<List<PermissionRoleDto>> GetPermissionRoleListAsync()
         {
-            throw new NotImplementedException();
+            return _permissionExtensionsAppService.GetPermissionRoleListAsync();
         }
     }
 }

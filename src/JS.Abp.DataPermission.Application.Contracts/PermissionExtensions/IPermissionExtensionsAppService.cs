@@ -19,6 +19,8 @@ namespace JS.Abp.DataPermission.PermissionExtensions
         Task<PermissionExtensionDto> CreateAsync(PermissionExtensionCreateDto input);
 
         Task<PermissionExtensionDto> UpdateAsync(Guid id, PermissionExtensionUpdateDto input);
+        
+        Task<PermissionExtensionDto> CopyAsync(Guid id);
 
         Task<IRemoteStreamContent> GetListAsExcelFileAsync(PermissionExtensionExcelDownloadDto input);
 

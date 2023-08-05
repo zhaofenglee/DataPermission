@@ -158,6 +158,19 @@ namespace JS.Abp.DataPermission.Blazor.Pages.DataPermission
             await EditingPermissionExtensionValidations.ClearAll();
             await EditPermissionExtensionModal.Show();
         }
+        private async Task CopyPermissionExtensionModalAsync(PermissionExtensionDto input)
+        {
+            try
+            {
+                await PermissionExtensionsAppService.CopyAsync(input.Id);
+                await GetPermissionExtensionsAsync();
+            }
+            catch (Exception ex)
+            {
+                await HandleErrorAsync(ex);
+            }
+            
+        }
 
         private async Task DeletePermissionExtensionAsync(PermissionExtensionDto input)
         {

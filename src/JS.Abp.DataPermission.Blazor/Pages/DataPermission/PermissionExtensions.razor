@@ -74,6 +74,10 @@
                                           Clicked="async () => await OpenEditPermissionExtensionModalAsync(context)"
                                           Text="@L["Edit"]"></EntityAction>
                             <EntityAction TItem="PermissionExtensionDto"
+                                                                      Visible="@CanCreatePermissionExtension"
+                                                                      Clicked="async () => await CopyPermissionExtensionModalAsync(context)"
+                                                                      Text="@L["Copy"]"></EntityAction>
+                            <EntityAction TItem="PermissionExtensionDto"
                                           Visible="@CanDeletePermissionExtension"
                                           Clicked="() => DeletePermissionExtensionAsync(context)"
                                           ConfirmationMessage="@(()=> L["DeleteConfirmationMessage"])"

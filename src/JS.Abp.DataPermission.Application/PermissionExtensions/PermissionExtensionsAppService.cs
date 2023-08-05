@@ -96,6 +96,22 @@ namespace JS.Abp.DataPermission.PermissionExtensions
 
             return ObjectMapper.Map<PermissionExtension, PermissionExtensionDto>(permissionExtension);
         }
+        [Authorize(DataPermissionPermissions.PermissionExtensions.Create)]
+        public virtual async Task<PermissionExtensionDto> CopyAsync(Guid id)
+        {
+            var permissionExtension = await _permissionExtensionRepository.GetAsync(id);
+            var newPermissionExtension = await _permissionExtensionManager.CreateAsync(
+                $"{permissionExtension.ObjectName}_Copy",
+                permissionExtension.RoleId,
+                permissionExtension.PermissionType,
+                permissionExtension.LambdaString, 
+                permissionExtension.IsActive,
+                permissionExtension.Description, 
+                permissionExtension.ExcludedRoleId
+            );
+
+            return ObjectMapper.Map<PermissionExtension, PermissionExtensionDto>(newPermissionExtension);
+        }
 
         [AllowAnonymous]
         public virtual async Task<IRemoteStreamContent> GetListAsExcelFileAsync(PermissionExtensionExcelDownloadDto input)

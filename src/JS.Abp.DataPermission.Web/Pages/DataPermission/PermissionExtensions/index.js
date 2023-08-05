@@ -61,6 +61,16 @@ $(function () {
                                 }
                             },
                             {
+                                text: l("Copy"),
+                                visible: abp.auth.isGranted('DataPermission.PermissionExtensions.Create'),
+                                action: function (data) {
+                                    permissionExtensionService.copy(data.record.id)
+                                        .then(function () {
+                                            dataTable.ajax.reload();
+                                        });
+                                }
+                            },
+                            {
                                 text: l("Delete"),
                                 visible: abp.auth.isGranted('DataPermission.PermissionExtensions.Delete'),
                                 confirmMessage: function () {
