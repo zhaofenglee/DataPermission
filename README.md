@@ -1,4 +1,6 @@
 # 数据权限
+## 7.3.1更新说明
+#### 1.增加复制数据权限行功能
 
 ## 7.2.3更新说明
 #### 1.增加基于组织权限控制
@@ -24,6 +26,7 @@ public MyOrganizationStore(IIdentityUserRepository identityUserRepository, IOrga
 
 }
 `````
+
 ## 7.2.1更新说明
 #### 1.DataPermissionExtensions增加了描述字段，可以添加备注信息
 #### 2.DataPermissionStore增加了权限判断方法，可以根据自己业务场景使用

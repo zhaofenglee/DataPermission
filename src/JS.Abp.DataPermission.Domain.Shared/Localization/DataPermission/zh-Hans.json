@@ -56,6 +56,7 @@
     "MaxName": "Max Name",
     "MaxDisplayName": "Max Display Name",
     "RoleName": "角色名称",
-    "Description": "描述"
+    "Description": "描述",
+    "Copy": "复制"
   }
 }
