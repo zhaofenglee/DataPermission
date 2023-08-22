@@ -19,7 +19,7 @@ public class PermissionHandler: ILocalEventHandler<EntityChangedEventData<Permis
         _cacheItem = cacheItem;
     }
     
-    public async Task HandleEventAsync(EntityChangedEventData<PermissionExtension> eventData)
+    public virtual async Task HandleEventAsync(EntityChangedEventData<PermissionExtension> eventData)
     {
         await _cache.RemoveAsync(
             DataPermissionConts.DataPermissionCacheKey
