@@ -42,7 +42,22 @@ public interface IDataPermissionStore
     /// <param name="item"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
+    PermissionCacheItem GetPermissionById<T>(string id,T item);
+    /// <summary>
+    /// 查询当前数据是否有权限
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="item"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
     Task<PermissionCacheItem> GetPermissionByIdAsync<T>(string id,T item);
+    /// <summary>
+    /// 获取当前数据所有权限,entity需包含Id
+    /// </summary>
+    /// <param name="entity"></param>
+    /// <typeparam name="TEntity"></typeparam>
+    /// <returns></returns>
+    PermissionCacheItem GetPermission<TEntity>(TEntity entity);
     /// <summary>
     /// 获取当前数据所有权限,entity需包含Id
     /// </summary>

@@ -144,6 +144,11 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
         return true;
     }
 
+    public virtual  PermissionCacheItem GetPermissionById<T>(string id, T item)
+    {
+        return AsyncHelper.RunSync(()=>GetPermissionByIdAsync(id,item));
+    }
+
     public virtual async Task<PermissionCacheItem> GetPermissionByIdAsync<T>(string id, T item)
     {
        PermissionCacheItem cacheItem = await _cacheItem.GetAsync(new PermissionCacheKey()
@@ -224,6 +229,11 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
                 CanDelete = true,
             };
         }
+    }
+
+    public virtual PermissionCacheItem GetPermission<TEntity>(TEntity entity)
+    {
+        return AsyncHelper.RunSync(()=>GetPermissionAsync(entity));
     }
 
     public virtual async Task<PermissionCacheItem> GetPermissionAsync<TEntity>(TEntity entity)
