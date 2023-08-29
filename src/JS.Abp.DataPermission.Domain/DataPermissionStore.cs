@@ -282,7 +282,7 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
                     {
                         //如果包含OrganizationUser要按整个组织设置查询权限
                         string newLambdaString = "";
-                        var members = await _organizationStore.GetMenberInOrganizationUnitAsync(user.Id);
+                        var members = await _organizationStore.GetMemberInOrganizationUnitAsync(user.Id);
                         if (members.Any())
                         {
                             foreach (var menber in members)

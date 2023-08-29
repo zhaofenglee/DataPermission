@@ -6,5 +6,5 @@ namespace JS.Abp.DataPermission;
 
 public interface IOrganizationStore
 {
-    Task<List<string>> GetMenberInOrganizationUnitAsync(Guid id);
+    Task<List<string>> GetMemberInOrganizationUnitAsync(Guid id);
 }
