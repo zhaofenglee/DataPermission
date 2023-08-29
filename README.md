@@ -206,3 +206,11 @@ public PermissionItemDto Permission { get; set; } = new PermissionItemDto();
 ## Samples
 
 See the [sample projects](https://github.com/zhaofenglee/DataPermission/tree/master/host/JS.Abp.DataPermission.Blazor.Server.Host)
+
+## 感谢名单
+
+####  [Jetbrains](https://www.jetbrains.com/)
+
+![JetBrains Logo (Main) logo](https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg)
+
+感谢提供免费IDE支持此项目 ([License](https://jb.gg/OpenSourceSupport))
