@@ -103,10 +103,10 @@ public MyOrganizationStore(IIdentityUserRepository identityUserRepository, IOrga
 > dotnet ef database update
 ````
 
-## 如何使用
-* 以下是参考Demo的使用方法，具体使用方法请参考Demo
+## 行级数据权限
+* 以下代码已经在Demo方案实现，具体使用方法请参考Demo
 
-### 1.配置需要控制的实体名称，类型，及对应的Lambda表达式
+### 1.在行级数据权限配置需要控制的实体名称，类型，及对应的Lambda表达式
 * 查询表达式默认是在原有的查询表达式上进行过滤，表达式需要注意格式，如：“x.Name != "Abc"”，x.为固定格式，Name为实体属性，Abc为过滤条件，实例的含义是当前角色仅允许查询Name不等于Abc的数据
 * 创建，修改和删除表达式需要注意格式，如：“x.Name == "Abc"”，x.为固定格式，Name为实体属性，Abc为过滤条件，实例的含义是当前角色仅允许创建，修改和删除Name等于Abc的数据
 * 数据权限控制已提供Blazor页面，其他前端框架请自行实现
@@ -211,6 +211,37 @@ public PermissionItemDto Permission { get; set; } = new PermissionItemDto();
                 return dto;
             }).ToList();
 ````
+
+## 字段级数据权限
+* 以下代码已经在Demo方案实现，具体使用方法请参考Demo
+
+### 1.在字段级数据权限配置需要控制的实体名称，类型，对应字段名称及对应的权限
+![img](/docs/images/20230901200918.png)
+
+### 2.在仓库或者数据写入服务中判断是否有权限，有权限再写入
+````csharp 
+ protected IDataPermissionItemStore dataPermissionItemStore => LazyServiceProvider.LazyGetRequiredService<IDataPermissionItemStore>();//字段级数据权限
+ 
+    if (dataPermissionItemStore.CheckUpdate(nameof(Demo), "Name"))
+                demo.Name = name;
+   if (dataPermissionItemStore.CheckUpdate(nameof(Demo), "DisplayName"))
+                demo.DisplayName = displayName;
+ 
+````
+### 3.在前端上进行控制，以下是以Blazor为例
+````csharp
+@inject IPermissionApplicationService PermissionApplicationService
+      private DataPermissionItemDto DataPermissionItem { get; set; }
+      //这里把字段级权限获取，再传递给前端，前端根据权限判断是否显示编辑
+            //需要注意判断是否有权限规则如下参考：
+            //if (!DataPermissionItem.PermissionItems.Any(x => x.TargetType == "DisplayName")||DataPermissionItem.PermissionItems.FirstOrDefault(x => x.TargetType == "DisplayName").CanEdit)
+            DataPermissionItem =
+                await PermissionApplicationService.GetDataPermissionItemAsync(new GetPermissionItemInput()
+                {
+                    ObjectName = "Demo",
+                });
+````
+
 ## Samples
 
 See the [sample projects](https://github.com/zhaofenglee/DataPermission/tree/master/host/JS.Abp.DataPermission.Blazor.Server.Host)
