@@ -1,4 +1,8 @@
 # 数据权限
+## 新功能
+* 增加字段级数据权限功能
+* 增加实体数据权限列表，并且把行级和字段级数据权限合并在同一个明细页面
+
 ## 7.3.1更新说明
 #### 1.增加复制数据权限行功能
 
@@ -32,12 +36,16 @@ public MyOrganizationStore(IIdentityUserRepository identityUserRepository, IOrga
 #### 2.DataPermissionStore增加了权限判断方法，可以根据自己业务场景使用
 
 ## 实现原理
+### 行级数据权限
 * 行数据查询权限是通过仓储数据查询条件进行过滤
 * 行数据权限修改和删除是通过仓储查询单个行对象再判断是否有权限，如果没有权限则抛出异常或在UI进行处理（有更好的方法也欢迎大家提出）
 * 通过设置 角色 和对应实体 实现查询可以根据自定义Lambda表达式过滤查询数据
 * 通过设置 角色 和对应实体 实现修改，删除，需要查询后再判断是否有权限
 * 通过设置 角色 和对应实体 实现创建，目前新增需要在创建之前进行权限判断，如果没有权限则抛出异常，如：
   “var checkPermission = await dataPermissionStore.CheckPermissionAsync(item, PermissionType.Create);”
+
+### 字段级数据权限
+* 字段数据权限是根据维护的字段名称和对应角色的权限进行判断，使用字段级数据权限需要修改前端和后端代码共同实现
 
 ## 缓存
 * 目前缓存时间为 10 分钟，如果“PermissionExtension”对象变更时会自动清除

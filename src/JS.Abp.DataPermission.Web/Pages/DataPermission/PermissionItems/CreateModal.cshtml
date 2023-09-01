@@ -1,0 +1,43 @@
+@page
+@using Microsoft.AspNetCore.Mvc.Localization
+@using JS.Abp.DataPermission.Localization
+@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal
+@using JS.Abp.DataPermission.Web.Pages.DataPermission.PermissionItems
+@using JS.Abp.DataPermission.PermissionItems;
+@using System.Globalization
+@inject IHtmlLocalizer<DataPermissionResource> L
+@model CreateModalModel
+@{
+    Layout = null;
+}
+
+<form data-ajaxForm="true" asp-page="/DataPermission/PermissionItems/CreateModal" autocomplete="off">
+    <abp-modal id="PermissionItemCreateModal">
+        <abp-modal-header title="@L["NewPermissionItem"].Value"></abp-modal-header>
+
+        <abp-modal-body>
+                    
+            <abp-input asp-for="PermissionItem.ObjectName"  />
+
+            <abp-input asp-for="PermissionItem.Description"  />
+            
+            <abp-select asp-for="PermissionItem.RoleId" asp-items="@Model.RoleList" label="RoleName"/>
+            
+            <abp-input asp-for="PermissionItem.TargetType"  />
+
+            <abp-input asp-for="PermissionItem.CanRead"  />
+
+            <abp-input asp-for="PermissionItem.CanCreate"  />
+
+            <abp-input asp-for="PermissionItem.CanEdit"  />
+
+            <abp-input asp-for="PermissionItem.CanDelete"  />
+            
+            <abp-input asp-for="PermissionItem.IsActive"  />
+                    
+                
+        </abp-modal-body>
+
+        <abp-modal-footer buttons="@(AbpModalButtons.Cancel|AbpModalButtons.Save)"></abp-modal-footer>
+    </abp-modal>
+</form>

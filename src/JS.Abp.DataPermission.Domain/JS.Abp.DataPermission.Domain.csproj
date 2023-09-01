@@ -16,4 +16,8 @@
     <ProjectReference Include="..\JS.Abp.DataPermission.Domain.Shared\JS.Abp.DataPermission.Domain.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="MyOrganizationStore.cs" />
+  </ItemGroup>
+
 </Project>

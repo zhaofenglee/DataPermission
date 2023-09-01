@@ -9,7 +9,7 @@ namespace JS.Abp.DataPermission.Demos
     {
         public string? Name { get; set; }
         public string? DisplayName { get; set; }
-        public PermissionItemDto Permission { get; set; } = new PermissionItemDto();
+        public RowPermissionItemDto Permission { get; set; } = new RowPermissionItemDto();
 
         public string ConcurrencyStamp { get; set; }
     }

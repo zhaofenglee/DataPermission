@@ -8,4 +8,8 @@ public class DataPermissionMenus
 
     public const string Demos = Prefix + ".Demos";
 
+    public const string PermissionItems = Prefix + ".PermissionItems";
+
+    public const string ObjectPermissions = Prefix + ".ObjectPermissions";
+
 }

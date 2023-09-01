@@ -1,0 +1,386 @@
+@page "/DataPermission/PermissionItems"
+
+
+
+@attribute [Authorize(DataPermissionPermissions.PermissionItems.Default)]
+@using global::JS.Abp.DataPermission.PermissionItems
+@using global::JS.Abp.DataPermission.Localization
+@using global::JS.Abp.DataPermission.Shared
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Localization
+@using Microsoft.AspNetCore.Components.Web
+@using Blazorise
+@using Blazorise.Components
+@using Blazorise.DataGrid
+@using Volo.Abp.BlazoriseUI
+@using Volo.Abp.BlazoriseUI.Components
+@using Volo.Abp.ObjectMapping
+@using Volo.Abp.AspNetCore.Components.Messages
+@using Volo.Abp.AspNetCore.Components.Web.Theming.Layout
+@using global::JS.Abp.DataPermission.Permissions
+@using JS.Abp.DataPermission.PermissionExtensions
+@using Microsoft.AspNetCore.Components
+@using Volo.Abp.AspNetCore.Components.Web
+@using Volo.Abp.Http.Client
+@inherits DataPermissionComponentBase
+@inject IPermissionItemsAppService PermissionItemsAppService
+@inject IUiMessageService UiMessageService
+@inject IRemoteServiceConfigurationProvider RemoteServiceConfigurationProvider
+@inject NavigationManager NavigationManager
+@inject IPermissionExtensionsAppService PermissionExtensionsAppService
+
+@* ************************* PAGE HEADER ************************* *@
+<PageHeader Title="@L["PermissionItems"]" BreadcrumbItems="BreadcrumbItems" Toolbar="Toolbar">
+
+</PageHeader>
+
+@* ************************* SEARCH ************************* *@
+<Card>
+    <CardBody>
+        <Form id="PermissionItemSearchForm" class="mb-3">
+            <Addons>
+                <Addon AddonType="AddonType.Body">
+                    <TextEdit @bind-Text="@Filter.FilterText"
+                              Autofocus="true"
+                              Placeholder="@L["Search"]">
+                    </TextEdit>
+                </Addon>
+                <Addon AddonType="AddonType.End">
+                    <SubmitButton Form="PermissionItemSearchForm" Clicked="GetPermissionItemsAsync">
+                        <Icon Name="IconName.Search" Class="me-1"></Icon>@L["Search"]
+                    </SubmitButton>
+                </Addon>
+            </Addons>
+        </Form>
+    </CardBody>
+</Card>
+
+@* ************************* DATA GRID ************************* *@
+<Card>
+    <CardBody>
+        <DataGrid TItem="PermissionItemDto"
+                  Data="PermissionItemList"
+                  ReadData="OnDataGridReadAsync"
+                  TotalItems="TotalCount"
+                  ShowPager="true"
+                  Responsive="true"
+                  PageSize="PageSize">
+            <DataGridColumns>
+                <DataGridEntityActionsColumn TItem="PermissionItemDto" @ref="@EntityActionsColumn">
+                    <DisplayTemplate>
+                        <EntityActions TItem="PermissionItemDto" EntityActionsColumn="@EntityActionsColumn">
+                            <EntityAction TItem="PermissionItemDto"
+                                          Visible="@CanEditPermissionItem"
+                                          Clicked="async () => await OpenEditPermissionItemModalAsync(context)"
+                                          Text="@L["Edit"]"></EntityAction>
+                            <EntityAction TItem="PermissionItemDto"
+                                          Visible="@CanCreatePermissionItem"
+                                          Clicked="async () => await CopyPermissionItemAsync(context)"
+                                          Text="@L["Copy"]">
+                            </EntityAction>
+                            <EntityAction TItem="PermissionItemDto"
+                                          Visible="@CanDeletePermissionItem"
+                                          Clicked="() => DeletePermissionItemAsync(context)"
+                                          ConfirmationMessage="@(()=> L["DeleteConfirmationMessage"])"
+                                          Text="@L["Delete"]"></EntityAction>
+                        </EntityActions>
+                    </DisplayTemplate>
+                </DataGridEntityActionsColumn>
+               
+              <DataGridColumn TItem="PermissionItemDto"
+                      Field="ObjectName"
+                      Caption="@L["ObjectName"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="PermissionItemDto"
+                      Field="Description"
+                      Caption="@L["Description"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="PermissionItemDto"
+                      Field="TargetType"
+                      Caption="@L["TargetType"]">
+              </DataGridColumn>
+
+                <DataGridColumn TItem="PermissionItemDto"
+                                Field="RoleName"
+                                Caption="@L["RoleName"]">
+                </DataGridColumn>
+                
+                <DataGridColumn TItem="PermissionItemDto"
+                      Field="CanRead"
+                      Caption="@L["CanRead"]">
+                    <DisplayTemplate>
+                        @if (context.CanRead)
+                        {
+                            <Icon TextColor="TextColor.Success" Name="@IconName.Check" />
+                        }
+                        else
+                        {
+                            <Icon TextColor="TextColor.Danger" Name="@IconName.Times" />
+                        }
+                    </DisplayTemplate>
+              </DataGridColumn>
+
+
+              <DataGridColumn TItem="PermissionItemDto"
+                      Field="CanCreate"
+                      Caption="@L["CanCreate"]">
+                    <DisplayTemplate>
+                        @if (context.CanCreate)
+                        {
+                            <Icon TextColor="TextColor.Success" Name="@IconName.Check" />
+                        }
+                        else
+                        {
+                            <Icon TextColor="TextColor.Danger" Name="@IconName.Times" />
+                        }
+                    </DisplayTemplate>
+              </DataGridColumn>
+
+
+              <DataGridColumn TItem="PermissionItemDto"
+                      Field="CanEdit"
+                      Caption="@L["CanEdit"]">
+                    <DisplayTemplate>
+                        @if (context.CanEdit)
+                        {
+                            <Icon TextColor="TextColor.Success" Name="@IconName.Check" />
+                        }
+                        else
+                        {
+                            <Icon TextColor="TextColor.Danger" Name="@IconName.Times" />
+                        }
+                    </DisplayTemplate>
+              </DataGridColumn>
+
+
+                <DataGridColumn TItem="PermissionItemDto"
+                                Field="CanDelete"
+                                Caption="@L["CanDelete"]">
+                    <DisplayTemplate>
+                        @if (context.CanDelete)
+                        {
+                            <Icon TextColor="TextColor.Success" Name="@IconName.Check" />
+                        }
+                        else
+                        {
+                            <Icon TextColor="TextColor.Danger" Name="@IconName.Times" />
+                        }
+                    </DisplayTemplate>
+                </DataGridColumn>
+                
+                <DataGridColumn TItem="PermissionItemDto"
+                                Field="IsActive"
+                                Caption="@L["IsActive"]">
+                    <DisplayTemplate>
+                        @if (context.IsActive)
+                        {
+                            <Icon TextColor="TextColor.Success" Name="@IconName.Check"/>
+                        }
+                        else
+                        {
+                            <Icon TextColor="TextColor.Danger" Name="@IconName.Times"/>
+                        }
+                    </DisplayTemplate>
+                </DataGridColumn>
+
+
+            </DataGridColumns>
+        </DataGrid>
+    </CardBody>
+</Card>
+
+@* ************************* CREATE MODAL ************************* *@
+<Modal @ref="CreatePermissionItemModal" Closing="@CreatePermissionItemModal.CancelClosingModalWhenFocusLost">
+    <ModalContent Centered="true">
+        <Form id="CreatePermissionItemForm">
+            <ModalHeader>
+                <ModalTitle>@L["NewPermissionItem"]</ModalTitle>
+                <CloseButton Clicked="CloseCreatePermissionItemModalAsync" />
+            </ModalHeader>
+            <ModalBody>
+                <Validations @ref="@NewPermissionItemValidations"
+                            Mode="ValidationMode.Auto"
+                            Model="@NewPermissionItem"
+                            ValidateOnLoad="false">
+                     
+                    
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["ObjectName"] *</FieldLabel>
+                            <TextEdit @bind-Text="@NewPermissionItem.ObjectName" MaxLength="PermissionItemConsts.ObjectNameMaxLength">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["Description"]</FieldLabel>
+                            <TextEdit @bind-Text="@NewPermissionItem.Description" >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["TargetType"] *</FieldLabel>
+                            <TextEdit @bind-Text="@NewPermissionItem.TargetType" MaxLength="PermissionItemConsts.TargetTypeMaxLength">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["RoleName"] *</FieldLabel>
+                            <Select TValue="Guid" @bind-SelectedValue="@NewPermissionItem.RoleId">
+                                <SelectItem TValue="Guid" Value=@Guid.Empty></SelectItem>
+                                @foreach (var item in PermissionRoleList)
+                                {
+                                    <SelectItem TValue="Guid" Value=@item.Id>@L[item.Name]</SelectItem>
+                                }
+                            </Select>
+                        </Field>
+                    </Validation>
+                    
+                    <Field>
+                        <Check TValue="bool" @bind-Checked="@NewPermissionItem.CanRead">@L["CanRead"]</Check>
+                    </Field>
+
+                    <Field>
+                        <Check TValue="bool" @bind-Checked="@NewPermissionItem.CanCreate">@L["CanCreate"]</Check>
+                    </Field>
+
+                    <Field>
+                        <Check TValue="bool" @bind-Checked="@NewPermissionItem.CanEdit">@L["CanEdit"]</Check>
+                    </Field>
+
+                    <Field>
+                        <Check TValue="bool" @bind-Checked="@NewPermissionItem.CanDelete">@L["CanDelete"]</Check>
+                    </Field>
+
+                    <Field>
+                        <Check TValue="bool" @bind-Checked="@NewPermissionItem.IsActive">@L["IsActive"]</Check>
+                    </Field>
+                    
+                    
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                        Clicked="CloseCreatePermissionItemModalAsync">
+                    @L["Cancel"]
+                </Button>
+                <SubmitButton Form="CreatePermissionItemForm" Clicked="CreatePermissionItemAsync" />
+            </ModalFooter>
+        </Form>
+    </ModalContent>
+</Modal>
+
+@* ************************* EDIT MODAL ************************* *@
+<Modal @ref="EditPermissionItemModal" Closing="@EditPermissionItemModal.CancelClosingModalWhenFocusLost">
+    <ModalContent Centered="true">
+        <Form id="EditPermissionItemForm">
+            <ModalHeader>
+                <ModalTitle>@L["Update"]</ModalTitle>
+                <CloseButton Clicked="CloseEditPermissionItemModalAsync" />
+            </ModalHeader>
+            <ModalBody>
+                <Validations @ref="@EditingPermissionItemValidations"
+                            Mode="ValidationMode.Auto"
+                            Model="@EditingPermissionItem"
+                            ValidateOnLoad="false">
+                     
+                    
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["ObjectName"] *</FieldLabel>
+                            <TextEdit @bind-Text="@EditingPermissionItem.ObjectName" MaxLength="PermissionItemConsts.ObjectNameMaxLength">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["Description"]</FieldLabel>
+                            <TextEdit @bind-Text="@EditingPermissionItem.Description" >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["TargetType"] *</FieldLabel>
+                            <TextEdit @bind-Text="@EditingPermissionItem.TargetType" MaxLength="PermissionItemConsts.TargetTypeMaxLength">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["RoleName"] *</FieldLabel>
+                            <Select TValue="Guid" @bind-SelectedValue="@EditingPermissionItem.RoleId">
+                                <SelectItem TValue="Guid" Value=@Guid.Empty></SelectItem>
+                                @foreach (var item in PermissionRoleList)
+                                {
+                                    <SelectItem TValue="Guid" Value=@item.Id>@L[item.Name]</SelectItem>
+                                }
+                            </Select>
+                        </Field>
+                    </Validation>
+                    
+
+                    <Field>
+                        <Check TValue="bool" @bind-Checked="@EditingPermissionItem.CanRead">@L["CanRead"]</Check>
+                    </Field>
+
+                    <Field>
+                        <Check TValue="bool" @bind-Checked="@EditingPermissionItem.CanCreate">@L["CanCreate"]</Check>
+                    </Field>
+
+                    <Field>
+                        <Check TValue="bool" @bind-Checked="@EditingPermissionItem.CanEdit">@L["CanEdit"]</Check>
+                    </Field>
+
+                    <Field>
+                        <Check TValue="bool" @bind-Checked="@EditingPermissionItem.CanDelete">@L["CanDelete"]</Check>
+                    </Field>
+
+                    <Field>
+                        <Check TValue="bool" @bind-Checked="@EditingPermissionItem.IsActive">@L["IsActive"]</Check>
+                    </Field>
+                    
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                        Clicked="CloseEditPermissionItemModalAsync">
+                    @L["Cancel"]
+                </Button>
+                <SubmitButton Form="CreatePermissionItemForm" Clicked="UpdatePermissionItemAsync" />
+            </ModalFooter>
+        </Form>
+    </ModalContent>
+</Modal>

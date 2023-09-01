@@ -7,6 +7,9 @@ using JS.Abp.DataPermission.PermissionTypes;
 
 namespace JS.Abp.DataPermission;
 
+/// <summary>
+/// 行级数据权限
+/// </summary>
 public interface IDataPermissionStore
 {
     /// <summary>

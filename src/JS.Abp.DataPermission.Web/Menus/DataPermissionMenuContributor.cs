@@ -19,8 +19,14 @@ public class DataPermissionMenuContributor : IMenuContributor
 
         var moduleMenu = AddModuleMenuItem(context); //Do not delete `moduleMenu` variable as it will be used by ABP Suite!
 
+        //Todo:前端UI没写好前不启用
+        //AddMenuItemObjectPermissions(context, moduleMenu);
+
         AddMenuItemPermissionExtensions(context, moduleMenu);
 
+        AddMenuItemPermissionItems(context, moduleMenu);
+
+       
         AddMenuItemDemos(context, moduleMenu);
     }
 
@@ -57,6 +63,32 @@ public class DataPermissionMenuContributor : IMenuContributor
                 "/DataPermission/Demos",
                 icon: "fa fa-file-alt",
                 requiredPermissionName: DataPermissionPermissions.Demos.Default
+            )
+        );
+    }
+
+    private static void AddMenuItemPermissionItems(MenuConfigurationContext context, ApplicationMenuItem parentMenu)
+    {
+        parentMenu.AddItem(
+            new ApplicationMenuItem(
+                Menus.DataPermissionMenus.PermissionItems,
+                context.GetLocalizer<DataPermissionResource>()["Menu:PermissionItems"],
+                "/DataPermission/PermissionItems",
+                icon: "fa fa-file-alt",
+                requiredPermissionName: DataPermissionPermissions.PermissionItems.Default
+            )
+        );
+    }
+
+    private static void AddMenuItemObjectPermissions(MenuConfigurationContext context, ApplicationMenuItem parentMenu)
+    {
+        parentMenu.AddItem(
+            new ApplicationMenuItem(
+                Menus.DataPermissionMenus.ObjectPermissions,
+                context.GetLocalizer<DataPermissionResource>()["Menu:ObjectPermissions"],
+                "/DataPermission/ObjectPermissions",
+                icon: "fa fa-file-alt",
+                requiredPermissionName: DataPermissionPermissions.ObjectPermissions.Default
             )
         );
     }

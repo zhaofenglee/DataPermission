@@ -55,6 +55,8 @@ public class DataPermissionWebModule : AbpModule
             //Configure authorization.
             options.Conventions.AuthorizePage("/PermissionExtensions/Index", DataPermissionPermissions.PermissionExtensions.Default);
             options.Conventions.AuthorizePage("/Demos/Index", DataPermissionPermissions.Demos.Default);
+            options.Conventions.AuthorizePage("/PermissionItems/Index", DataPermissionPermissions.PermissionItems.Default);
+            options.Conventions.AuthorizePage("/ObjectPermissions/Index", DataPermissionPermissions.ObjectPermissions.Default);
         });
     }
 }
