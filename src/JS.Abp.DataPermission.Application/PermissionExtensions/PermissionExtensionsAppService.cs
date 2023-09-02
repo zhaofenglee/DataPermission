@@ -51,7 +51,7 @@ namespace JS.Abp.DataPermission.PermissionExtensions
                 var dto = ObjectMapper.Map<PermissionExtension, PermissionExtensionDto>(queryResultItem);
                 if (queryResultItem.RoleId!=Guid.Empty)
                 {
-                    dto.RoleName =  _identityRoleRepository.GetAsync(queryResultItem.RoleId).Result.Name;
+                    dto.RoleName =  _identityRoleRepository.FindAsync(queryResultItem.RoleId).Result?.Name;
                 }
                 
                 return dto;
