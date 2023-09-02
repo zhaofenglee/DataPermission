@@ -9,7 +9,7 @@
     "Enum:PermissionType.3": "删除",
     "Enum:PermissionType.4": "编辑和删除",
     "Permission:PermissionExtensions": "行级数据权限控制",
-    "Permission:DataPermission": "行级数据权限控制",
+    "Permission:DataPermission": "数据权限控制",
     "Permission:Create": "创建",
     "Permission:Edit": "编辑",
     "Permission:Delete": "删除",
