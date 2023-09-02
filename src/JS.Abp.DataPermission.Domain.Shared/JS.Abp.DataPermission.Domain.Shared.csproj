@@ -23,4 +23,5 @@
     <Content Remove="Localization\DataPermission\*.json" />
   </ItemGroup>
 
+
 </Project>

@@ -29,6 +29,7 @@ namespace JS.Abp.DataPermission.Demos
         private readonly IDemoRepository _demoRepository;
         private readonly DemoManager _demoManager;
         protected IDataPermissionStore dataPermissionStore => LazyServiceProvider.LazyGetRequiredService<IDataPermissionStore>();
+        protected IDataPermissionItemStore dataPermissionItemStore => LazyServiceProvider.LazyGetRequiredService<IDataPermissionItemStore>();//字段级数据权限
         public DemosAppService(IDemoRepository demoRepository, DemoManager demoManager, IDistributedCache<DemoExcelDownloadTokenCacheItem, string> excelDownloadTokenCache)
         {
             _excelDownloadTokenCache = excelDownloadTokenCache;
@@ -47,7 +48,7 @@ namespace JS.Abp.DataPermission.Demos
                 dto.Permission = ObjectMapper.Map<PermissionCacheItem, RowPermissionItemDto>(dataPermissionStore.GetPermission(queryResultItem));
                 return dto;
             }).ToList();
-            
+            await dataPermissionItemStore.CheckListAsync(dtos);
             return new PagedResultDto<DemoDto>
             {
                 TotalCount = totalCount,
@@ -59,6 +60,7 @@ namespace JS.Abp.DataPermission.Demos
         {
             var demo = await _demoRepository.GetAsync(id);
             var item =  ObjectMapper.Map<Demo, DemoDto>(demo);
+            await dataPermissionItemStore.CheckAsync(item);
             item.Permission = ObjectMapper.Map<PermissionCacheItem, RowPermissionItemDto>( await dataPermissionStore.GetPermissionAsync(demo));
             return item;
         }

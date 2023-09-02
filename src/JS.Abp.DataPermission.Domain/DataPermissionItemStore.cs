@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using JS.Abp.DataPermission.Attributes;
 using JS.Abp.DataPermission.PermissionExtensions;
 using JS.Abp.DataPermission.PermissionItems;
 using JS.Abp.DataPermission.PermissionTypes;
@@ -105,7 +107,63 @@ public class DataPermissionItemStore:IDataPermissionItemStore,ITransientDependen
         }
       
     }
-    
+
+    public virtual  async Task<TDto> CheckAsync<TDto>(TDto sourceDto)
+    {
+        var type = typeof(TDto);
+        PropertyInfo[] props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+        DataColumnInfo columnInfo = new();
+        var list = props.Select(p => 
+        {
+            var targetType = p.GetAttribute<PermissionVerifierAttribute>();
+            if (targetType == null)
+                return null;
+            return new DataColumnInfo()
+            {
+                Property = p,
+                ObjectName = targetType.ObjectName,
+                TargetType = targetType.TargetType,
+            };
+        } ).Where(_ => _ != null);
+        if(list.Any())
+        {
+            foreach(var info in list)
+            {
+                var canRead = CheckRead(info.ObjectName, info.TargetType);
+                if (!canRead)
+                {
+                    if (info.Property.PropertyType.IsGenericType && info.Property.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                    {
+                        // If it's a nullable type, set the property to null
+                        info.Property.SetValue(sourceDto, null);
+                    }
+                    else if (info.Property.PropertyType.IsValueType)
+                    {
+                        // If it's a value type, set the property to its default value
+                        info.Property.SetValue(sourceDto, Activator.CreateInstance(info.Property.PropertyType));
+                    }
+                    else
+                    {
+                        // For reference types, you may choose to set it to null or handle differently
+                        info.Property.SetValue(sourceDto, null);
+                    }
+                    continue;
+                }
+            }
+        }
+        return sourceDto;
+    }
+
+    public virtual async Task<List<TDto>> CheckListAsync<TDto>(IEnumerable<TDto> sourceListDto)
+    {
+        var listDto = sourceListDto as TDto[] ?? sourceListDto.ToArray();
+        foreach (var dto in listDto)
+        {
+            await CheckAsync(dto);
+        }
+        return listDto.ToList();
+    }
+
     private  async Task<List<PermissionItemResult>> GetAllAsync()
     {
         return  await _cache.GetOrAddAsync(
@@ -151,4 +209,12 @@ public class DataPermissionItemStore:IDataPermissionItemStore,ITransientDependen
             return new List<PermissionItemResult>();
         }
     }
+     
+     public class DataColumnInfo
+     {
+         public string ObjectName { get; set; }
+         public string TargetType { get; set; }
+
+         public PropertyInfo Property { get; set; }
+     }
 }

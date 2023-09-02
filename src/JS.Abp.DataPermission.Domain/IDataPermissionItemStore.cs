@@ -54,5 +54,20 @@ public interface IDataPermissionItemStore
     /// <param name="objectName"></param>
     /// <returns></returns>
     Task<List<PermissionItemResult>> GetListAsync(string objectName);
-  
+
+    /// <summary>
+    /// 检查当前对象权限
+    /// </summary>
+    /// <param name="sourceDto"></param>
+    /// <typeparam name="TDto"></typeparam>
+    /// <returns></returns>
+    Task<TDto> CheckAsync<TDto>(TDto sourceDto);
+
+    /// <summary>
+    /// 检查当前对象权限
+    /// </summary>
+    /// <param name="sourceListDto"></param>
+    /// <typeparam name="TDto"></typeparam>
+    /// <returns></returns>
+    Task<List<TDto>> CheckListAsync<TDto>(IEnumerable<TDto> sourceListDto);
 }

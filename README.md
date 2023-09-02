@@ -229,6 +229,7 @@ public PermissionItemDto Permission { get; set; } = new PermissionItemDto();
  
 ````
 ### 3.在前端上进行控制，以下是以Blazor为例
+
 ````csharp
 @inject IPermissionApplicationService PermissionApplicationService
       private DataPermissionItemDto DataPermissionItem { get; set; }
@@ -242,6 +243,31 @@ public PermissionItemDto Permission { get; set; } = new PermissionItemDto();
                 });
 ````
 
+### 3.在服务上进行控制，如查询或导出时，把没有权限属性替换成默认值
+#### 3.1.首先配置Dto
+````csharp
+ public class DemoDto : FullAuditedEntityDto<Guid>, IHasConcurrencyStamp
+    {
+        public string? Name { get; set; }
+        [PermissionVerifier("Demo", "DisplayName")]
+        public string? DisplayName { get; set; }
+        public RowPermissionItemDto Permission { get; set; } = new RowPermissionItemDto();
+
+        public string ConcurrencyStamp { get; set; }
+    }
+````
+#### 3.2.在查询或导出时校验权限，无权时会把数据集替换成默认值
+````csharp
+public virtual async Task<DemoDto> GetAsync(Guid id)
+        {
+            var demo = await _demoRepository.GetAsync(id);
+            var item =  ObjectMapper.Map<Demo, DemoDto>(demo);
+            await dataPermissionItemStore.CheckAsync(item);//add
+            //await dataPermissionItemStore.CheckListAsync(dtos);//如果是列表需要使用这个方法
+            item.Permission = ObjectMapper.Map<PermissionCacheItem, RowPermissionItemDto>( await dataPermissionStore.GetPermissionAsync(demo));
+            return item;
+        }
+`````
 ## Samples
 
 See the [sample projects](https://github.com/zhaofenglee/DataPermission/tree/master/host/JS.Abp.DataPermission.Blazor.Server.Host)
