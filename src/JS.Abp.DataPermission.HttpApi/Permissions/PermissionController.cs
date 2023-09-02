@@ -30,4 +30,11 @@ public class PermissionController: AbpController,IPermissionApplicationService
     {
         return _permissionApplicationService.GetDataFilterAsync(input);
     }
+
+    [HttpGet]
+    [Route("data-permission-item")]
+    public virtual Task<DataPermissionItemDto> GetDataPermissionItemAsync(GetPermissionItemInput input)
+    {
+        return _permissionApplicationService.GetDataPermissionItemAsync(input);
+    }
 }

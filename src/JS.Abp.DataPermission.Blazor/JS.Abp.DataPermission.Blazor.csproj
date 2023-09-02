@@ -18,4 +18,6 @@
         <ProjectReference Include="..\JS.Abp.DataPermission.Application.Contracts\JS.Abp.DataPermission.Application.Contracts.csproj" />
     </ItemGroup>
 
+
+
 </Project>

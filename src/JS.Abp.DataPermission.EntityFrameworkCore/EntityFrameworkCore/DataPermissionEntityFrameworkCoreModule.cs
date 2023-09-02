@@ -1,5 +1,7 @@
 using JS.Abp.DataPermission.Demos;
+using JS.Abp.DataPermission.ObjectPermissions;
 using JS.Abp.DataPermission.PermissionExtensions;
+using JS.Abp.DataPermission.PermissionItems;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.Modularity;
@@ -22,6 +24,10 @@ public class DataPermissionEntityFrameworkCoreModule : AbpModule
             options.AddRepository<PermissionExtension, PermissionExtensions.EfCorePermissionExtensionRepository>();
 
             options.AddRepository<Demo, Demos.EfCoreDemoRepository>();
+            
+            options.AddRepository<ObjectPermission, ObjectPermissions.EfCoreObjectPermissionRepository>();
+            
+            options.AddRepository<PermissionItem, PermissionItems.EfCorePermissionItemRepository>();
 
         });
     }

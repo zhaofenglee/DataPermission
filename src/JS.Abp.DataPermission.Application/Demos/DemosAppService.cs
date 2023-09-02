@@ -44,7 +44,7 @@ namespace JS.Abp.DataPermission.Demos
             var dtos = items.Select(queryResultItem =>
             {
                 var dto = ObjectMapper.Map<Demo, DemoDto>(queryResultItem);
-                dto.Permission = ObjectMapper.Map<PermissionCacheItem, PermissionItemDto>(dataPermissionStore.GetPermissionAsync(queryResultItem).Result);
+                dto.Permission = ObjectMapper.Map<PermissionCacheItem, RowPermissionItemDto>(dataPermissionStore.GetPermission(queryResultItem));
                 return dto;
             }).ToList();
             
@@ -59,7 +59,7 @@ namespace JS.Abp.DataPermission.Demos
         {
             var demo = await _demoRepository.GetAsync(id);
             var item =  ObjectMapper.Map<Demo, DemoDto>(demo);
-            item.Permission = ObjectMapper.Map<PermissionCacheItem, PermissionItemDto>( await dataPermissionStore.GetPermissionAsync(demo));
+            item.Permission = ObjectMapper.Map<PermissionCacheItem, RowPermissionItemDto>( await dataPermissionStore.GetPermissionAsync(demo));
             return item;
         }
 

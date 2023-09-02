@@ -177,17 +177,20 @@
                         </Field>
                     </Validation>
 
-
-                    <Validation>
-                        <Field>
-                            <FieldLabel>@L["DisplayName"]</FieldLabel>
-                            <TextEdit @bind-Text="@EditingDemo.DisplayName" MaxLength="DemoConsts.DisplayNameMaxLength">
-                                <Feedback>
-                                    <ValidationError />
-                                </Feedback>
-                            </TextEdit>
-                        </Field>
-                    </Validation>
+                    @if (!DataPermissionItem.PermissionItems.Any(x => x.TargetType == "DisplayName")||DataPermissionItem.PermissionItems.FirstOrDefault(x => x.TargetType == "DisplayName").CanEdit)
+                    {
+                        <Validation>
+                            <Field>
+                                <FieldLabel>@L["DisplayName"]</FieldLabel>
+                                <TextEdit @bind-Text="@EditingDemo.DisplayName" MaxLength="DemoConsts.DisplayNameMaxLength">
+                                    <Feedback>
+                                        <ValidationError/>
+                                    </Feedback>
+                                </TextEdit>
+                            </Field>
+                        </Validation>
+                    }
+                    
 
 
                     

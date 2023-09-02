@@ -1,0 +1,32 @@
+@page
+@using Microsoft.AspNetCore.Mvc.Localization
+@using JS.Abp.DataPermission.Localization
+@using JS.Abp.DataPermission.Web.Pages.DataPermission.ObjectPermissions
+@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal
+@using JS.Abp.DataPermission.ObjectPermissions;
+@using System.Globalization
+@inject IHtmlLocalizer<DataPermissionResource> L
+@model EditModalModel
+@{
+    Layout = null;
+}
+
+<form data-ajaxForm="true" asp-page="/DataPermission/ObjectPermissions/EditModal" autocomplete="off">
+    <abp-modal id="ObjectPermissionEditModal">
+        <abp-modal-header title="@L["Update"].Value"></abp-modal-header>
+
+        <abp-modal-body>
+                    <abp-input asp-for="Id" />
+                    <abp-input asp-for="ObjectPermission.ConcurrencyStamp" hidden="true" suppress-label="true"/>
+                    
+            <abp-input asp-for="ObjectPermission.ObjectName"  />
+
+            <abp-input asp-for="ObjectPermission.Description"  />
+
+                    
+                
+        </abp-modal-body>
+
+        <abp-modal-footer buttons="@(AbpModalButtons.Cancel|AbpModalButtons.Save)"></abp-modal-footer>
+    </abp-modal>
+</form>

@@ -101,12 +101,12 @@ namespace JS.Abp.DataPermission.PermissionExtensions
         {
             var permissionExtension = await _permissionExtensionRepository.GetAsync(id);
             var newPermissionExtension = await _permissionExtensionManager.CreateAsync(
-                $"{permissionExtension.ObjectName}_Copy",
+                permissionExtension.ObjectName,
                 permissionExtension.RoleId,
                 permissionExtension.PermissionType,
                 permissionExtension.LambdaString, 
-                permissionExtension.IsActive,
-                permissionExtension.Description, 
+                false,
+                $"{permissionExtension.Description}_{permissionExtension.ObjectName}_Copy", 
                 permissionExtension.ExcludedRoleId
             );
 

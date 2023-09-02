@@ -1,0 +1,30 @@
+@page
+@using Microsoft.AspNetCore.Mvc.Localization
+@using JS.Abp.DataPermission.Localization
+@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal
+@using JS.Abp.DataPermission.Web.Pages.DataPermission.ObjectPermissions
+@using JS.Abp.DataPermission.ObjectPermissions;
+@using System.Globalization
+@inject IHtmlLocalizer<DataPermissionResource> L
+@model CreateModalModel
+@{
+    Layout = null;
+}
+
+<form data-ajaxForm="true" asp-page="/DataPermission/ObjectPermissions/CreateModal" autocomplete="off">
+    <abp-modal id="ObjectPermissionCreateModal">
+        <abp-modal-header title="@L["NewObjectPermission"].Value"></abp-modal-header>
+
+        <abp-modal-body>
+                    
+            <abp-input asp-for="ObjectPermission.ObjectName"  />
+
+            <abp-input asp-for="ObjectPermission.Description"  />
+
+                    
+                
+        </abp-modal-body>
+
+        <abp-modal-footer buttons="@(AbpModalButtons.Cancel|AbpModalButtons.Save)"></abp-modal-footer>
+    </abp-modal>
+</form>

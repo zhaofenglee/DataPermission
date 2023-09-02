@@ -16,10 +16,9 @@ public class MyDistributedIdentityUserEventHandler:
     ITransientDependency
 {
     private readonly IDistributedCache<List<DataPermissionResult>> _cache;
-    private readonly IDistributedCache<PermissionCacheItem,PermissionCacheKey> _cacheItem;
-    
+    private readonly IDistributedCache<List<PermissionItemResult>> _cacheItem;
     public MyDistributedIdentityUserEventHandler(IDistributedCache<List<DataPermissionResult>> cache,
-        IDistributedCache<PermissionCacheItem,PermissionCacheKey> cacheItem)
+        IDistributedCache<List<PermissionItemResult>> cacheItem)
     {
         _cache = cache;
         _cacheItem = cacheItem;
@@ -30,12 +29,18 @@ public class MyDistributedIdentityUserEventHandler:
         await _cache.RemoveAsync(
             DataPermissionConts.DataPermissionCacheKey
         );
+        await _cache.RemoveAsync(
+            DataPermissionConts.DataPermissionCacheItemsKey
+        );
     }
     
     public virtual async Task HandleEventAsync(EntityUpdatedEto<UserEto> eventData)
     {
         await _cache.RemoveAsync(
             DataPermissionConts.DataPermissionCacheKey
+        );
+        await _cache.RemoveAsync(
+            DataPermissionConts.DataPermissionCacheItemsKey
         );
     }
 

@@ -1,0 +1,89 @@
+@page
+@using Microsoft.AspNetCore.Authorization
+@using Volo.Abp.AspNetCore.Mvc.UI.Layout
+@using JS.Abp.DataPermission.Permissions
+@using JS.Abp.DataPermission.Web.Pages.DataPermission.PermissionItems
+@using JS.Abp.DataPermission.Web.Menus
+@using Microsoft.AspNetCore.Mvc.Localization
+@using JS.Abp.DataPermission.Localization
+@inject IHtmlLocalizer<DataPermissionResource> L
+@inject IAuthorizationService Authorization
+@model IndexModel
+@inject IPageLayout PageLayout
+@{
+    PageLayout.Content.Title = L["PermissionItems"].Value;
+    PageLayout.Content.MenuItemName = DataPermissionMenus.PermissionItems;
+}
+
+@section scripts
+{
+    <abp-script src="/Pages/DataPermission/PermissionItems/index.js" />
+}
+
+@section content_toolbar {
+    <abp-button id="ExportToExcelButton" text="@L["ExportToExcel"].Value" icon="download" size="Small" button-type="Primary" />
+    @if (await Authorization.IsGrantedAsync(DataPermissionPermissions.PermissionItems.Create))
+    {
+        <abp-button id="NewPermissionItemButton" text="@L["NewPermissionItem"].Value" icon="plus" size="Small" button-type="Primary" />
+    }
+}
+
+<abp-card>
+    <abp-card-body>
+		<abp-row class="mb-3">
+            <abp-column size-md="_12">
+                <form id="SearchForm" autocomplete="off">
+                    <div class="input-group">
+                        <input class="form-control page-search-filter-text" id="FilterText" placeholder="@L["Search"]"/>
+                        <abp-button button-type="Primary" type="submit" icon="search"/>
+                    </div>
+                </form>
+            </abp-column>
+            <abp-column size-md="_12" class="mt-3">
+                <a href="javascript:;" id="AdvancedFilterSectionToggler" class="text-decoration-none">@L["SeeAdvancedFilters"]</a>
+            </abp-column>
+        </abp-row>
+
+        <abp-row id="AdvancedFilterSection" style="display: none;">
+            <abp-column size="_3">
+                <abp-input asp-for="ObjectNameFilter" label="@L["ObjectName"].Value" />
+            </abp-column>
+            <abp-column size="_3">
+                <abp-input asp-for="DescriptionFilter" label="@L["Description"].Value" />
+            </abp-column>
+            <abp-column size="_3">
+                <abp-input asp-for="TargetTypeFilter" label="@L["TargetType"].Value" />
+            </abp-column>
+            <abp-column size="_3">
+                <abp-select asp-for="CanReadFilter" label="@L["CanRead"].Value" />
+            </abp-column>
+            <abp-column size="_3">
+                <abp-select asp-for="CanCreateFilter" label="@L["CanCreate"].Value" />
+            </abp-column>
+            <abp-column size="_3">
+                <abp-select asp-for="CanEditFilter" label="@L["CanEdit"].Value" />
+            </abp-column>
+            <abp-column size="_3">
+                <abp-select asp-for="CanDeleteFilter" label="@L["CanDelete"].Value" />
+            </abp-column>
+        </abp-row>
+
+        <abp-table striped-rows="true" id="PermissionItemsTable">
+            <thead>
+				<tr>
+					<th>@L["Actions"]</th>
+					<th>@L["ObjectName"]</th>
+					<th>@L["Description"]</th>
+                    <th>@L["TargetType"]</th>
+                    <th>@L["RoleName"]</th>
+					<th>@L["CanRead"]</th>
+					<th>@L["CanCreate"]</th>
+					<th>@L["CanEdit"]</th>
+                    <th>@L["CanDelete"]</th>
+                     <th>@L["IsActive"]</th>
+
+				</tr>
+            </thead>
+        </abp-table>
+    </abp-card-body>
+</abp-card>

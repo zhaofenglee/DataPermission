@@ -15,11 +15,16 @@ public class DataPermissionMenuContributor : IMenuContributor
         {
             await ConfigureMainMenuAsync(context);
             var moduleMenu = AddModuleMenuItem(context);
-            AddMenuItemPermissionExtensions(context, moduleMenu);
+            AddMenuItemObjectPermissions(context, moduleMenu);
+            //行级数据权限
+            // AddMenuItemPermissionExtensions(context, moduleMenu);  
+            //字段级数据权限
+            // AddMenuItemPermissionItems(context, moduleMenu);
             AddMenuItemDemos(context, moduleMenu);
+
         }
 
-       
+
     }
 
     private static async Task ConfigureMainMenuAsync(MenuConfigurationContext context)
@@ -64,6 +69,31 @@ public class DataPermissionMenuContributor : IMenuContributor
                 "/DataPermission/Demos",
                 icon: "fa fa-file-alt",
                 requiredPermissionName: DataPermissionPermissions.Demos.Default
+            )
+        );
+    }
+    private static void AddMenuItemPermissionItems(MenuConfigurationContext context, ApplicationMenuItem parentMenu)
+    {
+        parentMenu.AddItem(
+            new ApplicationMenuItem(
+                Menus.DataPermissionMenus.PermissionItems,
+                context.GetLocalizer<DataPermissionResource>()["Menu:PermissionItems"],
+                "/DataPermission/PermissionItems",
+                icon: "fa fa-file-alt",
+                requiredPermissionName: DataPermissionPermissions.PermissionItems.Default
+            )
+        );
+    }
+
+    private static void AddMenuItemObjectPermissions(MenuConfigurationContext context, ApplicationMenuItem parentMenu)
+    {
+        parentMenu.AddItem(
+            new ApplicationMenuItem(
+                Menus.DataPermissionMenus.ObjectPermissions,
+                context.GetLocalizer<DataPermissionResource>()["Menu:ObjectPermissions"],
+                "/DataPermission/ObjectPermissions",
+                icon: "fa fa-file-alt",
+                requiredPermissionName: DataPermissionPermissions.ObjectPermissions.Default
             )
         );
     }
