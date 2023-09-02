@@ -2,6 +2,7 @@ using System;
 using Mongo2Go;
 using Volo.Abp;
 using Volo.Abp.Data;
+using Volo.Abp.Identity.MongoDB;
 using Volo.Abp.Modularity;
 using Volo.Abp.Uow;
 
@@ -9,6 +10,7 @@ namespace JS.Abp.DataPermission.MongoDB;
 
 [DependsOn(
     typeof(DataPermissionTestBaseModule),
+    typeof(AbpIdentityMongoDbModule),
     typeof(DataPermissionMongoDbModule)
     )]
 public class DataPermissionMongoDbTestModule : AbpModule
