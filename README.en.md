@@ -1,4 +1,4 @@
-# 数据权限
+# DataPermission
 
 ---
 
@@ -7,19 +7,19 @@
 </div>
 
 ---
+## New Features
+* Added field-level data permission functionality
+* Added a list of entity data permissions and merged row-level and field-level data permissions into the same detail page.
 
-## 新功能
-* 增加字段级数据权限功能
-* 增加实体数据权限列表，并且把行级和字段级数据权限合并在同一个明细页面
 
-## 7.3.1更新说明
-#### 1.增加复制数据权限行功能
+## 7.3.1
+#### 1. Added the ability to copy data permissions.
 
-## 7.2.3更新说明
-#### 1.增加基于组织权限控制
-表达式配置为”x.CreatorId=="OrganizationUser"“ 会自动寻找当前组织所有下级成员
+## 7.2.3
+#### 1. Added organizational permission controls.
+The expression is configured as "x.CreatorId == 'OrganizationUser'" will automatically search for all subordinates in the current organization.
 
-* 支持重写获取组织成员方法（默认取abp组织）
+* Supports rewriting the method to obtain organization members (default to ABP organization).
 ````csharp
 context.Services.Replace(ServiceDescriptor.Singleton<IOrganizationStore, MyOrganizationStore>());
 
@@ -40,26 +40,27 @@ public MyOrganizationStore(IIdentityUserRepository identityUserRepository, IOrga
 }
 `````
 
-## 7.2.1更新说明
-#### 1.DataPermissionExtensions增加了描述字段，可以添加备注信息
-#### 2.DataPermissionStore增加了权限判断方法，可以根据自己业务场景使用
+## 7.2.1
+1. The DataPermissionExtensions has added a description field, which can be used to add commentary information.
+2. The DataPermissionStore has added permission evaluation methods, which can be used according to specific business scenarios.
 
-## 实现原理
-### 行级数据权限
-* 行数据查询权限是通过仓储数据查询条件进行过滤
-* 行数据权限修改和删除是通过仓储查询单个行对象再判断是否有权限，如果没有权限则抛出异常或在UI进行处理（有更好的方法也欢迎大家提出）
-* 通过设置 角色 和对应实体 实现查询可以根据自定义Lambda表达式过滤查询数据
-* 通过设置 角色 和对应实体 实现修改，删除，需要查询后再判断是否有权限
-* 通过设置 角色 和对应实体 实现创建，目前新增需要在创建之前进行权限判断，如果没有权限则抛出异常，如：
+## Implementation Principle
+
+### Row-level Data Authorization
+* Row-level query authorization is achieved by filtering through warehouse data query conditions.
+* Row-level authorization for modification and deletion is achieved by querying for a single row object in the warehouse and then checking for permission. If there is no permission, an exception is thrown or handled in the UI (if there is a better method, please feel free to suggest it).
+* By setting roles and corresponding entities, custom Lambda expressions can be used to filter query data.
+* By setting roles and corresponding entities, modification and deletion can be achieved, and permission must be checked after querying.
+* By setting roles and corresponding entities, creation can be achieved. Currently, authorization for new additions must be checked before creation. If there is no permission, an exception is thrown. For example:
   “var checkPermission = await dataPermissionStore.CheckPermissionAsync(item, PermissionType.Create);”
 
-### 字段级数据权限
-* 字段数据权限是根据维护的字段名称和对应角色的权限进行判断，使用字段级数据权限需要修改前端和后端代码共同实现
+### Field-Level Data Permissions
+* Field-level data permissions are judged based on the maintained field names and corresponding role permissions. To use field-level data permissions, front-end and back-end code modifications are required.
 
-## 缓存
-* 目前缓存时间为 10 分钟，如果“PermissionExtension”对象变更时会自动清除
-* 行级数据权限缓存时间为 10 分钟，权限变更后重新查询权限会进行覆盖
-* 可以通过配置方式修改默认缓存时间
+## Cache
+* Currently, the cache time is 10 minutes, and the cache will be automatically cleared if the "PermissionExtension" object changes.
+* The row-level data permission cache time is 10 minutes, and the permissions will be overwritten after they are re-queried when changes occur.
+* The default cache time can be modified through configuration.
 ````csharp
   Configure<DataPermissionOptions>(options =>
   {
@@ -68,9 +69,9 @@ public MyOrganizationStore(IIdentityUserRepository identityUserRepository, IOrga
 ````
 
 
-## 准备工作
+## Preparations
 
-### 1.安装 NuGet packages.
+### 1. Install NuGet packages.
 * JS.Abp.DataPermission.Application
 * JS.Abp.DataPermission.Application.Contracts
 * JS.Abp.DataPermission.Domain
@@ -84,7 +85,7 @@ public MyOrganizationStore(IIdentityUserRepository identityUserRepository, IOrga
 *(Optional)  JS.Abp.DataPermission.Blazor.WebAssembly
 *(Optional)  JS.Abp.DataPermission.Web
 
-### 2.添加“依赖”属性以配置模块
+### 2. Add "dependencies" attribute to configure modules.
 * [DependsOn(typeof(DataPermissionApplicationModule))]
 * [DependsOn(typeof(DataPermissionApplicationContractsModule))]
 * [DependsOn(typeof(DataPermissionDomainModule))]
@@ -99,11 +100,11 @@ public MyOrganizationStore(IIdentityUserRepository identityUserRepository, IOrga
 *(Optional)  [DependsOn(typeof(DataPermissionBlazorWebAssemblyModule))]
 *(Optional)  [DependsOn(typeof(DataPermissionWebModule))]
 
-### *若使用MongoDb，以下步骤可以忽略
-### 3. 在你的Dbcontext添加 ` builder.ConfigureDataPermission();` 
+### *If using MongoDB, the following steps can be ignored.
+### 3. Add `builder.ConfigureDataPermission();` to your DbContext.
 
-### 4. 添加 EF Core 迁移并更新数据库
-在 YourProject.EntityFrameworkCore 项目的目录中打开命令行终端，然后键入以下命令：
+### 4. Add EF Core migrations and update the database.
+Open a command-line terminal in the directory of YourProject.EntityFrameworkCore project and enter the following command:
 
 ````bash
 > dotnet ef migrations add Added_DataPermission
@@ -112,22 +113,22 @@ public MyOrganizationStore(IIdentityUserRepository identityUserRepository, IOrga
 > dotnet ef database update
 ````
 
-## 行级数据权限
-* 以下代码已经在Demo方案实现，具体使用方法请参考Demo
+## Row-Level Data Authorization
 
-### 1.在行级数据权限配置需要控制的实体名称，类型，及对应的Lambda表达式
-* 查询表达式默认是在原有的查询表达式上进行过滤，表达式需要注意格式，如：“x.Name != "Abc"”，x.为固定格式，Name为实体属性，Abc为过滤条件，实例的含义是当前角色仅允许查询Name不等于Abc的数据
-* 创建，修改和删除表达式需要注意格式，如：“x.Name == "Abc"”，x.为固定格式，Name为实体属性，Abc为过滤条件，实例的含义是当前角色仅允许创建，修改和删除Name等于Abc的数据
-* 数据权限控制已提供Blazor页面，其他前端框架请自行实现
+* The following code has been implemented in the Demo solution. Please refer to the Demo for specific usage.
+
+### 1. Configure the entity name, type, and corresponding Lambda expression for row-level data authorization.
+* The query expression filters the original query expression by default. The expression format needs to be noted, such as "x.Name != "Abc"", where x is the fixed format, Name is the entity property, and Abc is the filter condition. The example means that the current role is only allowed to query data where Name is not equal to Abc.
+* The creation, modification, and deletion expressions need to be noted in the format, such as "x.Name == "Abc"", where x is the fixed format, Name is the entity property, and Abc is the filter condition. The example means that the current role is only allowed to create, modify, and delete data where Name is equal to Abc.
+* Data authorization control has provided a Blazor page, please implement it yourself for other front-end frameworks.
 
 ![PermissionControl](/docs/images/PermissionControl.gif)
 
-### 2.在需要进行权限控制的仓储加入下述代码
+### 2. Add the following code to the repository that requires permission control.
 ````csharp
  protected IDataPermissionStore dataPermissionStore => LazyServiceProvider.LazyGetRequiredService<IDataPermissionStore>();
 ````
-### 3.在过滤条件前添加 `query = DataPermissionExtensions.EntityFilter(query,  dataPermissionStore.GetAll());`
-* abp7.2 可以直接使用“query = dataPermissionStore.EntityFilter(query);//add”
+### 3. Add `query = dataPermissionStore.EntityFilter(query);//add` before the filtering conditions.
 ````csharp
 protected virtual IQueryable<Demo> ApplyFilter(
             IQueryable<Demo> query,
@@ -135,18 +136,18 @@ protected virtual IQueryable<Demo> ApplyFilter(
             string name = null,
             string displayName = null)
         {
-            query = DataPermissionExtensions.EntityFilter(query,  dataPermissionStore.GetAll());//add
+            query = dataPermissionStore.EntityFilter(query)//add
             return query
                     .WhereIf(!string.IsNullOrWhiteSpace(filterText), e => e.Name.Contains(filterText) || e.DisplayName.Contains(filterText))
                     .WhereIf(!string.IsNullOrWhiteSpace(name), e => e.Name.Contains(name))
                     .WhereIf(!string.IsNullOrWhiteSpace(displayName), e => e.DisplayName.Contains(displayName));
         }
 ````
-### 4.进行上述操作后查询过滤功能就可以使用
+### 4. After performing the above operations, the query filtering function can be used.
 
-### 5.如果需要进行修改和删除的权限控制，有两个实现方法
-#### 5.1需要在查询单条数据方法前加入 ` await dataPermissionStore.GetPermissionAsync(id.ToString(), item);`
-* 这一步是为了查询当前用户是否有该数据修改和删除权限，用于后面判断是否可以进行修改和删除操作
+### 5. If permission control for modification and deletion is needed, there are two implementation methods.
+#### 5.1. It is necessary to add `await dataPermissionStore.GetPermissionAsync(id.ToString(), item);` before the method of querying a single data.
+* This step is to check whether the current user has the permission to modify and delete the data, which is used to determine whether modification and deletion operations can be performed later.
 ````csharp
  public async Task<Demo> GetAsync(Guid id, CancellationToken cancellationToken = default)
         {
@@ -160,20 +161,20 @@ protected virtual IQueryable<Demo> ApplyFilter(
 
 ![Demo](/docs/images/Demo.gif)
 
-* 在需要进行权限控制的服务引入服务“IPermissionApplicationService”
+* Introduce the "IPermissionApplicationService" service for services that require permission control.
 ````csharp
  protected IPermissionApplicationService permissionApplicationService => LazyServiceProvider.LazyGetRequiredService<IPermissionApplicationService>();
 ````
-* 在需要进行权限控制的方法前加入 `await permissionApplicationService.CheckPermissionAsync(id.ToString(), “abp权限名称”, PermissionType.Update);`
-* 权限判断规则是：如果当前用户是否有“abp权限”权限，没有直接为false，再判断是否有行权限，若无须判断abp权限名称传入空值可跳过
-* 在UI上控制还是在服务上进行控制可以根据实际情况进行选择，以下是以Blazor为例
+* Add `await permissionApplicationService.CheckPermissionAsync(id.ToString(), "abp permission name", PermissionType.Update);` before the methods that require permission control.
+* The rule for permission judgment is: if the current user has no "abp permission" permission, return false directly. Then, check if there is a row permission. If not, the abp permission name can be passed in as null to skip.
+* Whether to control on the UI or the backend can be chosen according to the actual situation. Below is an example using Blazor.
 ````csharp
 var demo = await DemosAppService.GetAsync(input.Id);
 CanEditDemo =  PermissionApplicationService.GetAsync(demo.Id.ToString(),DataPermissionPermissions.Demos.Edit, PermissionType.Update).Result.IsGranted;//add
 ````
 
-#### 5.2直接在服务上进行判断 
-* 这一步是把传入的对象判断是否有权限，如果没有权限则抛出异常，需要注意是传入的对象Name必须和实体名字一致
+#### 5.2 Direct judgement on the service
+* This step is to judge whether the incoming object has permission. If it does not have permission, an exception will be thrown. It is important to note that the object Name passed in must be consistent with the entity name.
 ````csharp
  public async Task<Demo> UpdateAsync(Guid id, UpdateDemoDto input, CancellationToken cancellationToken = default)
         {
@@ -188,7 +189,7 @@ CanEditDemo =  PermissionApplicationService.GetAsync(demo.Id.ToString(),DataPerm
 ````
 
 
-### 6.创建权限控制方法，可以在插入数据库前对传入对象进行判断
+### 6. Create permission control methods to check the incoming object before inserting it into the database.
 ````csharp
 //add permission check
 if (!dataPermissionStore.CheckPermission(demo, PermissionType.Create))
@@ -199,7 +200,7 @@ if (!dataPermissionStore.CheckPermission(demo, PermissionType.Create))
             }
 ````
 
-### 7.在服务上返回数据对应的权限
+### 7. Return the permissions corresponding to the data in the service.
 ````csharp
 //创建一个数据权限的Dto
 public class PermissionItemDto
@@ -221,13 +222,13 @@ public PermissionItemDto Permission { get; set; } = new PermissionItemDto();
             }).ToList();
 ````
 
-## 字段级数据权限
-* 以下代码已经在Demo方案实现，具体使用方法请参考Demo
+## Field-level Data Permissions
+* The following code has already been implemented in the demo solution. Please refer to the demo for specific usage instructions.
 
-### 1.在字段级数据权限配置需要控制的实体名称，类型，对应字段名称及对应的权限
+### 1. Configure the entity name, type, corresponding field name, and corresponding permissions that need to be controlled in field-level data permissions.
 ![img](/docs/images/20230901200918.png)
 
-### 2.在仓库或者数据写入服务中判断是否有权限，有权限再写入
+### 2. Check if there is permission in the warehouse or data writing service before writing.
 ````csharp 
  protected IDataPermissionItemStore dataPermissionItemStore => LazyServiceProvider.LazyGetRequiredService<IDataPermissionItemStore>();//字段级数据权限
  
@@ -237,7 +238,7 @@ public PermissionItemDto Permission { get; set; } = new PermissionItemDto();
                 demo.DisplayName = displayName;
  
 ````
-### 3.在前端上进行控制，以下是以Blazor为例
+### 3. Control on the frontend. Here is an example using Blazor.
 
 ````csharp
 @inject IPermissionApplicationService PermissionApplicationService
@@ -252,8 +253,8 @@ public PermissionItemDto Permission { get; set; } = new PermissionItemDto();
                 });
 ````
 
-### 4.在服务上进行控制，如查询或导出时，把没有权限属性替换成默认值
-#### 4.1.首先配置Dto
+### 4. Control in services, and replace unauthorized properties with default values when querying or exporting.
+#### 4.1. First configure the DTO.
 ````csharp
  public class DemoDto : FullAuditedEntityDto<Guid>, IHasConcurrencyStamp
     {
@@ -265,7 +266,7 @@ public PermissionItemDto Permission { get; set; } = new PermissionItemDto();
         public string ConcurrencyStamp { get; set; }
     }
 ````
-#### 4.2.在查询或导出时校验权限，无权时会把数据集替换成默认值
+#### 4.2. Validate permissions when querying or exporting data, and replace the dataset with default values if no permission.
 ````csharp
 public virtual async Task<DemoDto> GetAsync(Guid id)
         {
@@ -281,16 +282,16 @@ public virtual async Task<DemoDto> GetAsync(Guid id)
 
 See the [sample projects](https://github.com/zhaofenglee/DataPermission/tree/master/host/JS.Abp.DataPermission.Blazor.Server.Host)
 
-## 在线演示
+## Online demo
 https://rxsoftware.cn/
 
 账号：data001/data002
 密码：1q2w3E*
 
-## 感谢名单
+## Thanks
 
 ####  [Jetbrains](https://www.jetbrains.com/)
 
 ![JetBrains Logo (Main) logo](https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg)
 
-感谢提供免费IDE支持此项目 ([License](https://jb.gg/OpenSourceSupport))
+Thank you for providing free IDE support for this project. ([License](https://jb.gg/OpenSourceSupport))
