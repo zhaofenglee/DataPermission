@@ -1,6 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Application;
 using Volo.Abp.AutoMapper;
+using Volo.Abp.Domain.Entities.Caching;
 using Volo.Abp.Identity;
 using Volo.Abp.Modularity;
 
@@ -21,5 +23,7 @@ public class DataPermissionApplicationModule : AbpModule
         {
             options.AddMaps<DataPermissionApplicationModule>(validate: true);
         });
+        context.Services.AddEntityCache<IdentityRole, Guid>();
+
     }
 }

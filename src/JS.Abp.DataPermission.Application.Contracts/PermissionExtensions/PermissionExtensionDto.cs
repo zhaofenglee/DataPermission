@@ -9,7 +9,7 @@ namespace JS.Abp.DataPermission.PermissionExtensions
     {
         public string ObjectName { get; set; }
         public Guid RoleId { get; set; }
-        public string RoleName { get; set; }
+        public string? RoleName { get; set; }
         public Guid? ExcludedRoleId { get; set; }
         public PermissionType PermissionType { get; set; }
         public string LambdaString { get; set; }

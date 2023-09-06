@@ -10,7 +10,7 @@ namespace JS.Abp.DataPermission.PermissionItems
         public string? Description { get; set; }
         public string TargetType { get; set; }
         public Guid RoleId { get; set; }
-        public string RoleName { get; set; }
+        public string? RoleName { get; set; }
         public bool CanRead { get; set; }
         public bool CanCreate { get; set; }
         public bool CanEdit { get; set; }

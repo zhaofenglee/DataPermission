@@ -17,6 +17,7 @@ using Volo.Abp.Authorization;
 using Volo.Abp.Caching;
 using Microsoft.Extensions.Caching.Distributed;
 using JS.Abp.DataPermission.Shared;
+using Volo.Abp.Domain.Entities.Caching;
 using Volo.Abp.Identity;
 
 namespace JS.Abp.DataPermission.PermissionItems
@@ -28,33 +29,33 @@ namespace JS.Abp.DataPermission.PermissionItems
         private readonly IDistributedCache<PermissionItemExcelDownloadTokenCacheItem, string> _excelDownloadTokenCache;
         private readonly IPermissionItemRepository _permissionItemRepository;
         private readonly PermissionItemManager _permissionItemManager;
-        private readonly IIdentityRoleRepository _identityRoleRepository;
+        private readonly IEntityCache<IdentityRole, Guid> _roleCache;
         public PermissionItemsAppService(IPermissionItemRepository permissionItemRepository, 
             PermissionItemManager permissionItemManager,
             IDistributedCache<PermissionItemExcelDownloadTokenCacheItem, string> excelDownloadTokenCache,
-            IIdentityRoleRepository identityRoleRepository)
+            IEntityCache<IdentityRole, Guid> roleCache)
         {
             _excelDownloadTokenCache = excelDownloadTokenCache;
             _permissionItemRepository = permissionItemRepository;
             _permissionItemManager = permissionItemManager;
-            _identityRoleRepository = identityRoleRepository;
+            _roleCache = roleCache;
         }
 
         public virtual async Task<PagedResultDto<PermissionItemDto>> GetListAsync(GetPermissionItemsInput input)
         {
             var totalCount = await _permissionItemRepository.GetCountAsync(input.FilterText, input.ObjectName, input.Description, input.TargetType,input.RoleId, input.CanRead, input.CanCreate, input.CanEdit, input.CanDelete,input.IsActive);
             var items = await _permissionItemRepository.GetListAsync(input.FilterText, input.ObjectName, input.Description, input.TargetType,input.RoleId, input.CanRead, input.CanCreate, input.CanEdit, input.CanDelete,input.IsActive, input.Sorting, input.MaxResultCount, input.SkipCount);
-
-            var dtos = items.Select(queryResultItem =>
+            var dtos = await Task.WhenAll(items.Select(async queryResultItem =>
             {
                 var dto = ObjectMapper.Map<PermissionItem, PermissionItemDto>(queryResultItem);
-                if (queryResultItem.RoleId!=Guid.Empty)
+                if (queryResultItem.RoleId != Guid.Empty)
                 {
-                    dto.RoleName =  _identityRoleRepository.FindAsync(queryResultItem.RoleId).Result?.Name;
+                    var role = await _roleCache.FindAsync(queryResultItem.RoleId);
+                    dto.RoleName = role?.Name;
                 }
-                
+
                 return dto;
-            }).ToList();
+            }));
             
             return new PagedResultDto<PermissionItemDto>
             {
