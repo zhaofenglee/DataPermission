@@ -12,6 +12,8 @@ namespace JS.Abp.DataPermission.Web.Pages.DataPermission.PermissionExtensions
 {
     public class CreateModalModel : DataPermissionPageModel
     {
+        [BindProperty(SupportsGet = true)] 
+        public string ObjectName { get; set; }
         [BindProperty]
         public PermissionExtensionCreateViewModel PermissionExtension { get; set; }
         public List<SelectListItem> RoleList { get; set; }
@@ -26,7 +28,10 @@ namespace JS.Abp.DataPermission.Web.Pages.DataPermission.PermissionExtensions
 
         public async Task OnGetAsync()
         {
-            PermissionExtension = new PermissionExtensionCreateViewModel();
+            PermissionExtension = new PermissionExtensionCreateViewModel()
+            {
+                ObjectName = ObjectName,
+            };
             RoleList = (await _permissionExtensionsAppService.GetPermissionRoleListAsync())
                 .Select(x => new SelectListItem(x.Name, x.Id.ToString()))
                 .ToList();

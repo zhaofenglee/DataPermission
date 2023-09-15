@@ -40,6 +40,13 @@ $(function () {
                     items:
                         [
                             {
+                                text: l("EditDetails"),
+                                visible: abp.auth.isGranted('DataPermission.ObjectPermissions'),
+                                action: function(data) {
+                                    window.location = "/DataPermission/ObjectPermissions/" + data.record.objectName;
+                                }
+                            },
+                            {
                                 text: l("Edit"),
                                 visible: abp.auth.isGranted('DataPermission.ObjectPermissions.Edit'),
                                 action: function (data) {

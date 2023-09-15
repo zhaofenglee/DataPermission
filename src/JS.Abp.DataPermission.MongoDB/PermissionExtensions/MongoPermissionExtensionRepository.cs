@@ -69,7 +69,7 @@ namespace JS.Abp.DataPermission.PermissionExtensions
         {
             return query
                 .WhereIf(!string.IsNullOrWhiteSpace(filterText), e => e.ObjectName.Contains(filterText) || e.LambdaString.Contains(filterText)|| e.Description.Contains(filterText))
-                    .WhereIf(!string.IsNullOrWhiteSpace(objectName), e => e.ObjectName.Contains(objectName))
+                    .WhereIf(!string.IsNullOrWhiteSpace(objectName), e => e.ObjectName==objectName)
                     .WhereIf(roleId.HasValue, e => e.RoleId == roleId)
                     .WhereIf(excludedRoleId.HasValue, e => e.ExcludedRoleId == excludedRoleId)
                     .WhereIf(permissionType.HasValue, e => e.PermissionType == permissionType)

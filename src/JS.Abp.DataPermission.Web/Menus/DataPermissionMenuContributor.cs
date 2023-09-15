@@ -19,12 +19,12 @@ public class DataPermissionMenuContributor : IMenuContributor
 
         var moduleMenu = AddModuleMenuItem(context); //Do not delete `moduleMenu` variable as it will be used by ABP Suite!
 
-        //Todo:前端UI没写好前不启用
-        //AddMenuItemObjectPermissions(context, moduleMenu);
+        //禁用行级和字段级维护菜单，统一使用对象数据权限
+        AddMenuItemObjectPermissions(context, moduleMenu);
 
-        AddMenuItemPermissionExtensions(context, moduleMenu);
+        //AddMenuItemPermissionExtensions(context, moduleMenu);
 
-        AddMenuItemPermissionItems(context, moduleMenu);
+        //AddMenuItemPermissionItems(context, moduleMenu);
 
        
         AddMenuItemDemos(context, moduleMenu);
@@ -34,7 +34,7 @@ public class DataPermissionMenuContributor : IMenuContributor
     {
         var moduleMenu = new ApplicationMenuItem(
             DataPermissionMenus.Prefix,
-            displayName: "DataPermission",
+            displayName: context.GetLocalizer<DataPermissionResource>()["Menu:DataPermission"],
             icon: "fa fa-globe");
 
         //Add main menu items.

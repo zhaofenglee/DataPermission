@@ -13,6 +13,8 @@ namespace JS.Abp.DataPermission.Web.Pages.DataPermission.PermissionItems
 {
     public class CreateModalModel : DataPermissionPageModel
     {
+        [BindProperty(SupportsGet = true)] 
+        public string ObjectName { get; set; }
         [BindProperty]
         public PermissionItemCreateViewModel PermissionItem { get; set; }
 
@@ -29,7 +31,10 @@ _permissionExtensionsAppService = permissionExtensionsAppService;
 
         public async Task OnGetAsync()
         {
-            PermissionItem = new PermissionItemCreateViewModel();
+            PermissionItem = new PermissionItemCreateViewModel()
+            {
+                ObjectName = ObjectName,
+            };
             RoleList = (await _permissionExtensionsAppService.GetPermissionRoleListAsync())
                 .Select(x => new SelectListItem(x.Name, x.Id.ToString()))
                 .ToList();

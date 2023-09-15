@@ -1,0 +1,53 @@
+﻿@using Microsoft.AspNetCore.Authorization
+@using Volo.Abp.AspNetCore.Mvc.UI.Layout
+@using JS.Abp.DataPermission.Permissions
+@using JS.Abp.DataPermission.Web.Menus
+@using Microsoft.AspNetCore.Mvc.Localization
+@using JS.Abp.DataPermission.Localization
+@inject IHtmlLocalizer<DataPermissionResource> L
+@inject IAuthorizationService Authorization
+@model JS.Abp.DataPermission.Web.Pages.DataPermission.Components.PermissionExtensions.PermissionExtensionsViewModel
+
+
+<abp-card>
+    <abp-card-body>
+        <abp-input type="hidden" asp-for="@Model.ObjectNameFilter" label="@L["ObjectName"].Value"/>
+
+        <abp-table striped-rows="true" id="PermissionExtensionsTable">
+            <thead>
+            <tr>
+                <abp-row class="mb-3">
+                    <abp-column size="_9">
+                        <form id="SearchForm" autocomplete="off">
+                            <div class="input-group">
+                                <input class="form-control page-search-filter-text" id="FilterText" placeholder="@L["Search"]"/>
+                                <abp-button button-type="Primary" type="submit" icon="search"/>
+                            </div>
+                        </form>
+
+
+                    </abp-column>
+                    <abp-column Class="justify-content-end" Style="text-align: right" size="_3">
+                        <abp-button id="NewPermissionExtensionButton" text="@L["NewPermissionExtension"].Value" icon="plus" button-type="Primary"/>
+                    </abp-column>
+                </abp-row>
+
+
+            </tr>
+
+
+            <tr>
+                <th>@L["Actions"]</th>
+                @* <th>@L["ObjectName"]</th> *@
+                <th>@L["RoleName"]</th>
+                @* <th>@L["ExcludedRoleId"]</th> *@
+                <th>@L["PermissionType"]</th>
+                <th>@L["LambdaString"]</th>
+                <th>@L["Description"]</th>
+                <th>@L["IsActive"]</th>
+
+            </tr>
+            </thead>
+        </abp-table>
+    </abp-card-body>
+</abp-card>
