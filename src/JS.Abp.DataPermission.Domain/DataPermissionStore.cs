@@ -44,7 +44,7 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
 
     public virtual IQueryable<TEntity> EntityFilter<TEntity>(IQueryable<TEntity> query)
     {
-        if (_currentUser?.Id == null )
+        if (_currentUser.Id == null )
         { 
             return query;
         }
@@ -69,19 +69,19 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
             {
                 AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(Options.CacheExpirationTime)
             }
-        );
+        )??new List<DataPermissionResult>();
     }
 
     public virtual async Task<bool> GetPermissionAsync<T>(string id, T item)
     { 
        
-        PermissionCacheItem cacheItem = await  _cacheItem.GetAsync(new PermissionCacheKey()
+        PermissionCacheItem? cacheItem = await  _cacheItem.GetAsync(new PermissionCacheKey()
         {
             EntityId = id,
-            UserId = _currentUser?.Id??Guid.Empty
+            UserId = _currentUser.Id??Guid.Empty
         });
 
-        var permissions = (await GetAllAsync()).Where(c=>c.UserId==_currentUser?.Id&&c.ObjectName==typeof(T).Name&&c.PermissionType!=PermissionType.Read).ToList();
+        var permissions = (await GetAllAsync()).Where(c=>c.UserId==_currentUser.Id&&c.ObjectName==typeof(T).Name&&c.PermissionType!=PermissionType.Read).ToList();
         if (permissions.Any())
         {
             if (cacheItem==null)
@@ -90,7 +90,7 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
                 {
                     Id = id,
                     ObjectName = typeof(T).Name,
-                    UserId = _currentUser?.Id,
+                    UserId = _currentUser.Id,
                     CanRead = true,
                 };
             }
@@ -122,7 +122,7 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
             await _cacheItem.SetAsync(new PermissionCacheKey()
             {
                 EntityId = id,
-                UserId = _currentUser?.Id??Guid.Empty
+                UserId = _currentUser.Id??Guid.Empty
             }, cacheItem, new DistributedCacheEntryOptions
             {
                 AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(Options.CacheExpirationTime)
@@ -135,7 +135,7 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
                await _cacheItem.RemoveAsync(new PermissionCacheKey()
                {
                    EntityId = id,
-                   UserId = _currentUser?.Id??Guid.Empty
+                   UserId = _currentUser.Id??Guid.Empty
                });
             }
         }
@@ -144,29 +144,31 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
         return true;
     }
 
+    public virtual  PermissionCacheItem GetPermissionById<T>(string id, T item)
+    {
+        return AsyncHelper.RunSync(()=>GetPermissionByIdAsync(id,item));
+    }
+
     public virtual async Task<PermissionCacheItem> GetPermissionByIdAsync<T>(string id, T item)
     {
-       PermissionCacheItem cacheItem = await _cacheItem.GetAsync(new PermissionCacheKey()
+       PermissionCacheItem? cacheItem = await _cacheItem.GetAsync(new PermissionCacheKey()
         {
             EntityId = id,
-            UserId = _currentUser?.Id ?? Guid.Empty
+            UserId = _currentUser.Id ?? Guid.Empty
         });
 
         var permissions = (await GetAllAsync()).Where(c =>
-                c.UserId == _currentUser?.Id && c.ObjectName == typeof(T).Name &&
+                c.UserId == _currentUser.Id && c.ObjectName == typeof(T).Name &&
                 c.PermissionType != PermissionType.Read)
             .ToList();
         if (permissions.Any())
         {
-            if (cacheItem == null)
+            cacheItem ??= new PermissionCacheItem()
             {
-                cacheItem = new PermissionCacheItem()
-                {
-                    Id = id,
-                    ObjectName = typeof(T).Name,
-                    UserId = _currentUser?.Id
-                };
-            }
+                Id = id,
+                ObjectName = typeof(T).Name,
+                UserId = _currentUser.Id
+            };
 
             foreach (var permission in permissions)
             {
@@ -196,7 +198,7 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
             await _cacheItem.SetAsync(new PermissionCacheKey()
             {
                 EntityId = id,
-                UserId = _currentUser?.Id ?? Guid.Empty
+                UserId = _currentUser.Id ?? Guid.Empty
             }, cacheItem, new DistributedCacheEntryOptions
             {
                 AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(Options.CacheExpirationTime)
@@ -210,20 +212,25 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
                 await _cacheItem.RemoveAsync(new PermissionCacheKey()
                 {
                     EntityId = id,
-                    UserId = _currentUser?.Id ?? Guid.Empty
+                    UserId = _currentUser.Id ?? Guid.Empty
                 });
             }
             return  new PermissionCacheItem()
             {
                 Id = id,
                 ObjectName = typeof(T).Name,
-                UserId = _currentUser?.Id,
+                UserId = _currentUser.Id,
                 CanRead = true,
                 CanCreate = true,
                 CanUpdate = true,
                 CanDelete = true,
             };
         }
+    }
+
+    public virtual PermissionCacheItem GetPermission<TEntity>(TEntity entity)
+    {
+        return AsyncHelper.RunSync(()=>GetPermissionAsync(entity));
     }
 
     public virtual async Task<PermissionCacheItem> GetPermissionAsync<TEntity>(TEntity entity)
@@ -241,7 +248,7 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
     public async Task<bool> CheckPermissionAsync<T>(T item, PermissionType permissionType)
     {
         var permissions = (await GetAllAsync()).Where(c =>
-                c.UserId == _currentUser?.Id && c.ObjectName == typeof(T).Name && c.PermissionType == permissionType)
+                c.UserId == _currentUser.Id && c.ObjectName == typeof(T).Name && c.PermissionType == permissionType)
             .ToList();
         if (permissions.Any())
         {
@@ -272,7 +279,7 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
                     {
                         //如果包含OrganizationUser要按整个组织设置查询权限
                         string newLambdaString = "";
-                        var members = await _organizationStore.GetMenberInOrganizationUnitAsync(user.Id);
+                        var members = await _organizationStore.GetMemberInOrganizationUnitAsync(user.Id);
                         if (members.Any())
                         {
                             foreach (var menber in members)

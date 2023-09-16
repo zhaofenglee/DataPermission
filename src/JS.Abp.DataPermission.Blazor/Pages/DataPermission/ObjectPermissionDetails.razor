@@ -1,0 +1,188 @@
+@page "/DataPermission/ObjectPermissionDetails/{DetailId:guid}"
+
+
+
+@attribute [Authorize(DataPermissionPermissions.ObjectPermissions.Edit)]
+@using global::JS.Abp.DataPermission.ObjectPermissions
+@using global::JS.Abp.DataPermission.Localization
+@using global::JS.Abp.DataPermission.Shared
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Localization
+@using Microsoft.AspNetCore.Components.Web
+@using Blazorise
+@using Blazorise.Components
+@using Blazorise.DataGrid
+@using Volo.Abp.BlazoriseUI
+@using Volo.Abp.BlazoriseUI.Components
+@using Volo.Abp.ObjectMapping
+@using Volo.Abp.AspNetCore.Components.Messages
+@using Volo.Abp.AspNetCore.Components.Web.Theming.Layout
+@using global::JS.Abp.DataPermission.Permissions
+@using Microsoft.AspNetCore.Components
+@using Volo.Abp.AspNetCore.Components.Web
+@using Volo.Abp.Http.Client
+@inherits DataPermissionComponentBase
+@inject IObjectPermissionsAppService ObjectPermissionsAppService
+@inject IUiMessageService UiMessageService
+@inject IRemoteServiceConfigurationProvider RemoteServiceConfigurationProvider
+@inject NavigationManager NavigationManager
+@using JS.Abp.DataPermission.Blazor.Components
+
+@* ************************* PAGE HEADER ************************* *@
+<PageHeader Title="@L["ObjectPermissions"]" BreadcrumbItems="BreadcrumbItems" Toolbar="Toolbar">
+
+</PageHeader>
+
+<Card>
+    <CardBody>
+        <Paragraph TextAlignment="TextAlignment.End">
+            <Button Color="Color.Primary"
+                    Clicked="async () => await OpenEditObjectPermissionModalAsync()"
+                    Size="Size.Small">
+                <i class="far fa-edit"></i>
+                @L["Edit"]
+            </Button>
+        </Paragraph>
+        <Row>
+            <div class="container mb-4">
+                <Row>
+                    <div class="col-sm-6 col-md-3">
+                        <span class="text-muted">@L["ObjectName"]</span>
+                        <p class="h4" style="margin-left: 1px">@EditingObjectPermission.ObjectName</p>
+
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <span class="text-muted">@L["Description"]</span>
+                        <p class="h4" style="margin-left: 1px">@EditingObjectPermission.Description</p>
+
+                    </div>
+                </Row>
+            </div>
+
+        </Row>
+
+        <Tabs SelectedTab="Row">
+            <Items>
+                <Tab Name="Row">@L["PermissionExtension"]</Tab>
+                <Tab Name="Column">@L["PermissionItems"]</Tab>
+            </Items>
+            <Content>
+                <TabPanel Name="Row">
+                    <PermissionExtensionTabs ObjectName="@EditingObjectPermission.ObjectName"></PermissionExtensionTabs>
+                </TabPanel>
+                <TabPanel Name="Column">
+                    <PermissionItemTabs  ObjectName="@EditingObjectPermission.ObjectName"></PermissionItemTabs>
+                </TabPanel>
+            </Content>
+        </Tabs>
+    </CardBody>
+</Card>
+
+
+@* ************************* CREATE MODAL ************************* *@
+<Modal @ref="CreateObjectPermissionModal" Closing="@CreateObjectPermissionModal.CancelClosingModalWhenFocusLost">
+    <ModalContent Centered="true">
+        <Form id="CreateObjectPermissionForm">
+            <ModalHeader>
+                <ModalTitle>@L["NewObjectPermission"]</ModalTitle>
+                <CloseButton Clicked="CloseCreateObjectPermissionModalAsync" />
+            </ModalHeader>
+            <ModalBody>
+                <Validations @ref="@NewObjectPermissionValidations"
+                            Mode="ValidationMode.Auto"
+                            Model="@NewObjectPermission"
+                            ValidateOnLoad="false">
+                     
+                    
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["ObjectName"] *</FieldLabel>
+                            <TextEdit @bind-Text="@NewObjectPermission.ObjectName" MaxLength="ObjectPermissionConsts.ObjectNameMaxLength">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["Description"]</FieldLabel>
+                            <TextEdit @bind-Text="@NewObjectPermission.Description" >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    
+                    
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                        Clicked="CloseCreateObjectPermissionModalAsync">
+                    @L["Cancel"]
+                </Button>
+                <SubmitButton Form="CreateObjectPermissionForm" Clicked="CreateObjectPermissionAsync" />
+            </ModalFooter>
+        </Form>
+    </ModalContent>
+</Modal>
+
+@* ************************* EDIT MODAL ************************* *@
+<Modal @ref="EditObjectPermissionModal" Closing="@EditObjectPermissionModal.CancelClosingModalWhenFocusLost">
+    <ModalContent Centered="true">
+        <Form id="EditObjectPermissionForm">
+            <ModalHeader>
+                <ModalTitle>@L["Update"]</ModalTitle>
+                <CloseButton Clicked="CloseEditObjectPermissionModalAsync" />
+            </ModalHeader>
+            <ModalBody>
+                <Validations @ref="@EditingObjectPermissionValidations"
+                            Mode="ValidationMode.Auto"
+                            Model="@EditingObjectPermission"
+                            ValidateOnLoad="false">
+                     
+                    
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["ObjectName"] *</FieldLabel>
+                            <TextEdit @bind-Text="@EditingObjectPermission.ObjectName" MaxLength="ObjectPermissionConsts.ObjectNameMaxLength">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["Description"]</FieldLabel>
+                            <TextEdit @bind-Text="@EditingObjectPermission.Description" >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    
+                    
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                        Clicked="CloseEditObjectPermissionModalAsync">
+                    @L["Cancel"]
+                </Button>
+                <SubmitButton Form="CreateObjectPermissionForm" Clicked="UpdateObjectPermissionAsync" />
+            </ModalFooter>
+        </Form>
+    </ModalContent>
+</Modal>

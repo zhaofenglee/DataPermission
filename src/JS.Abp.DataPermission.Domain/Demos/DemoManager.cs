@@ -14,7 +14,8 @@ namespace JS.Abp.DataPermission.Demos
     public class DemoManager : DomainService
     {
         private readonly IDemoRepository _demoRepository;
-        protected IDataPermissionStore dataPermissionStore => LazyServiceProvider.LazyGetRequiredService<IDataPermissionStore>();//add
+        protected IDataPermissionStore dataPermissionStore => LazyServiceProvider.LazyGetRequiredService<IDataPermissionStore>();//行级数据权限
+        protected IDataPermissionItemStore dataPermissionItemStore => LazyServiceProvider.LazyGetRequiredService<IDataPermissionItemStore>();//字段级数据权限
         public DemoManager(IDemoRepository demoRepository)
         {
             _demoRepository = demoRepository;
@@ -50,8 +51,10 @@ namespace JS.Abp.DataPermission.Demos
 
             var demo = await _demoRepository.GetAsync(id);
 
-            demo.Name = name;
-            demo.DisplayName = displayName;
+            if (dataPermissionItemStore.CheckUpdate(nameof(Demo), "Name"))
+                demo.Name = name;
+            if (dataPermissionItemStore.CheckUpdate(nameof(Demo), "DisplayName"))
+                demo.DisplayName = displayName;
 
             demo.SetConcurrencyStampIfNotNull(concurrencyStamp);
             return await _demoRepository.UpdateAsync(demo);

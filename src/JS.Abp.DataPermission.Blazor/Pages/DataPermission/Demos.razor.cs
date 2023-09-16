@@ -11,6 +11,7 @@ using Volo.Abp.AspNetCore.Components.Web.Theming.PageToolbars;
 using JS.Abp.DataPermission.Demos;
 using JS.Abp.DataPermission.Permissions;
 using JS.Abp.DataPermission.PermissionTypes;
+using JS.Abp.DataPermission.Services;
 using JS.Abp.DataPermission.Shared;
 
 namespace JS.Abp.DataPermission.Blazor.Pages.DataPermission
@@ -38,7 +39,7 @@ namespace JS.Abp.DataPermission.Blazor.Pages.DataPermission
         private DataGridEntityActionsColumn<DemoDto> EntityActionsColumn { get; set; } = new();
         protected string SelectedCreateTab = "demo-create-tab";
         protected string SelectedEditTab = "demo-edit-tab";
-        
+        private DataPermissionItemDto DataPermissionItem { get; set; }
         public Demos()
         {
             NewDemo = new DemoCreateDto();
@@ -50,6 +51,7 @@ namespace JS.Abp.DataPermission.Blazor.Pages.DataPermission
                 Sorting = CurrentSorting
             };
             DemoList = new List<DemoDto>();
+            DataPermissionItem = new DataPermissionItemDto();
         }
 
         protected override async Task OnInitializedAsync()
@@ -85,6 +87,14 @@ namespace JS.Abp.DataPermission.Blazor.Pages.DataPermission
             //     .IsGrantedAsync(DataPermissionPermissions.Demos.Edit);
             CanDeleteDemo = await AuthorizationService
                             .IsGrantedAsync(DataPermissionPermissions.Demos.Delete);
+            //这里把字段级权限获取，再传递给前端，前端根据权限判断是否显示编辑
+            //需要注意判断是否有权限规则如下参考：
+            //if (!DataPermissionItem.PermissionItems.Any(x => x.TargetType == "DisplayName")||DataPermissionItem.PermissionItems.FirstOrDefault(x => x.TargetType == "DisplayName").CanEdit)
+            DataPermissionItem =
+                await PermissionApplicationService.GetDataPermissionItemAsync(new GetPermissionItemInput()
+                {
+                    ObjectName = "Demo",
+                });
         }
 
         private async Task GetDemosAsync()

@@ -19,6 +19,17 @@ public class DataPermissionPermissionDefinitionProvider : PermissionDefinitionPr
         demoPermission.AddChild(DataPermissionPermissions.Demos.Create, L("Permission:Create"));
         demoPermission.AddChild(DataPermissionPermissions.Demos.Edit, L("Permission:Edit"));
         demoPermission.AddChild(DataPermissionPermissions.Demos.Delete, L("Permission:Delete"));
+
+        var objectPermissionPermission = myGroup.AddPermission(DataPermissionPermissions.ObjectPermissions.Default, L("Permission:ObjectPermissions"));
+        objectPermissionPermission.AddChild(DataPermissionPermissions.ObjectPermissions.Create, L("Permission:Create"));
+        objectPermissionPermission.AddChild(DataPermissionPermissions.ObjectPermissions.Edit, L("Permission:Edit"));
+        objectPermissionPermission.AddChild(DataPermissionPermissions.ObjectPermissions.Delete, L("Permission:Delete"));
+
+        var permissionItemPermission = myGroup.AddPermission(DataPermissionPermissions.PermissionItems.Default, L("Permission:PermissionItems"));
+        permissionItemPermission.AddChild(DataPermissionPermissions.PermissionItems.Create, L("Permission:Create"));
+        permissionItemPermission.AddChild(DataPermissionPermissions.PermissionItems.Edit, L("Permission:Edit"));
+        permissionItemPermission.AddChild(DataPermissionPermissions.PermissionItems.Delete, L("Permission:Delete"));
+
     }
 
     private static LocalizableString L(string name)

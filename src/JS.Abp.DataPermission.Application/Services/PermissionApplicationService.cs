@@ -16,12 +16,16 @@ public class PermissionApplicationService : ApplicationService, IPermissionAppli
 {
     private readonly IDistributedCache<PermissionCacheItem, PermissionCacheKey> _cache;
     private readonly IDataPermissionStore _dataPermissionStore;
+    private readonly IDataPermissionItemStore _dataPermissionItemStore;
     private readonly ICurrentUser _currentUser;
     public PermissionApplicationService(IDistributedCache<PermissionCacheItem,PermissionCacheKey>  cache, 
-        IDataPermissionStore dataPermissionStore,ICurrentUser currentUser)
+        IDataPermissionStore dataPermissionStore,
+        IDataPermissionItemStore dataPermissionItemStore,
+        ICurrentUser currentUser)
     {
         _cache = cache;
         _dataPermissionStore = dataPermissionStore;
+        _dataPermissionItemStore = dataPermissionItemStore;
         _currentUser = currentUser;
     }
     public virtual async Task<GetPermissionResultDto> GetAsync(string id, string policyName, PermissionType permissionType)
@@ -122,5 +126,15 @@ public class PermissionApplicationService : ApplicationService, IPermissionAppli
         {
             return permission;
         }
+    }
+
+    public virtual async Task<DataPermissionItemDto> GetDataPermissionItemAsync(GetPermissionItemInput input)
+    {
+        var permissionItems = await _dataPermissionItemStore.GetListAsync(input.ObjectName);
+        return new DataPermissionItemDto()
+        {
+            ObjectName = input.ObjectName,
+            PermissionItems = permissionItems,
+        };
     }
 }

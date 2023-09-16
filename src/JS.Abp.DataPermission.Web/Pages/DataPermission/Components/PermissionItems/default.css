@@ -1,0 +1,15 @@
+/*.dataTables_scrollHead + .dataTables_scrollBody > .dataTable > thead > tr > th:after {*/
+/*    display: none;*/
+/*}*/
+/*table.dataTable{*/
+/*    width: 100% !important;*/
+/*}*/
+
+.dataTables_scrollHeadInner {
+    width: auto !important;
+}
+
+/*.dataTables_scrollHeadInner > .dataTable > thead > tr > th {*/
+/*    border-bottom-width: 0 !important;*/
+/*}*/
+

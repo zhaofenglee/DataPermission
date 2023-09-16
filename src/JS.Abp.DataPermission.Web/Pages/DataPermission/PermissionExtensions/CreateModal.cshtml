@@ -17,7 +17,7 @@
 
         <abp-modal-body>
                     
-            <abp-input asp-for="PermissionExtension.ObjectName"  />
+            <abp-input value="@Model.ObjectName" asp-for="PermissionExtension.ObjectName"  />
 
             @* <abp-input asp-for="PermissionExtension.RoleId"  /> *@
             <abp-select asp-for="PermissionExtension.RoleId" asp-items="@Model.RoleList" label="RoleName"/>

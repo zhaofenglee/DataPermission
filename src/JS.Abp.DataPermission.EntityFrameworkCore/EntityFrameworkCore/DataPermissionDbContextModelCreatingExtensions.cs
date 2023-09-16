@@ -3,6 +3,8 @@ using Volo.Abp.EntityFrameworkCore.Modeling;
 using JS.Abp.DataPermission.PermissionExtensions;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp;
+using JS.Abp.DataPermission.ObjectPermissions;
+using JS.Abp.DataPermission.PermissionItems;
 
 namespace JS.Abp.DataPermission.EntityFrameworkCore;
 
@@ -57,6 +59,35 @@ public static class DataPermissionDbContextModelCreatingExtensions
     b.Property(x => x.Name).HasColumnName(nameof(Demo.Name)).HasMaxLength(DemoConsts.NameMaxLength);
     b.Property(x => x.DisplayName).HasColumnName(nameof(Demo.DisplayName)).HasMaxLength(DemoConsts.DisplayNameMaxLength);
 });
+
+        }
+        if (builder.IsHostDatabase())
+        {
+            builder.Entity<ObjectPermission>(b =>
+            {
+                b.ToTable(DataPermissionDbProperties.DbTablePrefix + "ObjectPermissions", DataPermissionDbProperties.DbSchema);
+                b.ConfigureByConvention();
+                b.Property(x => x.ObjectName).HasColumnName(nameof(ObjectPermission.ObjectName)).IsRequired().HasMaxLength(ObjectPermissionConsts.ObjectNameMaxLength);
+                b.Property(x => x.Description).HasColumnName(nameof(ObjectPermission.Description));
+            });
+
+        }
+        if (builder.IsHostDatabase())
+        {
+            builder.Entity<PermissionItem>(b =>
+            {
+                b.ToTable(DataPermissionDbProperties.DbTablePrefix + "PermissionItems", DataPermissionDbProperties.DbSchema);
+                b.ConfigureByConvention();
+                b.Property(x => x.ObjectName).HasColumnName(nameof(PermissionItem.ObjectName)).IsRequired().HasMaxLength(PermissionItemConsts.ObjectNameMaxLength);
+                b.Property(x => x.Description).HasColumnName(nameof(PermissionItem.Description));
+                b.Property(x => x.TargetType).HasColumnName(nameof(PermissionItem.TargetType)).IsRequired().HasMaxLength(PermissionItemConsts.TargetTypeMaxLength);
+                b.Property(x=>x.RoleId).HasColumnName(nameof(PermissionItem.RoleId));
+                b.Property(x => x.CanRead).HasColumnName(nameof(PermissionItem.CanRead));
+                b.Property(x => x.CanCreate).HasColumnName(nameof(PermissionItem.CanCreate));
+                b.Property(x => x.CanEdit).HasColumnName(nameof(PermissionItem.CanEdit));
+                b.Property(x => x.CanDelete).HasColumnName(nameof(PermissionItem.CanDelete));
+                b.Property(x => x.IsActive).HasColumnName(nameof(PermissionItem.IsActive));
+            });
 
         }
     }

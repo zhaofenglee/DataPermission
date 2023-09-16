@@ -1,0 +1,73 @@
+@page "/DataPermission/ObjectPermissions/{ObjectName}"
+@using Microsoft.AspNetCore.Authorization
+@using Volo.Abp.AspNetCore.Mvc.UI.Layout
+@using JS.Abp.DataPermission.Permissions
+@using JS.Abp.DataPermission.Web.Pages.DataPermission.ObjectPermissions
+@using JS.Abp.DataPermission.Web.Menus
+@using Microsoft.AspNetCore.Mvc.Localization
+@using JS.Abp.DataPermission.Localization
+@using JS.Abp.DataPermission.Web.Pages.DataPermission.Components.PermissionExtensions
+@using JS.Abp.DataPermission.Web.Pages.DataPermission.Components.PermissionItems
+@using Volo.Abp.AspNetCore.Mvc.UI.Widgets
+@inject IHtmlLocalizer<DataPermissionResource> L
+@inject IAuthorizationService Authorization
+@inject IWidgetManager WidgetManager
+@model DetailsModel
+@inject IPageLayout PageLayout
+@{
+    PageLayout.Content.Title = L["ObjectPermissions"].Value;
+    PageLayout.Content.MenuItemName = DataPermissionMenus.ObjectPermissions;
+}
+
+@section scripts
+{
+    <abp-script src="/Pages/DataPermission/ObjectPermissions/details.js"/>
+}
+
+@section content_toolbar {
+
+}
+
+<abp-card>
+    <abp-card-body>
+        <input id="ObjectName" type="hidden" asp-for="@Model.ObjectName" value="@Model.ObjectName"/>
+        <abp-row id="OrderDetilsRow">
+            <div class="container mb-4">
+                <div class="row">
+                    <div class="col">
+                        <span class="text-muted">@L["ObjectName"]</span>
+                        <p class="h4">@Model.ObjectPermission.ObjectName</p>
+                    </div>
+                    <div class="col">
+                        <span class="text-muted">@L["Description"]</span>
+                        <p class="h4">@Model.ObjectPermission.Description</p>
+                    </div>
+
+                </div>
+
+            </div>
+        </abp-row>
+        <hr/>
+
+        <div id="ObjectPermissionDetailsArea">
+
+            <abp-tabs >
+                <abp-tab class="tab" active="true" title="@L["PermissionExtension"].Value">
+                      
+                     @await Component.InvokeAsync(typeof(PermissionExtensionsViewComponent), new
+                                                  {
+                                                      objectName = @Model.ObjectName
+                                                  })
+
+                </abp-tab>
+                <abp-tab class="tab" title="@L["PermissionItems"].Value">
+                    
+                   @await Component.InvokeAsync(typeof(PermissionItemsViewComponent), new
+                                                 {
+                                                     objectName = @Model.ObjectName
+                                                 })
+                </abp-tab>
+            </abp-tabs>
+        </div>
+    </abp-card-body>
+</abp-card>

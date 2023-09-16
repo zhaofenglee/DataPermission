@@ -14,8 +14,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Volo.Abp.AutoMapper" Version="7.3.2" />
-    <PackageReference Include="Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared" Version="7.3.2" />
+    <PackageReference Include="Volo.Abp.AutoMapper" Version="7.3.3" />
+    <PackageReference Include="Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared" Version="7.3.3" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,6 +38,12 @@
     <Content Remove="Components\**\*.css" />
     <Content Remove="wwwroot\**\*.*" />
     <Content Remove="Properties\launchSettings.json" />
+    <None Include="Pages\DataPermission\ObjectPermissions\CreateModal.cshtml" />
+    <None Include="Pages\DataPermission\ObjectPermissions\EditModal.cshtml" />
+    <None Include="Pages\DataPermission\ObjectPermissions\Index.cshtml" />
+    <None Include="Pages\DataPermission\PermissionItems\CreateModal.cshtml" />
+    <None Include="Pages\DataPermission\PermissionItems\EditModal.cshtml" />
+    <None Include="Pages\DataPermission\PermissionItems\Index.cshtml" />
     <None Include="Properties\launchSettings.json" />
   </ItemGroup>
 

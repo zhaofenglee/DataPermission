@@ -18,7 +18,7 @@ public class OrganizationStore: IOrganizationStore, ITransientDependency
         _organizationUnitRepository = organizationUnitRepository;
     }
     
-    public virtual async Task<List<string>> GetMenberInOrganizationUnitAsync(Guid id)
+    public virtual async Task<List<string>> GetMemberInOrganizationUnitAsync(Guid id)
     {
         List<string> result = new List<string>();
         result.Add(id.ToString());

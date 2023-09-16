@@ -1,5 +1,7 @@
 using JS.Abp.DataPermission.Demos;
+using JS.Abp.DataPermission.ObjectPermissions;
 using JS.Abp.DataPermission.PermissionExtensions;
+using JS.Abp.DataPermission.PermissionItems;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Modularity;
 using Volo.Abp.MongoDB;
@@ -22,6 +24,9 @@ public class DataPermissionMongoDbModule : AbpModule
             options.AddRepository<PermissionExtension, PermissionExtensions.MongoPermissionExtensionRepository>();
 
             options.AddRepository<Demo, Demos.MongoDemoRepository>();
+            options.AddRepository<PermissionItem, PermissionItems.MongoPermissionItemRepository>();
+
+            options.AddRepository<ObjectPermission, ObjectPermissions.MongoObjectPermissionRepository>();
 
         });
     }

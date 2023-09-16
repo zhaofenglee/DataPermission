@@ -2,6 +2,8 @@ using JS.Abp.DataPermission.Demos;
 using Volo.Abp.AutoMapper;
 using JS.Abp.DataPermission.PermissionExtensions;
 using AutoMapper;
+using JS.Abp.DataPermission.ObjectPermissions;
+using JS.Abp.DataPermission.PermissionItems;
 
 namespace JS.Abp.DataPermission.Blazor;
 
@@ -16,5 +18,9 @@ public class DataPermissionBlazorAutoMapperProfile : Profile
         CreateMap<PermissionExtensionDto, PermissionExtensionUpdateDto>();
 
         CreateMap<DemoDto, DemoUpdateDto>();
+        CreateMap<PermissionItemDto, PermissionItemUpdateDto>();
+
+        CreateMap<ObjectPermissionDto, ObjectPermissionUpdateDto>();
+
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore.Sqlite;
+using Volo.Abp.Identity.EntityFrameworkCore;
 using Volo.Abp.Modularity;
 using Volo.Abp.Uow;
 
@@ -12,6 +13,7 @@ namespace JS.Abp.DataPermission.EntityFrameworkCore;
 [DependsOn(
     typeof(DataPermissionTestBaseModule),
     typeof(DataPermissionEntityFrameworkCoreModule),
+    typeof(AbpIdentityEntityFrameworkCoreModule),
     typeof(AbpEntityFrameworkCoreSqliteModule)
     )]
 public class DataPermissionEntityFrameworkCoreTestModule : AbpModule
@@ -36,6 +38,10 @@ public class DataPermissionEntityFrameworkCoreTestModule : AbpModule
         var connection = new SqliteConnection("Data Source=:memory:");
         connection.Open();
 
+        new IdentityDbContext(
+            new DbContextOptionsBuilder<IdentityDbContext>().UseSqlite(connection).Options
+        ).GetService<IRelationalDatabaseCreator>().CreateTables();
+        
         new DataPermissionDbContext(
             new DbContextOptionsBuilder<DataPermissionDbContext>().UseSqlite(connection).Options
         ).GetService<IRelationalDatabaseCreator>().CreateTables();
