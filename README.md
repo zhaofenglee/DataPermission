@@ -8,6 +8,26 @@
 
 ---
 
+## 新功能
+* 增加基于Permission数据权限
+````csharp
+//前端请参考Abp文档https://docs.abp.io/en/abp/latest/Authorization
+
+//后端使用方法参考:AuthorizationPolicyProvider_Test
+//1.在需要输出Dto上加入PermissionAttribute
+public class DemoDto : FullAuditedEntityDto<Guid>, IHasConcurrencyStamp
+    {
+        public string? Name { get; set; }
+        [Permission(DataPermissionPermissions.Demos.Read)]//Add
+        public string? DisplayName { get; set; }
+        public RowPermissionItemDto Permission { get; set; } = new RowPermissionItemDto();
+
+        public string ConcurrencyStamp { get; set; }
+    }
+//2.在需要控制输出的方法中使用，若无权，会替换成默认值输出
+   private readonly IDataPermissionAuthorizationPolicyProvider _dataPermissionAuthorizationPolicyProvider;
+   await _dataPermissionAuthorizationPolicyProvider.CheckListAsync(dtos);
+````
 ## 7.3.3更新说明
 * 增加字段级数据权限功能
 * 增加实体数据权限列表，并且把行级和字段级数据权限合并在同一个明细页面
