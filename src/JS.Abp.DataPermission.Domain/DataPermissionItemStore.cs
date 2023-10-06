@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using JS.Abp.DataPermission.Attributes;
+using Attributes;
 using JS.Abp.DataPermission.PermissionExtensions;
 using JS.Abp.DataPermission.PermissionItems;
 using JS.Abp.DataPermission.PermissionTypes;
@@ -209,8 +210,8 @@ public class DataPermissionItemStore:IDataPermissionItemStore,ITransientDependen
             return new List<PermissionItemResult>();
         }
     }
-     
-     public class DataColumnInfo
+
+     private class DataColumnInfo
      {
          public string ObjectName { get; set; }
          public string TargetType { get; set; }

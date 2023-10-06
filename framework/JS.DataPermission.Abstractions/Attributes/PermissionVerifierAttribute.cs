@@ -1,6 +1,6 @@
 using System;
 
-namespace JS.Abp.DataPermission.Attributes;
+namespace System.ComponentModel.DataAnnotations;
 
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
 public class PermissionVerifierAttribute : Attribute
