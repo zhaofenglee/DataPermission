@@ -1,5 +1,5 @@
 using System;
-using JS.Abp.DataPermission.Attributes;
+using System.ComponentModel.DataAnnotations;
 using JS.Abp.DataPermission.Shared;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Domain.Entities;

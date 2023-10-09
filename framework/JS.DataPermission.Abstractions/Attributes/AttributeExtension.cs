@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Reflection;
 
-namespace JS.Abp.DataPermission.Attributes;
+namespace Attributes;
 
 public static class AttributeExtension
 {
