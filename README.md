@@ -8,12 +8,12 @@
 
 ---
 
-## 新功能
+## 7.4.0更新说明
 * 增加基于Permission数据权限
 ````csharp
 //前端请参考Abp文档https://docs.abp.io/en/abp/latest/Authorization
-
 //后端使用方法参考:AuthorizationPolicyProvider_Test
+
 //1.在需要输出Dto上加入PermissionAttribute
 public class DemoDto : FullAuditedEntityDto<Guid>, IHasConcurrencyStamp
     {
@@ -116,7 +116,6 @@ public MyOrganizationStore(IIdentityUserRepository identityUserRepository, IOrga
 * [DependsOn(typeof(DataPermissionEntityFrameworkCoreModule))] OR [DependsOn(typeof(DataPermissionMongoDbModule))]
 * [DependsOn(typeof(DataPermissionHttpApiModule))]
 * [DependsOn(typeof(DataPermissionHttpApiClientModule))]
-
 
 *(Optional)  [DependsOn(typeof(DataPermissionBlazorModule))]
 *(Optional)  [DependsOn(typeof(DataPermissionBlazorServerModule))]
@@ -251,7 +250,7 @@ public PermissionItemDto Permission { get; set; } = new PermissionItemDto();
 ### 1.在字段级数据权限配置需要控制的实体名称，类型，对应字段名称及对应的权限
 ![img](/docs/images/20230901200918.png)
 
-### 2.在仓库或者数据写入服务中判断是否有权限，有权限再写入
+### 2.在仓储或者数据写入服务中判断是否有权限，有权限再写入
 ````csharp 
  protected IDataPermissionItemStore dataPermissionItemStore => LazyServiceProvider.LazyGetRequiredService<IDataPermissionItemStore>();//字段级数据权限
  
