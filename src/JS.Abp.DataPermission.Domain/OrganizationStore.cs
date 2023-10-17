@@ -27,7 +27,7 @@ public class OrganizationStore: IOrganizationStore, ITransientDependency
         {
             foreach (var ou in oulist)
             {
-                var menbers =await _organizationUnitRepository.GetUnaddedUsersAsync(ou);
+                var menbers =await _organizationUnitRepository.GetMembersAsync(ou);
                 if (menbers.Any())
                 {
                     foreach (var menber in menbers)
