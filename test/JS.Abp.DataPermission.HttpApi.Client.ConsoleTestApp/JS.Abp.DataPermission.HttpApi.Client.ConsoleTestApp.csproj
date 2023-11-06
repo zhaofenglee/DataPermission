@@ -8,8 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Volo.Abp.Http.Client.IdentityModel" Version="7.4.0" />
-    <PackageReference Include="Volo.Abp.Autofac" Version="7.4.0" />
+    <PackageReference Include="Volo.Abp.Http.Client.IdentityModel" Version="7.4.1" />
+    <PackageReference Include="Volo.Abp.Autofac" Version="7.4.1" />
     <ProjectReference Include="..\..\src\JS.Abp.DataPermission.HttpApi.Client\JS.Abp.DataPermission.HttpApi.Client.csproj" />
   </ItemGroup>
 
