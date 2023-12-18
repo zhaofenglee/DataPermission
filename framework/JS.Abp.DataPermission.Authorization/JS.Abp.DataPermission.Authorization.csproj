@@ -12,10 +12,11 @@
         <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
         <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
         <RootNamespace />
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Volo.Abp.Authorization" Version="7.4.3" />
+      <PackageReference Include="Volo.Abp.Authorization" Version="7.4.4" />
     </ItemGroup>
 
     <ItemGroup>
@@ -25,5 +26,12 @@
     <ItemGroup>
       <ProjectReference Include="..\JS.DataPermission.Abstractions\JS.DataPermission.Abstractions.csproj" />
     </ItemGroup>
+
+
+    <Target Name="CopyPackage" AfterTargets="Pack" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <Copy
+                SourceFiles="$(OutputPath)$(PackageId).$(PackageVersion).nupkg"
+                DestinationFolder="..\..\packageshare\"/>
+    </Target>
 
 </Project>
