@@ -3,7 +3,7 @@
     <Import Project="..\..\common.props" />
     
     <PropertyGroup>
-        <TargetFrameworks>netstandard2.0;netstandard2.1;net7.0</TargetFrameworks>
+        <TargetFrameworks>netstandard2.0;netstandard2.1;net8.0</TargetFrameworks>
         <Nullable>enable</Nullable>
         <PackageId>JS.DataPermission.Abstractions</PackageId>
         <AssetTargetFallback>$(AssetTargetFallback);portable-net45+win8+wp8+wpa81;</AssetTargetFallback>
@@ -13,11 +13,6 @@
         <RootNamespace />
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
-
-    <Target Name="CopyPackage" AfterTargets="Pack" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <Copy
-                SourceFiles="$(OutputPath)$(PackageId).$(PackageVersion).nupkg"
-                DestinationFolder="..\..\packageshare\"/>
-    </Target>
+    
 
 </Project>
