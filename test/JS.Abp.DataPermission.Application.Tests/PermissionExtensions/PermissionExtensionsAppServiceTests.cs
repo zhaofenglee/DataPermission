@@ -3,11 +3,13 @@ using System.Linq;
 using Shouldly;
 using System.Threading.Tasks;
 using Volo.Abp.Domain.Repositories;
+using Volo.Abp.Modularity;
 using Xunit;
 
 namespace JS.Abp.DataPermission.PermissionExtensions
 {
-    public class PermissionExtensionsAppServiceTests : DataPermissionApplicationTestBase
+    public abstract class PermissionExtensionsAppServiceTests <TStartupModule> : DataPermissionApplicationTestBase<TStartupModule>
+        where TStartupModule : IAbpModule
     {
         private readonly IPermissionExtensionsAppService _permissionExtensionsAppService;
         private readonly IRepository<PermissionExtension, Guid> _permissionExtensionRepository;

@@ -40,6 +40,13 @@ namespace JS.Abp.DataPermission.ObjectPermissions
                 objectName: "3f1ac3871b2b4e9d9a14a21217b51f65577673c5aa914620bb96f3a580cc2b24e3d6d23ae3144a309c287623793e0e117a3ee07d24f34f9bbde95403f9a90f48",
                 description: "9099bdfdc7084050b42d611d714007c8e484fd6d502446"
             ));
+            
+            await _objectPermissionRepository.InsertAsync(new ObjectPermission
+            (
+                id: Guid.Parse("43e88ac8-c5d0-4085-a2b3-8528cf938f74"),
+                objectName: "Demo",
+                description: "Demo_permission_test"
+            ));
 
             await _unitOfWorkManager.Current.SaveChangesAsync();
 

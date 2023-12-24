@@ -7,6 +7,10 @@
 </div>
 
 ---
+## 8.0.0更新说明
+* 升级支持Net8.0
+* Abp版本升级到8.0.0
+* 增加权限单元测试，参考：DemosAppServiceTests
 
 ## 7.4.0更新说明
 * 增加基于Permission数据权限
