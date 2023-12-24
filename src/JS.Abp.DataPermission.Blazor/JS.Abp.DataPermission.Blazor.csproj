@@ -3,15 +3,15 @@
     <Import Project="..\..\common.props" />
 
     <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFrameworks>net8.0;</TargetFrameworks>
         <Nullable>enable</Nullable>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Volo.Abp.AutoMapper" Version="7.4.4" />
-        <PackageReference Include="Volo.Abp.AspNetCore.Components.Web.Theming" Version="7.4.4" />
-        <PackageReference Include="Volo.Abp.RemoteServices" Version="7.4.4" />
+        <PackageReference Include="Volo.Abp.AutoMapper" Version="$(VoloAbpPackageVersion)" />
+        <PackageReference Include="Volo.Abp.AspNetCore.Components.Web.Theming" Version="$(VoloAbpPackageVersion)" />
+        <PackageReference Include="Volo.Abp.RemoteServices" Version="$(VoloAbpPackageVersion)" />
     </ItemGroup>
 
     <ItemGroup>

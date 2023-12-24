@@ -7,39 +7,20 @@ using Volo.Abp.Security.Claims;
 namespace JS.Abp.DataPermission.Security;
 
 [Dependency(ReplaceServices = true)]
-public class FakeCurrentPrincipalAccessor : ICurrentPrincipalAccessor, ISingletonDependency
+public class FakeCurrentPrincipalAccessor : ThreadCurrentPrincipalAccessor
 {
-    public ClaimsPrincipal Principal => GetPrincipal();
-    private ClaimsPrincipal? _principal;
+    protected override ClaimsPrincipal GetClaimsPrincipal()
+    {
+        return GetPrincipal();
+    }
 
     private ClaimsPrincipal GetPrincipal()
     {
-        if (_principal == null)
+        return new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>
         {
-            lock (this)
-            {
-                if (_principal == null)
-                {
-                    _principal = new ClaimsPrincipal(
-                        new ClaimsIdentity(
-                            new List<Claim>
-                            {
-                                    new Claim(AbpClaimTypes.UserId,"2e701e62-0953-4dd3-910b-dc6cc93ccb0d"),
-                                    new Claim(AbpClaimTypes.UserName,"admin"),
-                                    new Claim(AbpClaimTypes.Email,"admin@abp.io")
-                            }
-                        )
-                    );
-                }
-            }
-        }
-
-        return _principal;
-    }
-
-    public IDisposable? Change(ClaimsPrincipal principal)
-    {
-        _principal = principal;
-        return null;
+            new Claim(AbpClaimTypes.UserId, "2e701e62-0953-4dd3-910b-dc6cc93ccb0d"),
+            new Claim(AbpClaimTypes.UserName, "admin"),
+            new Claim(AbpClaimTypes.Email, "admin@abp.io")
+        }));
     }
 }

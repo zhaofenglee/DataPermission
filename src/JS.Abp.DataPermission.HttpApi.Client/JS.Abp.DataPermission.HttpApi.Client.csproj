@@ -3,14 +3,14 @@
   <Import Project="..\..\common.props" />
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net8.0</TargetFrameworks>
     <Nullable>enable</Nullable>
     <RootNamespace>JS.Abp.DataPermission</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Volo.Abp.Http.Client" Version="7.4.4" />
+    <PackageReference Include="Volo.Abp.Http.Client" Version="$(VoloAbpPackageVersion)" />
     <ProjectReference Include="..\JS.Abp.DataPermission.Application.Contracts\JS.Abp.DataPermission.Application.Contracts.csproj" />
   </ItemGroup>
 

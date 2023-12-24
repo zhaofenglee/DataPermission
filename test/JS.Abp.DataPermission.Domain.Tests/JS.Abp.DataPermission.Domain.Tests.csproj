@@ -3,17 +3,18 @@
   <Import Project="..\..\common.props" />
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <RootNamespace>JS.Abp.DataPermission</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\JS.Abp.DataPermission.EntityFrameworkCore.Tests\JS.Abp.DataPermission.EntityFrameworkCore.Tests.csproj" />
+    <ProjectReference Include="..\..\src\JS.Abp.DataPermission.Domain\JS.Abp.DataPermission.Domain.csproj" />
+    <ProjectReference Include="..\JS.Abp.DataPermission.TestBase\JS.Abp.DataPermission.TestBase.csproj" />
   </ItemGroup>
 
 </Project>

@@ -4,6 +4,7 @@ using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Uow;
 using JS.Abp.DataPermission.PermissionExtensions;
+using JS.Abp.DataPermission.PermissionTypes;
 
 namespace JS.Abp.DataPermission.PermissionExtensions
 {
@@ -47,6 +48,18 @@ namespace JS.Abp.DataPermission.PermissionExtensions
                 excludedRoleId: Guid.Parse("2832d88e-33e9-47ed-9b54-8b8804ca6e12"),
                 permissionType: default,
                 lambdaString: "08676f6",
+                isActive: true,
+                description:null
+            ));
+            
+            await _permissionExtensionRepository.InsertAsync(new PermissionExtension
+            (
+                id: Guid.Parse("1f6c5bc9-9e00-4a21-80b4-d4e7b217f089"),
+                objectName: "Demo",
+                roleId: Guid.Parse("3e5ca2f9-fb65-4819-b4df-e62cae198ae8"),
+                excludedRoleId: null,
+                permissionType: PermissionType.Read,
+                lambdaString: "x.Name!=\"Admin\"",
                 isActive: true,
                 description:null
             ));

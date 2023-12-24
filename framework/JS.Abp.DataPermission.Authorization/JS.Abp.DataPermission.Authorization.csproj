@@ -3,7 +3,7 @@
     <Import Project="..\..\common.props" />
 
     <PropertyGroup>
-        <TargetFrameworks>netstandard2.0;netstandard2.1;net7.0</TargetFrameworks>
+        <TargetFrameworks>netstandard2.0;netstandard2.1;net8.0</TargetFrameworks>
         <Nullable>enable</Nullable>
         <AssemblyName>JS.DataPermission.Authorization</AssemblyName>
         <PackageId>JS.DataPermission.Authorization</PackageId>
@@ -16,7 +16,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Volo.Abp.Authorization" Version="7.4.4" />
+      <PackageReference Include="Volo.Abp.Authorization" Version="$(VoloAbpPackageVersion)" />
     </ItemGroup>
 
     <ItemGroup>
@@ -26,12 +26,6 @@
     <ItemGroup>
       <ProjectReference Include="..\JS.DataPermission.Abstractions\JS.DataPermission.Abstractions.csproj" />
     </ItemGroup>
-
-
-    <Target Name="CopyPackage" AfterTargets="Pack" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <Copy
-                SourceFiles="$(OutputPath)$(PackageId).$(PackageVersion).nupkg"
-                DestinationFolder="..\..\packageshare\"/>
-    </Target>
+    
 
 </Project>
