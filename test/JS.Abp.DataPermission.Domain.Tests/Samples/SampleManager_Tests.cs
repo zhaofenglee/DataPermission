@@ -1,13 +1,15 @@
 ﻿using System.Threading.Tasks;
+using Volo.Abp.Modularity;
 using Xunit;
 
 namespace JS.Abp.DataPermission.Samples;
 
-public class SampleManager_Tests : DataPermissionDomainTestBase
+public abstract class SampleManager_Tests<TStartupModule> : DataPermissionDomainTestBase<TStartupModule>
+    where TStartupModule : IAbpModule
 {
     //private readonly SampleManager _sampleManager;
 
-    public SampleManager_Tests()
+    protected SampleManager_Tests()
     {
         //_sampleManager = GetRequiredService<SampleManager>();
     }

@@ -2,20 +2,31 @@ using System;
 using System.Linq;
 using Shouldly;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using NSubstitute;
 using Volo.Abp.Domain.Repositories;
+using Volo.Abp.Modularity;
+using Volo.Abp.Users;
 using Xunit;
 
 namespace JS.Abp.DataPermission.Demos
 {
-    public class DemosAppServiceTests : DataPermissionApplicationTestBase
+    public abstract class DemosAppServiceTests <TStartupModule> : DataPermissionApplicationTestBase<TStartupModule>
+        where TStartupModule : IAbpModule
     {
         private readonly IDemosAppService _demosAppService;
         private readonly IRepository<Demo, Guid> _demoRepository;
-
+        protected ICurrentUser _currentUser;
         public DemosAppServiceTests()
         {
             _demosAppService = GetRequiredService<IDemosAppService>();
             _demoRepository = GetRequiredService<IRepository<Demo, Guid>>();
+        }
+        protected override void AfterAddApplication(IServiceCollection services)
+        {
+            //Mock the current user
+            _currentUser = Substitute.For<ICurrentUser>();
+            services.AddSingleton(_currentUser);
         }
 
         [Fact]
@@ -25,10 +36,16 @@ namespace JS.Abp.DataPermission.Demos
             var result = await _demosAppService.GetListAsync(new GetDemosInput());
 
             // Assert
-            result.TotalCount.ShouldBe(2);
-            result.Items.Count.ShouldBe(2);
+            result.TotalCount.ShouldBe(3);
+            result.Items.Count.ShouldBe(3);
             result.Items.Any(x => x.Id == Guid.Parse("ad9e6084-c77c-40e4-bfee-7f781f8f8a10")).ShouldBe(true);
             result.Items.Any(x => x.Id == Guid.Parse("32603ba2-eb97-487b-8f7a-05d01f1c1a04")).ShouldBe(true);
+            
+            // simulation of restricted users is performed, which does not allow accessing names "Admin".
+            Login(userId: TestData.UserId1); 
+            var result2 = await _demosAppService.GetListAsync(new GetDemosInput());
+            result2.TotalCount.ShouldBe(2);
+            result2.Items.Count.ShouldBe(2);
         }
 
         [Fact]
@@ -94,6 +111,12 @@ namespace JS.Abp.DataPermission.Demos
             var result = await _demoRepository.FindAsync(c => c.Id == Guid.Parse("ad9e6084-c77c-40e4-bfee-7f781f8f8a10"));
 
             result.ShouldBeNull();
+        }
+        
+        private void Login(Guid userId)
+        {
+            _currentUser.Id.Returns(userId);
+            _currentUser.IsAuthenticated.Returns(true);
         }
     }
 }

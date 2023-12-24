@@ -11,7 +11,7 @@ using Volo.Abp.Uow;
 namespace JS.Abp.DataPermission.EntityFrameworkCore;
 
 [DependsOn(
-    typeof(DataPermissionTestBaseModule),
+    typeof(DataPermissionApplicationTestModule),
     typeof(DataPermissionEntityFrameworkCoreModule),
     typeof(AbpIdentityEntityFrameworkCoreModule),
     typeof(AbpEntityFrameworkCoreSqliteModule)
