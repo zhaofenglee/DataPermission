@@ -10,6 +10,7 @@ namespace JS.Abp.DataPermission.Demos
     {
         public string? Name { get; set; }
         [PermissionVerifier("Demo", "DisplayName")]
+        [Permission("DataPermission.Demos")]
         public string? DisplayName { get; set; }
         public RowPermissionItemDto Permission { get; set; } = new RowPermissionItemDto();
 

@@ -1,6 +1,9 @@
 using System;
 
 namespace System.ComponentModel.DataAnnotations;
+/// <summary>
+/// 使用数据权限配置时需要标记此特性
+/// </summary>
 
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
 public class PermissionVerifierAttribute : Attribute

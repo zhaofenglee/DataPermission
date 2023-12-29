@@ -10,6 +10,7 @@ using JS.Abp.DataPermission.PermissionItems;
 using JS.Abp.DataPermission.PermissionTypes;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Options;
+using Volo.Abp.Authorization.Permissions;
 using Volo.Abp.Caching;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Repositories;
@@ -26,19 +27,21 @@ public class DataPermissionItemStore:IDataPermissionItemStore,ITransientDependen
     protected DataPermissionOptions Options { get; }
     private readonly IIdentityUserRepository _identityUserRepository;
     protected IRepository<PermissionItem, Guid> PermissionItemRepository { get; }
-    
+    private readonly IPermissionChecker _permissionChecker;
     public DataPermissionItemStore(
         ICurrentUser currentUser,
         IDistributedCache<List<PermissionItemResult>> cache,
         IOptions<DataPermissionOptions> options,
         IIdentityUserRepository identityUserRepository,
-        IRepository<PermissionItem, Guid> permissionItemRepository)
+        IRepository<PermissionItem, Guid> permissionItemRepository,
+        IPermissionChecker permissionChecker)
     {
         _currentUser = currentUser;
         _cache = cache;
         Options = options.Value;
         _identityUserRepository = identityUserRepository;
         PermissionItemRepository = permissionItemRepository;
+        _permissionChecker = permissionChecker;
     }
     
     public virtual bool CheckPermission(string objectName, string targetName, PermissionType permissionType)
@@ -116,21 +119,41 @@ public class DataPermissionItemStore:IDataPermissionItemStore,ITransientDependen
         DataColumnInfo columnInfo = new();
         var list = props.Select(p => 
         {
+            //如果有PermissionVerifierAttribute，则优先使用PermissionVerifierAttribute
             var targetType = p.GetAttribute<PermissionVerifierAttribute>();
-            if (targetType == null)
+            if (targetType != null)
+            {
+                return new DataColumnInfo()
+                {
+                    Property = p,
+                    ObjectName = targetType.ObjectName,
+                    TargetType = targetType.TargetType,
+                };
+            }
+            var targetPermission = p.GetAttribute<PermissionAttribute>();
+            if (targetPermission == null)
                 return null;
             return new DataColumnInfo()
             {
                 Property = p,
-                ObjectName = targetType.ObjectName,
-                TargetType = targetType.TargetType,
+                PermissionName = targetPermission.PermissionName,
             };
+
         } ).Where(_ => _ != null);
         if(list.Any())
         {
             foreach(var info in list)
             {
-                var canRead = CheckRead(info.ObjectName, info.TargetType);
+                var canRead = true;
+                if (!info.TargetType.IsNullOrWhiteSpace())
+                {
+                    canRead = CheckRead(info.ObjectName, info.TargetType);
+                }
+                if (!info.PermissionName.IsNullOrWhiteSpace())
+                {
+                    canRead =  await _permissionChecker
+                        .IsGrantedAsync(info.PermissionName);
+                }
                 if (!canRead)
                 {
                     if (info.Property.PropertyType.IsGenericType && info.Property.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
@@ -215,6 +238,7 @@ public class DataPermissionItemStore:IDataPermissionItemStore,ITransientDependen
      {
          public string ObjectName { get; set; }
          public string TargetType { get; set; }
+         public string PermissionName { get; set; }
 
          public PropertyInfo Property { get; set; }
      }
