@@ -82,7 +82,8 @@ public MyOrganizationStore(IIdentityUserRepository identityUserRepository, IOrga
   “var checkPermission = await dataPermissionStore.CheckPermissionAsync(item, PermissionType.Create);”
 
 ### 字段级数据权限
-* 字段数据权限是根据维护的字段名称和对应角色的权限进行判断，使用字段级数据权限需要修改前端和后端代码共同实现
+* 1.通过据维护的字段名称和对应角色的权限进行判断，使用字段级数据权限需要修改前端和后端代码共同实现
+* 2.通过检查Permission进行判断，使用字段级数据权限需要修改前端和后端代码共同实现
 
 ## 缓存
 * 目前缓存时间为 10 分钟，如果“PermissionExtension”对象变更时会自动清除
@@ -285,7 +286,8 @@ public PermissionItemDto Permission { get; set; } = new PermissionItemDto();
  public class DemoDto : FullAuditedEntityDto<Guid>, IHasConcurrencyStamp
     {
         public string? Name { get; set; }
-        [PermissionVerifier("Demo", "DisplayName")]
+        [PermissionVerifier("Demo", "DisplayName")]//优先度高
+        [Permission("DataPermission.Demos")]//如果希望直接使用Abp权限，可以使用这个
         public string? DisplayName { get; set; }
         public RowPermissionItemDto Permission { get; set; } = new RowPermissionItemDto();
 
