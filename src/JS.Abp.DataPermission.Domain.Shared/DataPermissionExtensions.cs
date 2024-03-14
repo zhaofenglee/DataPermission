@@ -19,12 +19,14 @@ public static class DataPermissionExtensions
     public static  IQueryable<TEntity> EntityFilter<TEntity>(IQueryable<TEntity> entity,List<DataPermissionResult> dataPermissions)
     {
         var query = entity;
-        if (dataPermissions!=null&&dataPermissions.Count>0)
+        if (dataPermissions.Any())
         {
-            foreach (var dataPermission in dataPermissions.Where(c=>c.PermissionType==PermissionType.Read&&c.ObjectName==typeof(TEntity).Name))
+            var dataPermission = dataPermissions.FirstOrDefault(c => c.PermissionType == PermissionType.Read && c.ObjectName == typeof(TEntity).Name);
+            if (dataPermission == null)
             {
-                query = Filter(query, dataPermission);
+                return query;
             }
+            query = Filter(query, dataPermission);
             return query;
         }
         else
@@ -32,6 +34,19 @@ public static class DataPermissionExtensions
             return query;
         }
         
+    }
+    /// <summary>
+    /// 实体查询过滤
+    /// </summary>
+    /// <param name="entity"></param>
+    /// <param name="dataPermission"></param>
+    /// <typeparam name="TEntity"></typeparam>
+    /// <returns></returns>
+    public static  IQueryable<TEntity> EntityFilter<TEntity>(IQueryable<TEntity> entity,DataPermissionResult dataPermission)
+    {
+        var query = entity;
+        query = Filter(query, dataPermission);
+        return query;
     }
     /// <summary>
     /// 检查实体是否有权限
