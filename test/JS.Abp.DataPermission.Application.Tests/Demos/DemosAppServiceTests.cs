@@ -32,12 +32,13 @@ namespace JS.Abp.DataPermission.Demos
         [Fact]
         public async Task GetListAsync()
         {
+            Login(userId: TestData.UserId1); 
             // Act
             var result = await _demosAppService.GetListAsync(new GetDemosInput());
 
             // Assert
-            result.TotalCount.ShouldBe(3);
-            result.Items.Count.ShouldBe(3);
+            result.TotalCount.ShouldBe(2);
+            result.Items.Count.ShouldBe(2);
             result.Items.Any(x => x.Id == Guid.Parse("ad9e6084-c77c-40e4-bfee-7f781f8f8a10")).ShouldBe(true);
             result.Items.Any(x => x.Id == Guid.Parse("32603ba2-eb97-487b-8f7a-05d01f1c1a04")).ShouldBe(true);
             
@@ -51,6 +52,7 @@ namespace JS.Abp.DataPermission.Demos
         [Fact]
         public async Task GetAsync()
         {
+            Login(userId: TestData.UserId1); 
             // Act
             var result = await _demosAppService.GetAsync(Guid.Parse("ad9e6084-c77c-40e4-bfee-7f781f8f8a10"));
 
@@ -90,6 +92,8 @@ namespace JS.Abp.DataPermission.Demos
                 DisplayName = "27ba89e6df6548268170a953dacea6515b928db5ce784679b49270e4f308ed082eecbb28496b403285e64871f4e638912c17f1a00e734a8a9840d092182df6cc"
             };
 
+            Login(userId: TestData.UserId1); 
+            
             // Act
             var serviceResult = await _demosAppService.UpdateAsync(Guid.Parse("ad9e6084-c77c-40e4-bfee-7f781f8f8a10"), input);
 
@@ -118,5 +122,6 @@ namespace JS.Abp.DataPermission.Demos
             _currentUser.Id.Returns(userId);
             _currentUser.IsAuthenticated.Returns(true);
         }
+        
     }
 }
