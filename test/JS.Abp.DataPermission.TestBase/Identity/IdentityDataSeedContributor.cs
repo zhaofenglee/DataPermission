@@ -38,12 +38,18 @@ public class IdentityDataSeedContributor : IDataSeedContributor, ISingletonDepen
             (TestData.RoleId1,
                 "Admin"));
         
-        IdentityUser user =new IdentityUser
+        IdentityUser user1 =new IdentityUser
         (TestData.UserId1,
             "test",
             "test@test.com");
-        user.AddRole(TestData.RoleId1);
-        await _userRepository.InsertAsync(user);
+        user1.AddRole(TestData.RoleId1);
+        await _userRepository.InsertAsync(user1);
+        
+        IdentityUser user2 =new IdentityUser
+        (TestData.UserId2,
+            "test2",
+            "test2@test.com");
+        await _userRepository.InsertAsync(user2);
         
         await _unitOfWorkManager.Current.SaveChangesAsync();
 

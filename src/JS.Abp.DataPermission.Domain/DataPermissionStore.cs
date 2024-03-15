@@ -44,13 +44,36 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
 
     public virtual IQueryable<TEntity> EntityFilter<TEntity>(IQueryable<TEntity> query)
     {
-        if (_currentUser.Id == null )
+        if (_currentUser.Id == null)
         { 
-            return query;
+            return DataPermissionExtensions.EntityFilter(query, new DataPermissionResult()
+            {
+                PermissionType = PermissionType.Read,
+                ObjectName = typeof(TEntity).Name,
+                LambdaString = "1!=1",
+                UserId = Guid.Empty
+            });
         }
         else
         {
-            return DataPermissionExtensions.EntityFilter(query, GetAll().Where(c=>c.UserId==(Guid )_currentUser.Id).ToList());
+            var dataPermissions = GetAll().Where(c=>c.ObjectName==typeof(TEntity).Name&& c.PermissionType==PermissionType.Read).ToList();
+            if (dataPermissions.Any())
+            {
+                if (dataPermissions.Any(c => c.UserId==_currentUser.Id))
+                {
+                    return DataPermissionExtensions.EntityFilter(query, dataPermissions.First(c=> c.UserId==_currentUser.Id));
+                }
+                return DataPermissionExtensions.EntityFilter(query, new DataPermissionResult()
+                {
+                    PermissionType = PermissionType.Read,
+                    ObjectName = typeof(TEntity).Name,
+                    LambdaString = "1!=1",
+                    UserId = Guid.Empty
+                });
+                
+            }
+
+            return query;
 
         }
     }
@@ -308,8 +331,25 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
                         UserId = user.Id
                     });
                 }
+                
+                var newDataPermissionResult = new DataPermissionResult()
+                {
+                    PermissionType = item.PermissionType,
+                    ObjectName = item.ObjectName,
+                    LambdaString = "1!=1",
+                    UserId = Guid.Empty
+                };
+
+                if (!result.Any(x => x.PermissionType == newDataPermissionResult.PermissionType &&
+                                     x.ObjectName == newDataPermissionResult.ObjectName &&
+                                     x.LambdaString == newDataPermissionResult.LambdaString &&
+                                     x.UserId == newDataPermissionResult.UserId))
+                {
+                    result.Add(newDataPermissionResult);
+                }
               
             }
+            
 
             return result;
             // var result = new List<DataPermissionResult>();
