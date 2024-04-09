@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Asp.Versioning;
 using JS.Abp.DataPermission.PermissionTypes;
 using JS.Abp.DataPermission.Services;
 using Microsoft.AspNetCore.Mvc;

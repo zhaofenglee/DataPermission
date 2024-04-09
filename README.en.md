@@ -7,10 +7,41 @@
 </div>
 
 ---
-## New Features
-* Added field-level data permission functionality
-* Added a list of entity data permissions and merged row-level and field-level data permissions into the same detail page.
+## Update 8.0.5
+* (Major change) Modified the way of judging entity data permissions, users without settings have no rights by default, if you need to open all data permissions, you need to set it.
+  Refer to: https://github.com/zhaofenglee/DataPermission/issues/30
 
+## Update 8.0.0
+* Upgraded to support Net8.0
+* Abp version upgraded to 8.0.0
+* Added permission unit tests, refer to: DemosAppServiceTests
+
+## Update 7.4.0
+* Added data permissions based on Permission
+````csharp
+//Please refer to the Abp document for the front end https://docs.abp.io/en/abp/latest/Authorization
+//Backend usage method reference: AuthorizationPolicyProvider_Test
+
+//1. Add PermissionAttribute to the output Dto that needs to be controlled
+public class DemoDto : FullAuditedEntityDto<Guid>, IHasConcurrencyStamp
+    {
+        public string? Name { get; set; }
+        [Permission(DataPermissionPermissions.Demos.Read)]//Add
+        public string? DisplayName { get; set; }
+        public RowPermissionItemDto Permission { get; set; } = new RowPermissionItemDto();
+
+        public string ConcurrencyStamp { get; set; }
+    }
+//2. Use it in the method that needs to control the output. If there is no right, it will be replaced with the default value output
+   private readonly IDataPermissionAuthorizationPolicyProvider _dataPermissionAuthorizationPolicyProvider;
+   await _dataPermissionAuthorizationPolicyProvider.CheckListAsync(dtos);
+````
+
+## Update 7.3.3
+* Added field-level data permission functionality
+* Added a list of entity data permissions, and merged row-level and field-level data permissions into the same detail page. 
+(If you want to add row-level and field-level menus separately, you can refer to DataPermissionMenuContributor to add them yourself)
+  ![img](/docs/images/20230915215545.png)
 
 ## 7.3.1
 #### 1. Added the ability to copy data permissions.
