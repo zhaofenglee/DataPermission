@@ -7,7 +7,7 @@ namespace JS.Abp.DataPermission.Blazor.WebAssembly;
     typeof(DataPermissionBlazorModule),
     typeof(DataPermissionHttpApiClientModule),
     typeof(AbpAspNetCoreComponentsWebAssemblyThemingModule)
-)]
+    )]
 public class DataPermissionBlazorWebAssemblyModule : AbpModule
 {
 

@@ -69,6 +69,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JS.DataPermission.Abstracti
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JS.Abp.DataPermission.Authorization.Tests", "test\JS.Abp.DataPermission.Authorization.Tests\JS.Abp.DataPermission.Authorization.Tests.csproj", "{8531BDE4-9E88-472A-A9E8-8AF13F00CB07}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JS.Abp.DataPermission.Blazor.Host.Client", "host\JS.Abp.DataPermission.Blazor.Host.Client\JS.Abp.DataPermission.Blazor.Host.Client.csproj", "{318D1671-1130-4C42-9F24-EED4198C00E5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -191,6 +193,10 @@ Global
 		{8531BDE4-9E88-472A-A9E8-8AF13F00CB07}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8531BDE4-9E88-472A-A9E8-8AF13F00CB07}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8531BDE4-9E88-472A-A9E8-8AF13F00CB07}.Release|Any CPU.Build.0 = Release|Any CPU
+		{318D1671-1130-4C42-9F24-EED4198C00E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{318D1671-1130-4C42-9F24-EED4198C00E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{318D1671-1130-4C42-9F24-EED4198C00E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{318D1671-1130-4C42-9F24-EED4198C00E5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -225,6 +231,7 @@ Global
 		{969E06BD-91D8-4C47-A1C4-7D88172D62B4} = {87177AF8-9D17-4D25-ADA1-637A1EE33009}
 		{6AF87958-01F1-4649-9480-43F42724C97A} = {87177AF8-9D17-4D25-ADA1-637A1EE33009}
 		{8531BDE4-9E88-472A-A9E8-8AF13F00CB07} = {CCD2960C-23CC-4AB4-B84D-60C7AAA52F4D}
+		{318D1671-1130-4C42-9F24-EED4198C00E5} = {E400416D-2895-4512-9D17-90681EEC7E0A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BB9B78FB-4F30-1794-15F4-D615ADA46FCA}

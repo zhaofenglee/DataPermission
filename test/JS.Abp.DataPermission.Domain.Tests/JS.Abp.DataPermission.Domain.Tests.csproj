@@ -17,4 +17,5 @@
     <ProjectReference Include="..\JS.Abp.DataPermission.TestBase\JS.Abp.DataPermission.TestBase.csproj" />
   </ItemGroup>
 
+
 </Project>

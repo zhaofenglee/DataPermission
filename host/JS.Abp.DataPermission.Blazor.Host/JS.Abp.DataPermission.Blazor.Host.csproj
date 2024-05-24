@@ -1,35 +1,15 @@
-<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <Import Project="..\..\common.props" />
+    <Import Project="..\..\common.props" />
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Blazorise.Bootstrap5" Version="1.4.1" />
-    <PackageReference Include="Blazorise.Icons.FontAwesome" Version="1.4.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Volo.Abp.Autofac.WebAssembly" Version="$(VoloAbpPackageVersion)" />
-    <PackageReference Include="Volo.Abp.AspNetCore.Components.WebAssembly.BasicTheme" Version="$(VoloAbpPackageVersion)" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Volo.Abp.Account.Application.Contracts" Version="$(VoloAbpPackageVersion)" />
-    <PackageReference Include="Volo.Abp.Identity.Blazor.WebAssembly" Version="$(VoloAbpPackageVersion)" />
-    <PackageReference Include="Volo.Abp.TenantManagement.Blazor.WebAssembly" Version="$(VoloAbpPackageVersion)" />
-    <PackageReference Include="Volo.Abp.SettingManagement.Blazor.WebAssembly" Version="$(VoloAbpPackageVersion)" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\JS.Abp.DataPermission.Host.Shared\JS.Abp.DataPermission.Host.Shared.csproj" />
-    <ProjectReference Include="..\..\src\JS.Abp.DataPermission.Blazor.WebAssembly\JS.Abp.DataPermission.Blazor.WebAssembly.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.4" />
+        <ProjectReference Include="..\JS.Abp.DataPermission.Blazor.Host.Client\JS.Abp.DataPermission.Blazor.Host.Client.csproj" />
+    </ItemGroup>
 
 </Project>

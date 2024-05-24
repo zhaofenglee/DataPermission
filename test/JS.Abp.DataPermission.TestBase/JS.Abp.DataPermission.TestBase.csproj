@@ -7,20 +7,7 @@
     <Nullable>enable</Nullable>
     <RootNamespace>JS.Abp.DataPermission</RootNamespace>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="appsettings.json" />
-    <Content Include="appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <None Remove="appsettings.secrets.json" />
-    <Content Include="appsettings.secrets.json">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+  
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
@@ -35,11 +22,9 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" />
     <PackageReference Include="Volo.Abp.Autofac" Version="$(VoloAbpPackageVersion)" />
     <PackageReference Include="Volo.Abp.Authorization" Version="$(VoloAbpPackageVersion)" />
+    <PackageReference Include="Volo.Abp.Guids" Version="$(VoloAbpPackageVersion)" />
     <PackageReference Include="Volo.Abp.TestBase" Version="$(VoloAbpPackageVersion)" />
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\JS.Abp.DataPermission.Domain\JS.Abp.DataPermission.Domain.csproj" />
-  </ItemGroup>
+  
 
 </Project>

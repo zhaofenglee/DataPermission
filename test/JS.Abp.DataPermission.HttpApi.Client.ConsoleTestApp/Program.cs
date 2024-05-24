@@ -1,34 +1,22 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Volo.Abp;
-using Volo.Abp.Threading;
+using Microsoft.Extensions.Hosting;
 
-namespace JS.Abp.DataPermission;
+namespace JS.Abp.DataPermission.HttpApi.Client.ConsoleTestApp;
 
 class Program
 {
-    async static Task Main(string[] args)
+    static async Task Main(string[] args)
     {
-        using (var application = await AbpApplicationFactory.CreateAsync<DataPermissionConsoleApiClientModule>(options =>
-        {
-            var builder = new ConfigurationBuilder();
-            builder.AddJsonFile("appsettings.json", false);
-            builder.AddJsonFile("appsettings.secrets.json", true);
-            options.Services.ReplaceConfiguration(builder.Build());
-            options.UseAutofac();
-        }))
-        {
-            await application.InitializeAsync();
-
-            var demo = application.ServiceProvider.GetRequiredService<ClientDemoService>();
-            await demo.RunAsync();
-
-            Console.WriteLine("Press ENTER to stop application...");
-            Console.ReadLine();
-
-            await application.ShutdownAsync();
-        }
+        await CreateHostBuilder(args).RunConsoleAsync();
     }
+
+    public static IHostBuilder CreateHostBuilder(string[] args) =>
+        Host.CreateDefaultBuilder(args)
+            .AddAppSettingsSecretsJson()
+            .ConfigureServices((hostContext, services) =>
+            {
+                services.AddHostedService<ConsoleTestAppHostedService>();
+            });
 }

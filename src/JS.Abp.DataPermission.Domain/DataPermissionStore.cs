@@ -24,22 +24,23 @@ public class DataPermissionStore:IDataPermissionStore, ITransientDependency
     protected DataPermissionOptions Options { get; }
     private readonly IIdentityUserRepository _identityUserRepository;
     private readonly IOrganizationStore _organizationStore;
-    public DataPermissionStore(ICurrentUser currentUser, 
-        IRepository<PermissionExtension, Guid> permissionExtensionRepository,
-        IDistributedCache<List<DataPermissionResult>> cache,
-        IDistributedCache<PermissionCacheItem,PermissionCacheKey> cacheItem,
-        IOptions<DataPermissionOptions> options,
-        IIdentityUserRepository identityUserRepository,
-        IOrganizationStore organizationStore
+    public DataPermissionStore(
+         ICurrentUser currentUser, 
+         IRepository<PermissionExtension, Guid> permissionExtensionRepository,
+         IDistributedCache<List<DataPermissionResult>> cache,
+         IDistributedCache<PermissionCacheItem,PermissionCacheKey> cacheItem,
+         IOptions<DataPermissionOptions> options,
+         IIdentityUserRepository identityUserRepository,
+         IOrganizationStore organizationStore
     )
     {
-        _currentUser = currentUser;
-        PermissionExtensionRepository = permissionExtensionRepository;
-        _cache = cache;
-        _cacheItem = cacheItem;
-        Options = options.Value;
-        _identityUserRepository = identityUserRepository;
-        _organizationStore = organizationStore;
+         _currentUser = currentUser;
+         PermissionExtensionRepository = permissionExtensionRepository;
+         _cache = cache;
+         _cacheItem = cacheItem;
+         Options = options.Value;
+         _identityUserRepository = identityUserRepository;
+         _organizationStore = organizationStore;
     }
 
     public virtual IQueryable<TEntity> EntityFilter<TEntity>(IQueryable<TEntity> query)
