@@ -1,6 +1,6 @@
 using System;
 
-namespace System.ComponentModel.DataAnnotations;
+namespace Attributes;
 /// <summary>
 /// 使用数据权限配置时需要标记此特性
 /// </summary>

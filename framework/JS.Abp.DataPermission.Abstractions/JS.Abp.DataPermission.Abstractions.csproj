@@ -5,7 +5,7 @@
     <PropertyGroup>
         <TargetFrameworks>netstandard2.0;netstandard2.1;net8.0</TargetFrameworks>
         <Nullable>enable</Nullable>
-        <PackageId>JS.DataPermission.Abstractions</PackageId>
+        <PackageId>JS.Abp.DataPermission.Abstractions</PackageId>
         <AssetTargetFallback>$(AssetTargetFallback);portable-net45+win8+wp8+wpa81;</AssetTargetFallback>
         <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
         <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>

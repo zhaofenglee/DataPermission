@@ -65,7 +65,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "framework", "framework", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JS.Abp.DataPermission.Authorization", "framework\JS.Abp.DataPermission.Authorization\JS.Abp.DataPermission.Authorization.csproj", "{969E06BD-91D8-4C47-A1C4-7D88172D62B4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JS.DataPermission.Abstractions", "framework\JS.DataPermission.Abstractions\JS.DataPermission.Abstractions.csproj", "{6AF87958-01F1-4649-9480-43F42724C97A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JS.Abp.DataPermission.Abstractions", "framework\JS.Abp.DataPermission.Abstractions\JS.Abp.DataPermission.Abstractions.csproj", "{6AF87958-01F1-4649-9480-43F42724C97A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JS.Abp.DataPermission.Authorization.Tests", "test\JS.Abp.DataPermission.Authorization.Tests\JS.Abp.DataPermission.Authorization.Tests.csproj", "{8531BDE4-9E88-472A-A9E8-8AF13F00CB07}"
 EndProject
