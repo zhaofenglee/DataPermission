@@ -28,7 +28,7 @@ public class PermissionApplicationService : ApplicationService, IPermissionAppli
         _dataPermissionItemStore = dataPermissionItemStore;
         _currentUser = currentUser;
     }
-    public virtual async Task<GetPermissionResultDto> GetAsync(string id, string policyName, PermissionType permissionType)
+    public virtual async Task<GetPermissionResultDto> GetAsync(string id, string? policyName, PermissionType permissionType)
     {
         if (!policyName.IsNullOrWhiteSpace())
         {
