@@ -157,7 +157,7 @@ namespace JS.Abp.DataPermission.Blazor.Pages.DataPermission
         {
             var demo = await DemosAppService.GetAsync(input.Id);
             //CanEditDemo =  PermissionApplicationService.GetAsync(demo.Id.ToString(),DataPermissionPermissions.Demos.Edit, PermissionType.Update).Result.IsGranted;//add
-            CanEditDemo =  PermissionApplicationService.GetAsync(demo.Id.ToString()).Result.IsGranted;//add
+            CanEditDemo =  (await PermissionApplicationService.GetAsync(demo.Id.ToString(),null,PermissionType.Update)).IsGranted;//add
             EditingDemoId = demo.Id;
             EditingDemo = ObjectMapper.Map<DemoDto, DemoUpdateDto>(demo);
             await EditingDemoValidations.ClearAll();
