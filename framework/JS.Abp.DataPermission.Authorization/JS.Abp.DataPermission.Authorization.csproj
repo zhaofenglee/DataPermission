@@ -22,10 +22,6 @@
     <ItemGroup>
       <ProjectReference Include="..\JS.Abp.DataPermission.Abstractions\JS.Abp.DataPermission.Abstractions.csproj" />
     </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\JS.Abp.DataPermission.Abstractions\JS.Abp.DataPermission.Abstractions.csproj" />
-    </ItemGroup>
     
 
 </Project>
