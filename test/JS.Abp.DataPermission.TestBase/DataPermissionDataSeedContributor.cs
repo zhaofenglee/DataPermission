@@ -12,8 +12,7 @@ public class DataPermissionDataSeedContributor : IDataSeedContributor, ITransien
     private readonly ICurrentTenant _currentTenant;
 
     public DataPermissionDataSeedContributor(
-        IGuidGenerator guidGenerator,
-        ICurrentTenant currentTenant)
+        IGuidGenerator guidGenerator, ICurrentTenant currentTenant)
     {
         _guidGenerator = guidGenerator;
         _currentTenant = currentTenant;
@@ -24,6 +23,7 @@ public class DataPermissionDataSeedContributor : IDataSeedContributor, ITransien
         /* Instead of returning the Task.CompletedTask, you can insert your test data
          * at this point!
          */
+
         using (_currentTenant.Change(context?.TenantId))
         {
             return Task.CompletedTask;

@@ -10,7 +10,7 @@ export const environment = {
     logoUrl: '',
   },
   oAuthConfig: {
-    issuer: 'https://localhost:44317/',
+    issuer: 'https://localhost:44382/',
     redirectUri: baseUrl,
     clientId: 'DataPermission_App',
     responseType: 'code',
@@ -19,11 +19,11 @@ export const environment = {
   },
   apis: {
     default: {
-      url: 'https://localhost:44317',
+      url: 'https://localhost:44382',
       rootNamespace: 'JS.Abp.DataPermission',
     },
     DataPermission: {
-      url: 'https://localhost:44327',
+      url: 'https://localhost:44307',
       rootNamespace: 'JS.Abp.DataPermission',
     },
   },

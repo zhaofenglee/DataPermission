@@ -53,13 +53,25 @@ namespace JS.Abp.DataPermission.Blazor.Pages.DataPermission
             };
             ObjectPermissionList = new List<ObjectPermissionDto>();
         }
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+            
+                await Task.Yield();
+                await InvokeAsync(StateHasChanged);
+            }
 
+            await base.OnAfterRenderAsync(firstRender);
+        }
         protected override async Task OnInitializedAsync()
         {
+            await base.OnInitializedAsync();
+            await SearchAsync();
             await SetToolbarItemsAsync();
             await SetBreadcrumbItemsAsync();
             await SetPermissionsAsync();
-            await SearchAsync();
+           
         }
 
         protected virtual ValueTask SetBreadcrumbItemsAsync()

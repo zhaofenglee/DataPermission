@@ -53,12 +53,23 @@ namespace JS.Abp.DataPermission.Blazor.Components
             PermissionItemList = new List<PermissionItemDto>();
             PermissionRoleList = new List<PermissionRoleDto>();
         }
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+            
+                await Task.Yield();
+                await InvokeAsync(StateHasChanged);
+            }
 
+            await base.OnAfterRenderAsync(firstRender);
+        }
         protected override async Task OnInitializedAsync()
         {
-          
             await SetPermissionsAsync();
             await GetPermissionRoleAsync();
+            await GetPermissionItemsAsync();
+            await base.OnInitializedAsync();
         }
 
         

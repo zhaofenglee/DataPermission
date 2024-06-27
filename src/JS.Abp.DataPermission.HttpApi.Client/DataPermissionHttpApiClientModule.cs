@@ -21,5 +21,6 @@ public class DataPermissionHttpApiClientModule : AbpModule
         {
             options.FileSets.AddEmbedded<DataPermissionHttpApiClientModule>();
         });
+
     }
 }

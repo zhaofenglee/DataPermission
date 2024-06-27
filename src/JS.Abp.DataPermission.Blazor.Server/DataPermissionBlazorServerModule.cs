@@ -4,8 +4,8 @@ using Volo.Abp.Modularity;
 namespace JS.Abp.DataPermission.Blazor.Server;
 
 [DependsOn(
-    typeof(DataPermissionBlazorModule),
-    typeof(AbpAspNetCoreComponentsServerThemingModule)
+    typeof(AbpAspNetCoreComponentsServerThemingModule),
+    typeof(DataPermissionBlazorModule)
     )]
 public class DataPermissionBlazorServerModule : AbpModule
 {
