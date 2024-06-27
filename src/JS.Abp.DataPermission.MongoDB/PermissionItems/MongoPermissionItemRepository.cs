@@ -20,17 +20,17 @@ namespace JS.Abp.DataPermission.PermissionItems
         }
 
         public async Task<List<PermissionItem>> GetListAsync(
-            string filterText = null,
-            string objectName = null,
-            string description = null,
-            string targetType = null,
+            string? filterText = null,
+            string? objectName = null,
+            string? description = null,
+            string? targetType = null,
             Guid? roleId = null,
             bool? canRead = null,
             bool? canCreate = null,
             bool? canEdit = null,
             bool? canDelete = null,
             bool? isActive = null,
-            string sorting = null,
+            string? sorting = null,
             int maxResultCount = int.MaxValue,
             int skipCount = 0,
             CancellationToken cancellationToken = default)
@@ -43,10 +43,10 @@ namespace JS.Abp.DataPermission.PermissionItems
         }
 
         public async Task<long> GetCountAsync(
-           string filterText = null,
-           string objectName = null,
-           string description = null,
-           string targetType = null,
+           string? filterText = null,
+           string? objectName = null,
+           string? description = null,
+           string? targetType = null,
            Guid? roleId = null,
            bool? canRead = null,
            bool? canCreate = null,
@@ -61,10 +61,10 @@ namespace JS.Abp.DataPermission.PermissionItems
 
         protected virtual IQueryable<PermissionItem> ApplyFilter(
             IQueryable<PermissionItem> query,
-            string filterText,
-            string objectName = null,
-            string description = null,
-            string targetType = null,
+            string? filterText = null,
+            string? objectName = null,
+            string? description = null,
+            string? targetType = null,
             Guid? roleId = null,
             bool? canRead = null,
             bool? canCreate = null,

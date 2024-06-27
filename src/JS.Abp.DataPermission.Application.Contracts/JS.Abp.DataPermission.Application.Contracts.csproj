@@ -12,7 +12,7 @@
   <ItemGroup>
     <PackageReference Include="Volo.Abp.Ddd.Application.Contracts" Version="$(VoloAbpPackageVersion)" />
     <PackageReference Include="Volo.Abp.Authorization.Abstractions" Version="$(VoloAbpPackageVersion)" />
-    <ProjectReference Include="..\..\framework\JS.DataPermission.Abstractions\JS.DataPermission.Abstractions.csproj" />
+    <ProjectReference Include="..\..\framework\JS.Abp.DataPermission.Abstractions\JS.Abp.DataPermission.Abstractions.csproj" />
     <ProjectReference Include="..\JS.Abp.DataPermission.Domain.Shared\JS.Abp.DataPermission.Domain.Shared.csproj" />
   </ItemGroup>
 

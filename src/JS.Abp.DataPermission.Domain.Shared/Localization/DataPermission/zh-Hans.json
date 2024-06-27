@@ -84,6 +84,9 @@
     "Menu:ObjectPermissions": "实体数据权限",
     "ObjectPermission": "实体数据权限",
     "EditDetails": "编辑详情",
-    "Update": "更新"
+    "Update": "更新",
+    "Cancel": "取消",
+    "Edit": "编辑",
+    "Delete": "删除"
   }
 }

@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <Import Project="..\..\common.props" />
+    
+    <PropertyGroup>
+        <TargetFrameworks>netstandard2.0;netstandard2.1;net8.0</TargetFrameworks>
+        <Nullable>enable</Nullable>
+        <PackageId>JS.Abp.DataPermission.Abstractions</PackageId>
+        <AssetTargetFallback>$(AssetTargetFallback);portable-net45+win8+wp8+wpa81;</AssetTargetFallback>
+        <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+        <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+        <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+        <RootNamespace />
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    </PropertyGroup>
+    
+
+</Project>

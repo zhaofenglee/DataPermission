@@ -5,8 +5,8 @@
     <PropertyGroup>
         <TargetFrameworks>netstandard2.0;netstandard2.1;net8.0</TargetFrameworks>
         <Nullable>enable</Nullable>
-        <AssemblyName>JS.DataPermission.Authorization</AssemblyName>
-        <PackageId>JS.DataPermission.Authorization</PackageId>
+        <AssemblyName>JS.Abp.DataPermission.Authorization</AssemblyName>
+        <PackageId>JS.Abp.DataPermission.Authorization</PackageId>
         <AssetTargetFallback>$(AssetTargetFallback);portable-net45+win8+wp8+wpa81;</AssetTargetFallback>
         <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
         <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
@@ -20,11 +20,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\JS.DataPermission.Abstractions\JS.DataPermission.Abstractions.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\JS.DataPermission.Abstractions\JS.DataPermission.Abstractions.csproj" />
+      <ProjectReference Include="..\JS.Abp.DataPermission.Abstractions\JS.Abp.DataPermission.Abstractions.csproj" />
     </ItemGroup>
     
 

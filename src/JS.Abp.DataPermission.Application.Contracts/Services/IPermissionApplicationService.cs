@@ -14,7 +14,7 @@ public interface IPermissionApplicationService : IApplicationService
     /// <param name="policyName">abp权限名称</param>
     /// <param name="permissionType">数据权限类型</param>
     /// <returns></returns>
-    Task<GetPermissionResultDto> GetAsync(string id,string policyName ="",PermissionType permissionType=PermissionType.Update);
+    Task<GetPermissionResultDto> GetAsync(string id,string? policyName,PermissionType permissionType=PermissionType.Update);
     /// <summary>
     /// 获取当前用户权限配置
     /// </summary>

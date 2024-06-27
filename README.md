@@ -7,6 +7,10 @@
 </div>
 
 ---
+## 8.2.0更新说明
+* abp8.2版本升级,blazorwasm修改为blazorapp
+* 修改framework包命名规则
+
 ## 8.0.5更新说明
 * (重大变更) 修改实体数据权限判断方式，无设定的用户默认无权，如需要开通所有数据权限需进行设定
 参考：https://github.com/zhaofenglee/DataPermission/issues/30

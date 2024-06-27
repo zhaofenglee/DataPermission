@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Attributes;
 using Volo.Abp.Domain.Entities;
 
 namespace JS.Abp.DataPermission.Authorization.Tests

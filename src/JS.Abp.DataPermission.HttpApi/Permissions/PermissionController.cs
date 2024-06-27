@@ -21,7 +21,7 @@ public class PermissionController: AbpController,IPermissionApplicationService
     }
     [HttpGet]
 
-    public virtual Task<GetPermissionResultDto> GetAsync(string id, string policyName, PermissionType permissionType)
+    public virtual Task<GetPermissionResultDto> GetAsync(string id, string? policyName, PermissionType permissionType)
     {
         return _permissionApplicationService.GetAsync(id, policyName, permissionType);
     }

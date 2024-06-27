@@ -3,7 +3,7 @@
   <Import Project="..\..\common.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;net8.0</TargetFrameworks>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <RootNamespace>JS.Abp.DataPermission</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -13,7 +13,7 @@
     <PackageReference Include="Volo.Abp.Ddd.Domain" Version="$(VoloAbpPackageVersion)" />
     <PackageReference Include="Volo.Abp.Identity.Domain" Version="$(VoloAbpPackageVersion)" />
     <PackageReference Include="Volo.Abp.Caching" Version="$(VoloAbpPackageVersion)" />
-    <ProjectReference Include="..\..\framework\JS.DataPermission.Abstractions\JS.DataPermission.Abstractions.csproj" />
+    <ProjectReference Include="..\..\framework\JS.Abp.DataPermission.Abstractions\JS.Abp.DataPermission.Abstractions.csproj" />
     <ProjectReference Include="..\JS.Abp.DataPermission.Domain.Shared\JS.Abp.DataPermission.Domain.Shared.csproj" />
   </ItemGroup>
 

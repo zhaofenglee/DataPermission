@@ -81,7 +81,7 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
         var webClientId = configurationSection["DataPermission_Web:ClientId"];
         if (!webClientId.IsNullOrWhiteSpace())
         {
-            var webClientRootUrl = configurationSection["DataPermission_Web:RootUrl"].EnsureEndsWith('/');
+            var webClientRootUrl = configurationSection["DataPermission_Web:RootUrl"]!.EnsureEndsWith('/');
 
             /* DataPermission_Web client is only needed if you created a tiered
              * solution. Otherwise, you can delete this client. */
