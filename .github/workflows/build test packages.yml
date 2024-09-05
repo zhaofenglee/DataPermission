@@ -1,0 +1,66 @@
+name: publish test to my-nuget
+on:
+  push:
+    branches:
+      - dev
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: NuGet/setup-nuget@v1
+      - uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: read common.props
+        id: commonProps
+        uses: juliangruber/read-file-action@v1
+        with:
+          path: ./common.props
+
+      - name: get version
+        id: getVersion
+        uses: AsasInnab/regex-action@v1
+        with:
+          regex_pattern: '(?<=>)[^<>]+(?=</Version>)'
+          regex_flags: 'gim'
+          search_string: '${{ steps.commonProps.outputs.content }}'
+
+      - name: dotnet restore
+        run: dotnet restore --configfile ${{github.workspace}}/NuGet.Config
+
+      - name: dotnet build
+        run: dotnet build -c Release
+
+      - name: dotnet test
+        run: dotnet test -c Release --no-restore --no-build
+        
+      - name: dotnet pack
+        run: dotnet pack -c Release --no-build --property PackageOutputPath=${{ github.workspace }}/nugetPackages/
+
+      - name: remove unused packages
+        run: |
+          cd ${{ github.workspace }}/nugetPackages
+          shopt -s extglob
+          rm -f !(JS.Abp.*)
+          rm -f !(*.${{ steps.getVersion.outputs.first_match }}.nupkg)
+          rm -f *.Blazor.Host.*
+          rm -f *.Blazor.Server.Host.*
+          rm -f *.Host.Shared.*
+          rm -f *.HttpApi.Host.*
+          rm -f *.IdentityServer.*
+          rm -f *.AuthServer.*
+          rm -f *.Web.Host.*
+          rm -f *.Web.Unified.*
+          rm -f *.HttpApi.Client.ConsoleTestApp.*
+          rm -f *.Tests.*
+          rm -f *.TestBase.*
+          ls
+
+      - name: dotnet nuget Add Source
+        run: dotnet nuget add source https://nuget.rxsoftware.cn/v3/index.json --name MyNuGet --username ${{secrets.NUGET_USERNAME}} --password ${{secrets.NUGET_PASSWORD}} --store-password-in-clear-text
+          
+      - name: dotnet nuget push to MyNuGet
+        run: dotnet nuget push ${{ github.workspace }}/nugetPackages/*.nupkg -k ${{secrets.MY_NUGET_API_KEY}} -s "MyNuGet" --skip-duplicate
+  
