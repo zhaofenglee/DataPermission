@@ -25,6 +25,11 @@ namespace JS.Abp.DataPermission.ObjectPermissions
             Check.NotNullOrWhiteSpace(objectName, nameof(objectName));
             Check.Length(objectName, nameof(objectName), ObjectPermissionConsts.ObjectNameMaxLength);
 
+            if (await IsObjectNameExistsAsync(objectName))
+            {
+                throw new BusinessException("ObjectPermission:DuplicateObjectName")
+                    .WithData("ObjectName", objectName);
+            }
 
             var objectPermission = new ObjectPermission(
              GuidGenerator.Create(),
@@ -51,5 +56,11 @@ namespace JS.Abp.DataPermission.ObjectPermissions
             return await _objectPermissionRepository.UpdateAsync(objectPermission);
         }
 
+        private async Task<bool> IsObjectNameExistsAsync(string objectName)
+        {
+            return await _objectPermissionRepository.AnyAsync(op => op.ObjectName == objectName);
+        }
+
     }
+
 }
