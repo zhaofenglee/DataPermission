@@ -83,6 +83,8 @@
     "Menu:ObjectPermissions": "Object Permissions",
     "ObjectPermission": "Object Permission",
     "EditDetails": "Edit Details",
-    "Update": "Update"
+    "Update": "Update",
+    "ObjectPermission:DuplicateObjectName": "This object name '{ObjectName}' is already added.",
+    "DuplicateObjectName": "This object name {0} is already added."
   }
 }

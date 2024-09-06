@@ -22,7 +22,7 @@ namespace JS.Abp.DataPermission.ObjectPermissions
 {
 
     [Authorize(DataPermissionPermissions.ObjectPermissions.Default)]
-    public class ObjectPermissionsAppService : ApplicationService, IObjectPermissionsAppService
+    public class ObjectPermissionsAppService : DataPermissionAppService, IObjectPermissionsAppService
     {
         private readonly IDistributedCache<ObjectPermissionExcelDownloadTokenCacheItem, string> _excelDownloadTokenCache;
         private readonly IObjectPermissionRepository _objectPermissionRepository;
@@ -61,6 +61,7 @@ namespace JS.Abp.DataPermission.ObjectPermissions
         [Authorize(DataPermissionPermissions.ObjectPermissions.Create)]
         public virtual async Task<ObjectPermissionDto> CreateAsync(ObjectPermissionCreateDto input)
         {
+            await CheckObjectNameExistsAsync(input.ObjectName);
 
             var objectPermission = await _objectPermissionManager.CreateAsync(
              input.ObjectName, input.Description
@@ -115,6 +116,16 @@ namespace JS.Abp.DataPermission.ObjectPermissions
             {
                 Token = token
             };
+        }
+
+        private async Task CheckObjectNameExistsAsync(string objectName) 
+        {
+            if(!await _objectPermissionRepository.AnyAsync(op => op.ObjectName == objectName))
+            {
+                return;
+            }
+
+            throw new UserFriendlyException(L["DuplicateObjectName", objectName]);
         }
     }
 }
