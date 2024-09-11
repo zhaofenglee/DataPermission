@@ -87,6 +87,8 @@
     "Update": "更新",
     "Cancel": "取消",
     "Edit": "编辑",
-    "Delete": "删除"
+    "Delete": "删除",
+    "ObjectPermission:DuplicateObjectName": "此对象名称'{ObjectName}'已被添加。",
+    "DuplicateObjectName": "此对象名称{0}已被添加。"
   }
 }

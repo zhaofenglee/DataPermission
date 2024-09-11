@@ -174,7 +174,7 @@
                     <Validation>
                         <Field>
                             <FieldLabel>@L["ObjectName"] *</FieldLabel>
-                            <TextEdit @bind-Text="@EditingObjectPermission.ObjectName" MaxLength="ObjectPermissionConsts.ObjectNameMaxLength">
+                            <TextEdit @bind-Text="@EditingObjectPermission.ObjectName" ReadOnly="true" MaxLength="ObjectPermissionConsts.ObjectNameMaxLength">
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
