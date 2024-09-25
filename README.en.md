@@ -7,6 +7,15 @@
 </div>
 
 ---
+## Update 8.3.0
+* Upgraded ABP version to 8.3.0
+* Added uniqueness check for data permissions
+
+## Update 8.2.0
+* Upgraded to ABP version 8.2, changed blazorwasm to blazorapp
+* Modified framework package naming rules
+
+
 ## Update 8.0.5
 * (Major change) Modified the way of judging entity data permissions, users without settings have no rights by default, if you need to open all data permissions, you need to set it.
   Refer to: https://github.com/zhaofenglee/DataPermission/issues/30
