@@ -15,6 +15,7 @@ using JS.Abp.DataPermission.MultiTenancy;
 using StackExchange.Redis;
 using Microsoft.OpenApi.Models;
 using Volo.Abp;
+using Volo.Abp.AspNetCore.Authentication.JwtBearer;
 using Volo.Abp.AspNetCore.Mvc.UI.MultiTenancy;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared;
 using Volo.Abp.AspNetCore.Serilog;
@@ -42,6 +43,7 @@ namespace JS.Abp.DataPermission;
     typeof(DataPermissionEntityFrameworkCoreModule),
     typeof(DataPermissionHttpApiModule),
     typeof(AbpAspNetCoreMvcUiMultiTenancyModule),
+    typeof(AbpAspNetCoreAuthenticationJwtBearerModule),
     typeof(AbpAutofacModule),
     typeof(AbpCachingStackExchangeRedisModule),
     typeof(AbpEntityFrameworkCoreSqlServerModule),
@@ -120,7 +122,7 @@ public class DataPermissionHttpApiHostModule : AbpModule
         });
 
         context.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
+            .AddAbpJwtBearer(options =>
             {
                 options.Authority = configuration["AuthServer:Authority"];
                 options.RequireHttpsMetadata = configuration.GetValue<bool>("AuthServer:RequireHttpsMetadata");
@@ -175,7 +177,7 @@ public class DataPermissionHttpApiHostModule : AbpModule
 
         app.UseHttpsRedirection();
         app.UseCorrelationId();
-        app.UseStaticFiles();
+        app.MapAbpStaticAssets();
         app.UseRouting();
         app.UseCors();
         app.UseAuthentication();
