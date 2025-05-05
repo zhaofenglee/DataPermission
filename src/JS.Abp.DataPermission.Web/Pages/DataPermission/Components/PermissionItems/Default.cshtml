@@ -31,7 +31,10 @@
 
 					</abp-column>
 					<abp-column Class="justify-content-end" Style="text-align: right" size="_3">
-						<abp-button id="NewPermissionItemButton" text="@L["NewPermissionItem"].Value" icon="plus" button-type="Primary"/>
+						@if (await Authorization.IsGrantedAsync(DataPermissionPermissions.PermissionItems.Create))
+						{
+							<abp-button id="NewPermissionItemButton" text="@L["NewPermissionItem"].Value" icon="plus" button-type="Primary"/>
+						}
 					</abp-column>
 				</abp-row>
 
