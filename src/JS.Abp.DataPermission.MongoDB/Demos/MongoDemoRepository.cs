@@ -37,10 +37,10 @@ namespace JS.Abp.DataPermission.Demos
             int skipCount = 0,
             CancellationToken cancellationToken = default)
         {
-            var query = ApplyFilter((await GetMongoQueryableAsync(cancellationToken)), filterText, name, displayName);
+            var query = ApplyFilter((await GetQueryableAsync(cancellationToken)), filterText, name, displayName);
             query = query.OrderBy(string.IsNullOrWhiteSpace(sorting) ? DemoConsts.GetDefaultSorting(false) : sorting);
-            return await query.As<IMongoQueryable<Demo>>()
-                .PageBy<Demo, IMongoQueryable<Demo>>(skipCount, maxResultCount)
+            return await query
+                .PageBy(skipCount, maxResultCount)
                 .ToListAsync(GetCancellationToken(cancellationToken));
         }
 
@@ -50,8 +50,8 @@ namespace JS.Abp.DataPermission.Demos
            string displayName = null,
            CancellationToken cancellationToken = default)
         {
-            var query = ApplyFilter((await GetMongoQueryableAsync(cancellationToken)), filterText, name, displayName);
-            return await query.As<IMongoQueryable<Demo>>().LongCountAsync(GetCancellationToken(cancellationToken));
+            var query = ApplyFilter((await GetQueryableAsync(cancellationToken)), filterText, name, displayName);
+            return await query.LongCountAsync(GetCancellationToken(cancellationToken));
         }
 
         protected virtual IQueryable<Demo> ApplyFilter(

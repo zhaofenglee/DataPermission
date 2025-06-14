@@ -11,10 +11,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\JS.Abp.DataPermission.Application\JS.Abp.DataPermission.Application.csproj" />
     <ProjectReference Include="..\JS.Abp.DataPermission.Domain.Tests\JS.Abp.DataPermission.Domain.Tests.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
   </ItemGroup>
 
 </Project>

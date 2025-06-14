@@ -28,10 +28,10 @@ namespace JS.Abp.DataPermission.ObjectPermissions
             int skipCount = 0,
             CancellationToken cancellationToken = default)
         {
-            var query = ApplyFilter((await GetMongoQueryableAsync(cancellationToken)), filterText, objectName, description);
+            var query = ApplyFilter((await GetQueryableAsync(cancellationToken)), filterText, objectName, description);
             query = query.OrderBy(string.IsNullOrWhiteSpace(sorting) ? ObjectPermissionConsts.GetDefaultSorting(false) : sorting);
-            return await query.As<IMongoQueryable<ObjectPermission>>()
-                .PageBy<ObjectPermission, IMongoQueryable<ObjectPermission>>(skipCount, maxResultCount)
+            return await query
+                .PageBy(skipCount, maxResultCount)
                 .ToListAsync(GetCancellationToken(cancellationToken));
         }
 
@@ -41,8 +41,8 @@ namespace JS.Abp.DataPermission.ObjectPermissions
            string description = null,
            CancellationToken cancellationToken = default)
         {
-            var query = ApplyFilter((await GetMongoQueryableAsync(cancellationToken)), filterText, objectName, description);
-            return await query.As<IMongoQueryable<ObjectPermission>>().LongCountAsync(GetCancellationToken(cancellationToken));
+            var query = ApplyFilter((await GetQueryableAsync(cancellationToken)), filterText, objectName, description);
+            return await query.LongCountAsync(GetCancellationToken(cancellationToken));
         }
 
         protected virtual IQueryable<ObjectPermission> ApplyFilter(

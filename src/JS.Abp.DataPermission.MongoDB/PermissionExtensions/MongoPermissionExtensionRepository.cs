@@ -34,10 +34,10 @@ namespace JS.Abp.DataPermission.PermissionExtensions
             int skipCount = 0,
             CancellationToken cancellationToken = default)
         {
-            var query = ApplyFilter((await GetMongoQueryableAsync(cancellationToken)), filterText, objectName, roleId, excludedRoleId, permissionType, lambdaString, isActive,description);
+            var query = ApplyFilter((await GetQueryableAsync(cancellationToken)), filterText, objectName, roleId, excludedRoleId, permissionType, lambdaString, isActive,description);
             query = query.OrderBy(string.IsNullOrWhiteSpace(sorting) ? PermissionExtensionConsts.GetDefaultSorting(false) : sorting);
-            return await query.As<IMongoQueryable<PermissionExtension>>()
-                .PageBy<PermissionExtension, IMongoQueryable<PermissionExtension>>(skipCount, maxResultCount)
+            return await query
+                .PageBy(skipCount, maxResultCount)
                 .ToListAsync(GetCancellationToken(cancellationToken));
         }
 
@@ -52,8 +52,8 @@ namespace JS.Abp.DataPermission.PermissionExtensions
            string description = null,
            CancellationToken cancellationToken = default)
         {
-            var query = ApplyFilter((await GetMongoQueryableAsync(cancellationToken)), filterText, objectName, roleId, excludedRoleId, permissionType, lambdaString, isActive,description);
-            return await query.As<IMongoQueryable<PermissionExtension>>().LongCountAsync(GetCancellationToken(cancellationToken));
+            var query = ApplyFilter((await GetQueryableAsync(cancellationToken)), filterText, objectName, roleId, excludedRoleId, permissionType, lambdaString, isActive,description);
+            return await query.LongCountAsync(GetCancellationToken(cancellationToken));
         }
 
         protected virtual IQueryable<PermissionExtension> ApplyFilter(
