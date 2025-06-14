@@ -35,10 +35,10 @@ namespace JS.Abp.DataPermission.PermissionItems
             int skipCount = 0,
             CancellationToken cancellationToken = default)
         {
-            var query = ApplyFilter((await GetMongoQueryableAsync(cancellationToken)), filterText, objectName, description, targetType,roleId, canRead, canCreate, canEdit, canDelete,isActive);
+            var query = ApplyFilter((await GetQueryableAsync(cancellationToken)), filterText, objectName, description, targetType,roleId, canRead, canCreate, canEdit, canDelete,isActive);
             query = query.OrderBy(string.IsNullOrWhiteSpace(sorting) ? PermissionItemConsts.GetDefaultSorting(false) : sorting);
-            return await query.As<IMongoQueryable<PermissionItem>>()
-                .PageBy<PermissionItem, IMongoQueryable<PermissionItem>>(skipCount, maxResultCount)
+            return await query
+                .PageBy(skipCount, maxResultCount)
                 .ToListAsync(GetCancellationToken(cancellationToken));
         }
 
@@ -55,8 +55,8 @@ namespace JS.Abp.DataPermission.PermissionItems
            bool? isActive = null,
            CancellationToken cancellationToken = default)
         {
-            var query = ApplyFilter((await GetMongoQueryableAsync(cancellationToken)), filterText, objectName, description, targetType,roleId, canRead, canCreate, canEdit, canDelete,isActive);
-            return await query.As<IMongoQueryable<PermissionItem>>().LongCountAsync(GetCancellationToken(cancellationToken));
+            var query = ApplyFilter((await GetQueryableAsync(cancellationToken)), filterText, objectName, description, targetType,roleId, canRead, canCreate, canEdit, canDelete,isActive);
+            return await query.LongCountAsync(GetCancellationToken(cancellationToken));
         }
 
         protected virtual IQueryable<PermissionItem> ApplyFilter(

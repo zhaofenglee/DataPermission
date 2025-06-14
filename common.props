@@ -1,8 +1,8 @@
 <Project>
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
-    <Version>9.1.3</Version>
-    <VoloAbpPackageVersion>9.1.3</VoloAbpPackageVersion>
+    <Version>9.2.0</Version>
+    <VoloAbpPackageVersion>9.2.0</VoloAbpPackageVersion>
     <Description>Abp DataPermission Module</Description>
     <Authors>zhaofenglee</Authors>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
