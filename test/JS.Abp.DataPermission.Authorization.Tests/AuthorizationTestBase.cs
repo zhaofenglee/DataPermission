@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using Volo.Abp;
 using Volo.Abp.Security.Claims;
+using Volo.Abp.Testing;
 
 namespace JS.Abp.DataPermission.Authorization.Tests;
 
