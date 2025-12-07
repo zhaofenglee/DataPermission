@@ -1,6 +1,8 @@
 {
   "extends": "./tsconfig.prod.json",
   "compilerOptions": {
+    "esModuleInterop": true,
+    "skipLibCheck": true,
     "paths": {
       "@j-s.Abp/data-permission": [
         "projects/data-permission/src/public-api.ts"

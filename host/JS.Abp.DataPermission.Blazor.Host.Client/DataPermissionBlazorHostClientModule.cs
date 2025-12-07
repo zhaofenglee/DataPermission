@@ -11,7 +11,6 @@ using Volo.Abp.Account;
 using Volo.Abp.AspNetCore.Components.Web.Theming.Routing;
 using Volo.Abp.AspNetCore.Components.WebAssembly.BasicTheme;
 using Volo.Abp.Autofac.WebAssembly;
-using Volo.Abp.AutoMapper;
 using Volo.Abp.Identity.Blazor.WebAssembly;
 using Volo.Abp.Modularity;
 using Volo.Abp.SettingManagement.Blazor.WebAssembly;
@@ -41,7 +40,7 @@ public class DataPermissionBlazorHostClientModule : AbpModule
         ConfigureBlazorise(context);
         ConfigureRouter(context);
         ConfigureMenu(context);
-        ConfigureAutoMapper(context);
+        context.Services.AddMapperlyObjectMapper<DataPermissionBlazorHostClientModule>();
     }
 
     private void ConfigureRouter(ServiceConfigurationContext context)
@@ -83,12 +82,5 @@ public class DataPermissionBlazorHostClientModule : AbpModule
             BaseAddress = new Uri(environment.BaseAddress)
         });
     }
-
-    private void ConfigureAutoMapper(ServiceConfigurationContext context)
-    {
-        Configure<AbpAutoMapperOptions>(options =>
-        {
-            options.AddMaps<DataPermissionBlazorHostClientModule>();
-        });
-    }
+    
 }

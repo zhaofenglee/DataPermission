@@ -29,7 +29,6 @@ using Volo.Abp.AspNetCore.Mvc.UI.Theme.Basic;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared;
 using Volo.Abp.AspNetCore.Serilog;
 using Volo.Abp.Autofac;
-using Volo.Abp.AutoMapper;
 using Volo.Abp.Caching;
 using Volo.Abp.Caching.StackExchangeRedis;
 using Volo.Abp.FeatureManagement;
@@ -101,11 +100,11 @@ public class DataPermissionWebHostModule : AbpModule
         ConfigureCache(configuration);
         ConfigureUrls(configuration);
         ConfigureAuthentication(context, configuration);
-        ConfigureAutoMapper();
         ConfigureVirtualFileSystem(hostingEnvironment);
         ConfigureSwaggerServices(context.Services);
         ConfigureMultiTenancy();
         ConfigureDataProtection(context, configuration, hostingEnvironment);
+        context.Services.AddMapperlyObjectMapper<DataPermissionWebHostModule>();
     }
 
     private void ConfigureMenu(IConfiguration configuration)
@@ -168,14 +167,7 @@ public class DataPermissionWebHostModule : AbpModule
                 options.Scope.Add("DataPermission");
             });
     }
-
-    private void ConfigureAutoMapper()
-    {
-        Configure<AbpAutoMapperOptions>(options =>
-        {
-            options.AddMaps<DataPermissionWebHostModule>();
-        });
-    }
+    
 
     private void ConfigureVirtualFileSystem(IWebHostEnvironment hostingEnvironment)
     {
