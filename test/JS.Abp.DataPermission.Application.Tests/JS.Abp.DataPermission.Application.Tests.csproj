@@ -3,7 +3,7 @@
   <Import Project="..\..\common.props" />
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <RootNamespace>JS.Abp.DataPermission</RootNamespace>
   </PropertyGroup>
@@ -11,7 +11,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\JS.Abp.DataPermission.Application\JS.Abp.DataPermission.Application.csproj" />
     <ProjectReference Include="..\JS.Abp.DataPermission.Domain.Tests\JS.Abp.DataPermission.Domain.Tests.csproj" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
   </ItemGroup>
 
 </Project>

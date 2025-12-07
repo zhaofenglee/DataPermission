@@ -17,7 +17,6 @@ using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared;
 using Volo.Abp.AspNetCore.Serilog;
 using Volo.Abp.AuditLogging.MongoDB;
 using Volo.Abp.Autofac;
-using Volo.Abp.AutoMapper;
 using Volo.Abp.MongoDB;
 using Volo.Abp.Emailing;
 using Volo.Abp.FeatureManagement;
@@ -27,6 +26,7 @@ using Volo.Abp.Identity.MongoDB;
 using Volo.Abp.Identity.Web;
 using Volo.Abp.Localization;
 using Volo.Abp.Localization.ExceptionHandling;
+using Volo.Abp.Mapperly;
 using Volo.Abp.Modularity;
 using Volo.Abp.MultiTenancy;
 using Volo.Abp.OpenIddict.MongoDB;
@@ -54,7 +54,7 @@ namespace JS.Abp.DataPermission.Web.MongoDb;
     // ABP Framework packages
     typeof(AbpAspNetCoreMvcModule),
     typeof(AbpAutofacModule),
-    typeof(AbpAutoMapperModule),
+    typeof(AbpMapperlyModule),
     typeof(AbpSwashbuckleModule),
     typeof(AbpAspNetCoreSerilogModule),
     typeof(AbpAspNetCoreMvcUiBasicThemeModule),
@@ -143,13 +143,13 @@ public class MongoDbModule : AbpModule
         ConfigureMultiTenancy();
         ConfigureUrls(configuration);
         //ConfigureBundles();
-        ConfigureAutoMapper(context);
         ConfigureSwagger(context.Services);
         ConfigureNavigationServices();
         ConfigureAutoApiControllers();
         ConfigureVirtualFiles(hostingEnvironment);
         ConfigureLocalization();
         ConfigureMongoDB(context);
+        context.Services.AddMapperlyObjectMapper<MongoDbModule>();
     }
 
     private void ConfigureAuthentication(ServiceConfigurationContext context)
@@ -266,20 +266,7 @@ public class MongoDbModule : AbpModule
             }
         );
     }
-
-    private void ConfigureAutoMapper(ServiceConfigurationContext context)
-    {
-        context.Services.AddAutoMapperObjectMapper<MongoDbModule>();
-        Configure<AbpAutoMapperOptions>(options =>
-        {
-            /* Uncomment `validate: true` if you want to enable the Configuration Validation feature.
-             * See AutoMapper's documentation to learn what it is:
-             * https://docs.automapper.org/en/stable/Configuration-validation.html
-             */
-            options.AddMaps<MongoDbModule>(/* validate: true */);
-        });
-    }
-
+    
     private void ConfigureMongoDB(ServiceConfigurationContext context)
     {
         context.Services.AddMongoDbContext<MongoDbDbContext>(options =>
