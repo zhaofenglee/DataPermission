@@ -4,18 +4,18 @@ using JS.Abp.DataPermission.Localization;
 using JS.Abp.DataPermission.Web.Menus;
 using Volo.Abp.AspNetCore.Mvc.Localization;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared;
-using Volo.Abp.AutoMapper;
 using Volo.Abp.Modularity;
 using Volo.Abp.UI.Navigation;
 using Volo.Abp.VirtualFileSystem;
 using JS.Abp.DataPermission.Permissions;
+using Volo.Abp.Mapperly;
 
 namespace JS.Abp.DataPermission.Web;
 
 [DependsOn(
     typeof(DataPermissionApplicationContractsModule),
     typeof(AbpAspNetCoreMvcUiThemeSharedModule),
-    typeof(AbpAutoMapperModule)
+    typeof(AbpMapperlyModule)
     )]
 public class DataPermissionWebModule : AbpModule
 {
@@ -44,12 +44,8 @@ public class DataPermissionWebModule : AbpModule
             options.FileSets.AddEmbedded<DataPermissionWebModule>();
         });
 
-        context.Services.AddAutoMapperObjectMapper<DataPermissionWebModule>();
-        Configure<AbpAutoMapperOptions>(options =>
-        {
-            options.AddMaps<DataPermissionWebModule>(validate: true);
-        });
-
+        context.Services.AddMapperlyObjectMapper<DataPermissionWebModule>();
+        
         Configure<RazorPagesOptions>(options =>
         {
             //Configure authorization.

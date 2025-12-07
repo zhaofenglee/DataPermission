@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { DataPermissionService } from '../services/data-permission.service';
 
 @Component({
@@ -7,7 +7,7 @@ import { DataPermissionService } from '../services/data-permission.service';
   styles: [],
 })
 export class DataPermissionComponent implements OnInit {
-  constructor(private service: DataPermissionService) {}
+  private service = inject(DataPermissionService);
 
   ngOnInit(): void {
     this.service.sample().subscribe(console.log);
