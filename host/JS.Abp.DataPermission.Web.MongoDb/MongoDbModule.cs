@@ -1,7 +1,7 @@
 ﻿using JS.Abp.DataPermission.MongoDB;
 using Microsoft.AspNetCore.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using JS.Abp.DataPermission.Web.MongoDb.Data;
 using JS.Abp.DataPermission.Web.MongoDb.Localization;
 using JS.Abp.DataPermission.Web.MongoDb.Menus;

@@ -12,7 +12,7 @@ using Microsoft.Extensions.Hosting;
 using JS.Abp.DataPermission.EntityFrameworkCore;
 using JS.Abp.DataPermission.MultiTenancy;
 using StackExchange.Redis;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Volo.Abp;
 using Volo.Abp.AspNetCore.Authentication.JwtBearer;
 using Volo.Abp.AspNetCore.Mvc.UI.MultiTenancy;
