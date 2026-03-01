@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using JS.Abp.DataPermission.Blazor.Server.Host.Components;
 using JS.Abp.DataPermission.Blazor.Server.Host.Menus;
 using JS.Abp.DataPermission.EntityFrameworkCore;
