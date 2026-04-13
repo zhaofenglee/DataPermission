@@ -80,8 +80,8 @@
 
 
 @* ************************* CREATE MODAL ************************* *@
-<Modal @ref="CreateObjectPermissionModal" Closing="@CreateObjectPermissionModal.CancelClosingModalWhenFocusLost">
-    <ModalContent Centered="true">
+<Modal @ref="CreateObjectPermissionModal" Closing="@CreateObjectPermissionModal.CancelClosingModalWhenFocusLost" Centered="true">
+    <ModalContent>
         <Form id="CreateObjectPermissionForm">
             <ModalHeader>
                 <ModalTitle>@L["NewObjectPermission"]</ModalTitle>
@@ -97,11 +97,11 @@
                     <Validation>
                         <Field>
                             <FieldLabel>@L["ObjectName"] *</FieldLabel>
-                            <TextEdit @bind-Text="@NewObjectPermission.ObjectName" MaxLength="ObjectPermissionConsts.ObjectNameMaxLength">
+                            <TextInput @bind-Value="@NewObjectPermission.ObjectName" MaxLength="ObjectPermissionConsts.ObjectNameMaxLength">
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
-                            </TextEdit>
+                            </TextInput>
                         </Field>
                     </Validation>
 
@@ -109,11 +109,11 @@
                     <Validation>
                         <Field>
                             <FieldLabel>@L["Description"]</FieldLabel>
-                            <TextEdit @bind-Text="@NewObjectPermission.Description" >
+                            <TextInput @bind-Value="@NewObjectPermission.Description" >
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
-                            </TextEdit>
+                            </TextInput>
                         </Field>
                     </Validation>
 
@@ -134,8 +134,8 @@
 </Modal>
 
 @* ************************* EDIT MODAL ************************* *@
-<Modal @ref="EditObjectPermissionModal" Closing="@EditObjectPermissionModal.CancelClosingModalWhenFocusLost">
-    <ModalContent Centered="true">
+<Modal @ref="EditObjectPermissionModal" Closing="@EditObjectPermissionModal.CancelClosingModalWhenFocusLost" Centered="true">
+    <ModalContent>
         <Form id="EditObjectPermissionForm">
             <ModalHeader>
                 <ModalTitle>@L["Update"]</ModalTitle>
@@ -151,11 +151,11 @@
                     <Validation>
                         <Field>
                             <FieldLabel>@L["ObjectName"] *</FieldLabel>
-                            <TextEdit @bind-Text="@EditingObjectPermission.ObjectName" ReadOnly="true" MaxLength="ObjectPermissionConsts.ObjectNameMaxLength">
+                            <TextInput @bind-Value="@EditingObjectPermission.ObjectName" ReadOnly="true" MaxLength="ObjectPermissionConsts.ObjectNameMaxLength">
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
-                            </TextEdit>
+                            </TextInput>
                         </Field>
                     </Validation>
 
@@ -163,11 +163,11 @@
                     <Validation>
                         <Field>
                             <FieldLabel>@L["Description"]</FieldLabel>
-                            <TextEdit @bind-Text="@EditingObjectPermission.Description" >
+                            <TextInput @bind-Value="@EditingObjectPermission.Description" >
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
-                            </TextEdit>
+                            </TextInput>
                         </Field>
                     </Validation>
 

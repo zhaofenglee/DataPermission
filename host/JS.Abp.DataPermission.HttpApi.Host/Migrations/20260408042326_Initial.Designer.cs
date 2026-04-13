@@ -13,8 +13,8 @@ using Volo.Abp.EntityFrameworkCore;
 namespace JS.Abp.DataPermission.Migrations
 {
     [DbContext(typeof(DataPermissionHttpApiHostMigrationsDbContext))]
-    [Migration("20240524121853_add_datapermission_module")]
-    partial class add_datapermission_module
+    [Migration("20260408042326_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -22,7 +22,7 @@ namespace JS.Abp.DataPermission.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("_Abp_DatabaseProvider", EfCoreDatabaseProvider.SqlServer)
-                .HasAnnotation("ProductVersion", "8.0.4")
+                .HasAnnotation("ProductVersion", "10.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);

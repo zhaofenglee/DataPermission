@@ -38,10 +38,10 @@
         <Form id="ObjectPermissionSearchForm" class="mb-3">
             <Addons>
                 <Addon AddonType="AddonType.Body">
-                    <TextEdit @bind-Text="@Filter.FilterText"
+                    <TextInput @bind-Value="@Filter.FilterText"
                               Autofocus="true"
                               Placeholder="@L["Search"]">
-                    </TextEdit>
+                    </TextInput>
                 </Addon>
                 <Addon AddonType="AddonType.End">
                     <SubmitButton Form="ObjectPermissionSearchForm" Clicked="GetObjectPermissionsAsync">
@@ -69,17 +69,17 @@
                         <EntityActions TItem="ObjectPermissionDto" EntityActionsColumn="@EntityActionsColumn">
                             <EntityAction TItem="ObjectPermissionDto"
                                           Visible="@CanEditObjectPermission"
-                                          Clicked="async () => await OpenObjectPermissionDetailAsync(context)"
+                                          Clicked="async () => await OpenObjectPermissionDetailAsync(context.Item)"
                                           Text="@L["EditDetails"]">
                             </EntityAction>
                             <EntityAction TItem="ObjectPermissionDto"
                                           Visible="@CanEditObjectPermission"
-                                          Clicked="async () => await OpenEditObjectPermissionModalAsync(context)"
+                                          Clicked="async () => await OpenEditObjectPermissionModalAsync(context.Item)"
                                           Text="@L["Edit"]">
                             </EntityAction>
                             <EntityAction TItem="ObjectPermissionDto"
                                           Visible="@CanDeleteObjectPermission"
-                                          Clicked="() => DeleteObjectPermissionAsync(context)"
+                                          Clicked="() => DeleteObjectPermissionAsync(context.Item)"
                                           ConfirmationMessage="@(() => L["DeleteConfirmationMessage"])"
                                           Text="@L["Delete"]">
                             </EntityAction>
@@ -103,8 +103,8 @@
 </Card>
 
 @* ************************* CREATE MODAL ************************* *@
-<Modal @ref="CreateObjectPermissionModal" Closing="@CreateObjectPermissionModal.CancelClosingModalWhenFocusLost">
-    <ModalContent Centered="true">
+<Modal @ref="CreateObjectPermissionModal" Closing="@CreateObjectPermissionModal.CancelClosingModalWhenFocusLost" Centered="true">
+    <ModalContent>
         <Form id="CreateObjectPermissionForm">
             <ModalHeader>
                 <ModalTitle>@L["NewObjectPermission"]</ModalTitle>
@@ -120,11 +120,11 @@
                     <Validation>
                         <Field>
                             <FieldLabel>@L["ObjectName"] *</FieldLabel>
-                            <TextEdit @bind-Text="@NewObjectPermission.ObjectName" MaxLength="ObjectPermissionConsts.ObjectNameMaxLength">
+                            <TextInput @bind-Value="@NewObjectPermission.ObjectName" MaxLength="ObjectPermissionConsts.ObjectNameMaxLength">
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
-                            </TextEdit>
+                            </TextInput>
                         </Field>
                     </Validation>
 
@@ -132,11 +132,11 @@
                     <Validation>
                         <Field>
                             <FieldLabel>@L["Description"]</FieldLabel>
-                            <TextEdit @bind-Text="@NewObjectPermission.Description" >
+                            <TextInput @bind-Value="@NewObjectPermission.Description" >
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
-                            </TextEdit>
+                            </TextInput>
                         </Field>
                     </Validation>
 
@@ -157,8 +157,8 @@
 </Modal>
 
 @* ************************* EDIT MODAL ************************* *@
-<Modal @ref="EditObjectPermissionModal" Closing="@EditObjectPermissionModal.CancelClosingModalWhenFocusLost">
-    <ModalContent Centered="true">
+<Modal @ref="EditObjectPermissionModal" Closing="@EditObjectPermissionModal.CancelClosingModalWhenFocusLost" Centered="true">
+    <ModalContent>
         <Form id="EditObjectPermissionForm">
             <ModalHeader>
                 <ModalTitle>@L["Update"]</ModalTitle>
@@ -174,11 +174,11 @@
                     <Validation>
                         <Field>
                             <FieldLabel>@L["ObjectName"] *</FieldLabel>
-                            <TextEdit @bind-Text="@EditingObjectPermission.ObjectName" ReadOnly="true" MaxLength="ObjectPermissionConsts.ObjectNameMaxLength">
+                            <TextInput @bind-Value="@EditingObjectPermission.ObjectName" ReadOnly="true" MaxLength="ObjectPermissionConsts.ObjectNameMaxLength">
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
-                            </TextEdit>
+                            </TextInput>
                         </Field>
                     </Validation>
 
@@ -186,11 +186,11 @@
                     <Validation>
                         <Field>
                             <FieldLabel>@L["Description"]</FieldLabel>
-                            <TextEdit @bind-Text="@EditingObjectPermission.Description" >
+                            <TextInput @bind-Value="@EditingObjectPermission.Description" >
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
-                            </TextEdit>
+                            </TextInput>
                         </Field>
                     </Validation>
 
