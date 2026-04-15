@@ -36,10 +36,10 @@
                 <Column ColumnSize="ColumnSize.Is8">
                     <Addons>
                         <Addon AddonType="AddonType.Body">
-                            <TextEdit @bind-Text="@Filter.FilterText"
+                            <TextInput @bind-Value="@Filter.FilterText"
                                       Autofocus="true"
                                       Placeholder="@L["Search"]">
-                            </TextEdit>
+                            </TextInput>
                         </Addon>
                         <Addon AddonType="AddonType.End">
                             <SubmitButton Form="PermissionItemSearchForm" Clicked="GetPermissionItemsAsync">
@@ -72,16 +72,16 @@
                         <EntityActions TItem="PermissionItemDto" EntityActionsColumn="@EntityActionsColumn">
                             <EntityAction TItem="PermissionItemDto"
                                           Visible="@CanEditPermissionItem"
-                                          Clicked="async () => await OpenEditPermissionItemModalAsync(context)"
+                                          Clicked="async () => await OpenEditPermissionItemModalAsync(context.Item)"
                                           Text="@L["Edit"]"></EntityAction>
                             <EntityAction TItem="PermissionItemDto"
                                           Visible="@CanCreatePermissionItem"
-                                          Clicked="async () => await CopyPermissionItemAsync(context)"
+                                          Clicked="async () => await CopyPermissionItemAsync(context.Item)"
                                           Text="@L["Copy"]">
                             </EntityAction>
                             <EntityAction TItem="PermissionItemDto"
                                           Visible="@CanDeletePermissionItem"
-                                          Clicked="() => DeletePermissionItemAsync(context)"
+                                          Clicked="() => DeletePermissionItemAsync(context.Item)"
                                           ConfirmationMessage="@(() => L["DeleteConfirmationMessage"])"
                                           Text="@L["Delete"]"></EntityAction>
                         </EntityActions>
@@ -112,7 +112,7 @@
                                 Field="CanRead"
                                 Caption="@L["CanRead"]">
                     <DisplayTemplate>
-                        @if (context.CanRead)
+                        @if (context.Item.CanRead)
                         {
                             <Icon TextColor="TextColor.Success" Name="@IconName.Check"/>
                         }
@@ -128,7 +128,7 @@
                                 Field="CanCreate"
                                 Caption="@L["CanCreate"]">
                     <DisplayTemplate>
-                        @if (context.CanCreate)
+                        @if (context.Item.CanCreate)
                         {
                             <Icon TextColor="TextColor.Success" Name="@IconName.Check"/>
                         }
@@ -144,7 +144,7 @@
                                 Field="CanEdit"
                                 Caption="@L["CanEdit"]">
                     <DisplayTemplate>
-                        @if (context.CanEdit)
+                        @if (context.Item.CanEdit)
                         {
                             <Icon TextColor="TextColor.Success" Name="@IconName.Check"/>
                         }
@@ -160,7 +160,7 @@
                                 Field="CanDelete"
                                 Caption="@L["CanDelete"]">
                     <DisplayTemplate>
-                        @if (context.CanDelete)
+                        @if (context.Item.CanDelete)
                         {
                             <Icon TextColor="TextColor.Success" Name="@IconName.Check"/>
                         }
@@ -176,7 +176,7 @@
                                 Field="IsActive"
                                 Caption="@L["IsActive"]">
                     <DisplayTemplate>
-                        @if (context.IsActive)
+                        @if (context.Item.IsActive)
                         {
                             <Icon TextColor="TextColor.Success" Name="@IconName.Check"/>
                         }
@@ -194,8 +194,8 @@
 </div>
 
 @* ************************* CREATE MODAL ************************* *@
-<Modal @ref="CreatePermissionItemModal" Closing="@CreatePermissionItemModal.CancelClosingModalWhenFocusLost">
-    <ModalContent Centered="true">
+<Modal @ref="CreatePermissionItemModal" Closing="@CreatePermissionItemModal.CancelClosingModalWhenFocusLost" Centered="true">
+    <ModalContent>
         <Form id="CreatePermissionItemForm">
             <ModalHeader>
                 <ModalTitle>@L["NewPermissionItem"]</ModalTitle>
@@ -224,18 +224,18 @@
                     <Validation>
                         <Field>
                             <FieldLabel>@L["TargetType"] *</FieldLabel>
-                            <TextEdit @bind-Text="@NewPermissionItem.TargetType" MaxLength="PermissionItemConsts.TargetTypeMaxLength">
+                            <TextInput @bind-Value="@NewPermissionItem.TargetType" MaxLength="PermissionItemConsts.TargetTypeMaxLength">
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
-                            </TextEdit>
+                            </TextInput>
                         </Field>
                     </Validation>
 
                     <Validation>
                         <Field>
                             <FieldLabel>@L["RoleName"] *</FieldLabel>
-                            <Select TValue="Guid" @bind-SelectedValue="@NewPermissionItem.RoleId">
+                            <Select TValue="Guid" @bind-Value="@NewPermissionItem.RoleId">
                                 <SelectItem TValue="Guid" Value=@Guid.Empty></SelectItem>
                                 @foreach (var item in PermissionRoleList)
                                 {
@@ -247,33 +247,33 @@
                     
 
                     <Field>
-                        <Check TValue="bool" @bind-Checked="@NewPermissionItem.CanRead">@L["CanRead"]</Check>
+                        <Check TValue="bool" @bind-Value="@NewPermissionItem.CanRead">@L["CanRead"]</Check>
                     </Field>
 
                     <Field>
-                        <Check TValue="bool" @bind-Checked="@NewPermissionItem.CanCreate">@L["CanCreate"]</Check>
+                        <Check TValue="bool" @bind-Value="@NewPermissionItem.CanCreate">@L["CanCreate"]</Check>
                     </Field>
 
                     <Field>
-                        <Check TValue="bool" @bind-Checked="@NewPermissionItem.CanEdit">@L["CanEdit"]</Check>
+                        <Check TValue="bool" @bind-Value="@NewPermissionItem.CanEdit">@L["CanEdit"]</Check>
                     </Field>
 
                     <Field>
-                        <Check TValue="bool" @bind-Checked="@NewPermissionItem.CanDelete">@L["CanDelete"]</Check>
+                        <Check TValue="bool" @bind-Value="@NewPermissionItem.CanDelete">@L["CanDelete"]</Check>
                     </Field>
 
                     <Field>
-                        <Check TValue="bool" @bind-Checked="@NewPermissionItem.IsActive">@L["IsActive"]</Check>
+                        <Check TValue="bool" @bind-Value="@NewPermissionItem.IsActive">@L["IsActive"]</Check>
                     </Field>
                     
                     <Validation>
                         <Field>
                             <FieldLabel>@L["Description"]</FieldLabel>
-                            <MemoEdit @bind-Text="@NewPermissionItem.Description">
+                            <MemoInput @bind-Value="@NewPermissionItem.Description">
                                 <Feedback>
                                     <ValidationError/>
                                 </Feedback>
-                            </MemoEdit>
+                            </MemoInput>
                         </Field>
                     </Validation>
                     
@@ -291,8 +291,8 @@
 </Modal>
 
 @* ************************* EDIT MODAL ************************* *@
-<Modal @ref="EditPermissionItemModal" Closing="@EditPermissionItemModal.CancelClosingModalWhenFocusLost">
-    <ModalContent Centered="true">
+<Modal @ref="EditPermissionItemModal" Closing="@EditPermissionItemModal.CancelClosingModalWhenFocusLost" Centered="true">
+    <ModalContent>
         <Form id="EditPermissionItemForm">
             <ModalHeader>
                 <ModalTitle>@L["Update"]</ModalTitle>
@@ -322,18 +322,18 @@
                     <Validation>
                         <Field>
                             <FieldLabel>@L["TargetType"] *</FieldLabel>
-                            <TextEdit @bind-Text="@EditingPermissionItem.TargetType" MaxLength="PermissionItemConsts.TargetTypeMaxLength">
+                            <TextInput @bind-Value="@EditingPermissionItem.TargetType" MaxLength="PermissionItemConsts.TargetTypeMaxLength">
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
-                            </TextEdit>
+                            </TextInput>
                         </Field>
                     </Validation>
 
                     <Validation>
                         <Field>
                             <FieldLabel>@L["RoleName"] *</FieldLabel>
-                            <Select TValue="Guid" @bind-SelectedValue="@EditingPermissionItem.RoleId">
+                            <Select TValue="Guid" @bind-Value="@EditingPermissionItem.RoleId">
                                 <SelectItem TValue="Guid" Value=@Guid.Empty></SelectItem>
                                 @foreach (var item in PermissionRoleList)
                                 {
@@ -345,33 +345,33 @@
                     
 
                     <Field>
-                        <Check TValue="bool" @bind-Checked="@EditingPermissionItem.CanRead">@L["CanRead"]</Check>
+                        <Check TValue="bool" @bind-Value="@EditingPermissionItem.CanRead">@L["CanRead"]</Check>
                     </Field>
 
                     <Field>
-                        <Check TValue="bool" @bind-Checked="@EditingPermissionItem.CanCreate">@L["CanCreate"]</Check>
+                        <Check TValue="bool" @bind-Value="@EditingPermissionItem.CanCreate">@L["CanCreate"]</Check>
                     </Field>
 
                     <Field>
-                        <Check TValue="bool" @bind-Checked="@EditingPermissionItem.CanEdit">@L["CanEdit"]</Check>
+                        <Check TValue="bool" @bind-Value="@EditingPermissionItem.CanEdit">@L["CanEdit"]</Check>
                     </Field>
 
                     <Field>
-                        <Check TValue="bool" @bind-Checked="@EditingPermissionItem.CanDelete">@L["CanDelete"]</Check>
+                        <Check TValue="bool" @bind-Value="@EditingPermissionItem.CanDelete">@L["CanDelete"]</Check>
                     </Field>
 
                     <Field>
-                        <Check TValue="bool" @bind-Checked="@EditingPermissionItem.IsActive">@L["IsActive"]</Check>
+                        <Check TValue="bool" @bind-Value="@EditingPermissionItem.IsActive">@L["IsActive"]</Check>
                     </Field>
 
                     <Validation>
                         <Field>
                             <FieldLabel>@L["Description"]</FieldLabel>
-                            <MemoEdit @bind-Text="@EditingPermissionItem.Description">
+                            <MemoInput @bind-Value="@EditingPermissionItem.Description">
                                 <Feedback>
                                     <ValidationError/>
                                 </Feedback>
-                            </MemoEdit>
+                            </MemoInput>
                         </Field>
                     </Validation>
                     
