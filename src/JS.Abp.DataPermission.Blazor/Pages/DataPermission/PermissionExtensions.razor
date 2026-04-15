@@ -40,10 +40,10 @@
         <Form id="PermissionExtensionSearchForm" class="mb-3">
             <Addons>
                 <Addon AddonType="AddonType.Body">
-                    <TextEdit @bind-Text="@Filter.FilterText"
+                    <TextInput @bind-Value="@Filter.FilterText"
                               Autofocus="true"
                               Placeholder="@L["Search"]">
-                    </TextEdit>
+                    </TextInput>
                 </Addon>
                 <Addon AddonType="AddonType.End">
                     <SubmitButton Form="PermissionExtensionSearchForm" Clicked="GetPermissionExtensionsAsync">
@@ -71,15 +71,15 @@
                         <EntityActions TItem="PermissionExtensionDto" EntityActionsColumn="@EntityActionsColumn">
                             <EntityAction TItem="PermissionExtensionDto"
                                           Visible="@CanEditPermissionExtension"
-                                          Clicked="async () => await OpenEditPermissionExtensionModalAsync(context)"
+                                          Clicked="async () => await OpenEditPermissionExtensionModalAsync(context.Item)"
                                           Text="@L["Edit"]"></EntityAction>
                             <EntityAction TItem="PermissionExtensionDto"
                                                                       Visible="@CanCreatePermissionExtension"
-                                                                      Clicked="async () => await CopyPermissionExtensionModalAsync(context)"
+                                                                      Clicked="async () => await CopyPermissionExtensionModalAsync(context.Item)"
                                                                       Text="@L["Copy"]"></EntityAction>
                             <EntityAction TItem="PermissionExtensionDto"
                                           Visible="@CanDeletePermissionExtension"
-                                          Clicked="() => DeletePermissionExtensionAsync(context)"
+                                          Clicked="() => DeletePermissionExtensionAsync(context.Item)"
                                           ConfirmationMessage="@(()=> L["DeleteConfirmationMessage"])"
                                           Text="@L["Delete"]"></EntityAction>
                         </EntityActions>
@@ -96,7 +96,7 @@
                                 Field="PermissionType"
                                 Caption="@L["PermissionType"]">
                     <DisplayTemplate>
-                        @L[$"Enum:PermissionType.{context.PermissionType.ToString("d")}"]
+                        @L[$"Enum:PermissionType.{context.Item.PermissionType.ToString("d")}"]
                     </DisplayTemplate>
                 </DataGridColumn>
                 
@@ -126,7 +126,7 @@
                                 Field="IsActive"
                                 Caption="@L["IsActive"]">
                     <DisplayTemplate>
-                        @if (context.IsActive)
+                        @if (context.Item.IsActive)
                         {
                             <Icon TextColor="TextColor.Success" Name="@IconName.Check" />
                         }
@@ -147,8 +147,8 @@
 </Card>
 
 @* ************************* CREATE MODAL ************************* *@
-<Modal @ref="CreatePermissionExtensionModal" Closing="@CreatePermissionExtensionModal.CancelClosingModalWhenFocusLost">
-    <ModalContent Centered="true">
+<Modal @ref="CreatePermissionExtensionModal" Closing="@CreatePermissionExtensionModal.CancelClosingModalWhenFocusLost" Centered="true">
+    <ModalContent>
         <Form id="CreatePermissionExtensionForm">
             <ModalHeader>
                 <ModalTitle>@L["NewPermissionExtension"]</ModalTitle>
@@ -164,17 +164,17 @@
                     <Validation>
                         <Field>
                             <FieldLabel>@L["ObjectName"] *</FieldLabel>
-                            <TextEdit @bind-Text="@NewPermissionExtension.ObjectName" MaxLength="PermissionExtensionConsts.ObjectNameMaxLength">
+                            <TextInput @bind-Value="@NewPermissionExtension.ObjectName" MaxLength="PermissionExtensionConsts.ObjectNameMaxLength">
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
-                            </TextEdit>
+                            </TextInput>
                         </Field>
                     </Validation>
                     
                     <Field>
                         <FieldLabel>@L["PermissionType"]</FieldLabel>
-                        <Select TValue="PermissionType" @bind-SelectedValue="@NewPermissionExtension.PermissionType">
+                        <Select TValue="PermissionType" @bind-Value="@NewPermissionExtension.PermissionType">
                             @foreach (var itemValue in Enum.GetValues(typeof(PermissionType)))
                             {
                                 <SelectItem TValue="PermissionType" Value="@((PermissionType) itemValue)">
@@ -188,7 +188,7 @@
                     <Validation>
                         <Field>
                             <FieldLabel>@L["RoleName"] *</FieldLabel>
-                            <Select TValue="Guid" @bind-SelectedValue="@NewPermissionExtension.RoleId">
+                            <Select TValue="Guid" @bind-Value="@NewPermissionExtension.RoleId">
                                  <SelectItem TValue="Guid" Value=@Guid.Empty></SelectItem>
                                 @foreach (var item in PermissionRoleList)
                                 {
@@ -219,27 +219,27 @@
                     <Validation>
                         <Field>
                             <FieldLabel>@L["LambdaString"] *</FieldLabel>
-                            <MemoEdit @bind-Text="@NewPermissionExtension.LambdaString" >
+                            <MemoInput @bind-Value="@NewPermissionExtension.LambdaString" >
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
-                            </MemoEdit>
+                            </MemoInput>
                         </Field>
                     </Validation>
 
 
                     <Field>
-                        <Check TValue="bool" @bind-Checked="@NewPermissionExtension.IsActive">@L["IsActive"]</Check>
+                        <Check TValue="bool" @bind-Value="@NewPermissionExtension.IsActive">@L["IsActive"]</Check>
                     </Field>
 
                     <Validation>
                         <Field>
                             <FieldLabel>@L["Description"] *</FieldLabel>
-                            <MemoEdit @bind-Text="@NewPermissionExtension.Description" >
+                            <MemoInput @bind-Value="@NewPermissionExtension.Description" >
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
-                            </MemoEdit>
+                            </MemoInput>
                         </Field>
                     </Validation>
                     
@@ -258,8 +258,8 @@
 </Modal>
 
 @* ************************* EDIT MODAL ************************* *@
-<Modal @ref="EditPermissionExtensionModal" Closing="@EditPermissionExtensionModal.CancelClosingModalWhenFocusLost">
-    <ModalContent Centered="true">
+<Modal @ref="EditPermissionExtensionModal" Closing="@EditPermissionExtensionModal.CancelClosingModalWhenFocusLost" Centered="true">
+    <ModalContent>
         <Form id="EditPermissionExtensionForm">
             <ModalHeader>
                 <ModalTitle>@L["Update"]</ModalTitle>
@@ -275,11 +275,11 @@
                     <Validation>
                         <Field>
                             <FieldLabel>@L["ObjectName"] *</FieldLabel>
-                            <TextEdit @bind-Text="@EditingPermissionExtension.ObjectName" MaxLength="PermissionExtensionConsts.ObjectNameMaxLength">
+                            <TextInput @bind-Value="@EditingPermissionExtension.ObjectName" MaxLength="PermissionExtensionConsts.ObjectNameMaxLength">
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
-                            </TextEdit>
+                            </TextInput>
                         </Field>
                     </Validation>
 
@@ -290,7 +290,7 @@
 
                     <Field>
                         <FieldLabel>@L["PermissionType"]</FieldLabel>
-                        <Select TValue="PermissionType" @bind-SelectedValue="@EditingPermissionExtension.PermissionType">
+                        <Select TValue="PermissionType" @bind-Value="@EditingPermissionExtension.PermissionType">
                             @foreach (var itemValue in Enum.GetValues(typeof(PermissionType)))
                             {
                                 <SelectItem TValue="PermissionType" Value="@((PermissionType) itemValue)">
@@ -303,7 +303,7 @@
                     <Validation>
                         <Field>
                             <FieldLabel>@L["RoleName"] *</FieldLabel>
-                            <Select TValue="Guid" @bind-SelectedValue="@EditingPermissionExtension.RoleId">
+                            <Select TValue="Guid" @bind-Value="@EditingPermissionExtension.RoleId">
                                 @foreach (var item in PermissionRoleList)
                                 {
                                     <SelectItem TValue="Guid" Value=@item.Id>@L[item.Name]</SelectItem>
@@ -331,27 +331,27 @@
                     <Validation>
                         <Field>
                             <FieldLabel>@L["LambdaString"] *</FieldLabel>
-                            <MemoEdit @bind-Text="@EditingPermissionExtension.LambdaString" >
+                            <MemoInput @bind-Value="@EditingPermissionExtension.LambdaString" >
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
-                            </MemoEdit>
+                            </MemoInput>
                         </Field>
                     </Validation>
 
 
                     <Field>
-                        <Check TValue="bool" @bind-Checked="@EditingPermissionExtension.IsActive">@L["IsActive"]</Check>
+                        <Check TValue="bool" @bind-Value="@EditingPermissionExtension.IsActive">@L["IsActive"]</Check>
                     </Field>
 
                     <Validation>
                         <Field>
                             <FieldLabel>@L["Description"] *</FieldLabel>
-                            <MemoEdit @bind-Text="@EditingPermissionExtension.Description" >
+                            <MemoInput @bind-Value="@EditingPermissionExtension.Description" >
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
-                            </MemoEdit>
+                            </MemoInput>
                         </Field>
                     </Validation>
                     

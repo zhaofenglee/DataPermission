@@ -40,10 +40,10 @@
         <Form id="DemoSearchForm" class="mb-3">
             <Addons>
                 <Addon AddonType="AddonType.Body">
-                    <TextEdit @bind-Text="@Filter.FilterText"
+                    <TextInput @bind-Value="@Filter.FilterText"
                               Autofocus="true"
                               Placeholder="@L["Search"]">
-                    </TextEdit>
+                    </TextInput>
                 </Addon>
                 <Addon AddonType="AddonType.End">
                     <SubmitButton Form="DemoSearchForm" Clicked="GetDemosAsync">
@@ -71,11 +71,11 @@
                         <EntityActions TItem="DemoDto" EntityActionsColumn="@EntityActionsColumn">
                             <EntityAction TItem="DemoDto"
                                           Visible="true"
-                                          Clicked="async () => await OpenEditDemoModalAsync(context)"
+                                          Clicked="async () => await OpenEditDemoModalAsync(context.Item)"
                                           Text="@L["Edit"]"></EntityAction>
                             <EntityAction TItem="DemoDto"
                                           Visible="@CanDeleteDemo"
-                                          Clicked="() => DeleteDemoAsync(context)"
+                                          Clicked="() => DeleteDemoAsync(context.Item)"
                                           ConfirmationMessage="@(()=> L["DeleteConfirmationMessage"])"
                                           Text="@L["Delete"]"></EntityAction>
                         </EntityActions>
@@ -98,8 +98,8 @@
 </Card>
 
 @* ************************* CREATE MODAL ************************* *@
-<Modal @ref="CreateDemoModal" Closing="@CreateDemoModal.CancelClosingModalWhenFocusLost">
-    <ModalContent Centered="true">
+<Modal @ref="CreateDemoModal" Closing="@CreateDemoModal.CancelClosingModalWhenFocusLost" Centered="true">
+    <ModalContent>
         <Form id="CreateDemoForm">
             <ModalHeader>
                 <ModalTitle>@L["NewDemo"]</ModalTitle>
@@ -115,11 +115,11 @@
                     <Validation>
                         <Field>
                             <FieldLabel>@L["Name"]</FieldLabel>
-                            <TextEdit @bind-Text="@NewDemo.Name" MaxLength="DemoConsts.NameMaxLength">
+                            <TextInput @bind-Value="@NewDemo.Name" MaxLength="DemoConsts.NameMaxLength">
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
-                            </TextEdit>
+                            </TextInput>
                         </Field>
                     </Validation>
 
@@ -127,11 +127,11 @@
                     <Validation>
                         <Field>
                             <FieldLabel>@L["DisplayName"]</FieldLabel>
-                            <TextEdit @bind-Text="@NewDemo.DisplayName" MaxLength="DemoConsts.DisplayNameMaxLength">
+                            <TextInput @bind-Value="@NewDemo.DisplayName" MaxLength="DemoConsts.DisplayNameMaxLength">
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
-                            </TextEdit>
+                            </TextInput>
                         </Field>
                     </Validation>
 
@@ -152,8 +152,8 @@
 </Modal>
 
 @* ************************* EDIT MODAL ************************* *@
-<Modal @ref="EditDemoModal" Closing="@EditDemoModal.CancelClosingModalWhenFocusLost">
-    <ModalContent Centered="true">
+<Modal @ref="EditDemoModal" Closing="@EditDemoModal.CancelClosingModalWhenFocusLost" Centered="true">
+    <ModalContent>
         <Form id="EditDemoForm">
             <ModalHeader>
                 <ModalTitle>@L["Update"]</ModalTitle>
@@ -169,11 +169,11 @@
                     <Validation>
                         <Field>
                             <FieldLabel>@L["Name"]</FieldLabel>
-                            <TextEdit @bind-Text="@EditingDemo.Name" MaxLength="DemoConsts.NameMaxLength">
+                            <TextInput @bind-Value="@EditingDemo.Name" MaxLength="DemoConsts.NameMaxLength">
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
-                            </TextEdit>
+                            </TextInput>
                         </Field>
                     </Validation>
 
@@ -182,11 +182,11 @@
                         <Validation>
                             <Field>
                                 <FieldLabel>@L["DisplayName"]</FieldLabel>
-                                <TextEdit @bind-Text="@EditingDemo.DisplayName" MaxLength="DemoConsts.DisplayNameMaxLength">
+                                <TextInput @bind-Value="@EditingDemo.DisplayName" MaxLength="DemoConsts.DisplayNameMaxLength">
                                     <Feedback>
                                         <ValidationError/>
                                     </Feedback>
-                                </TextEdit>
+                                </TextInput>
                             </Field>
                         </Validation>
                     }
