@@ -1,8 +1,8 @@
 <Project>
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
-    <Version>10.6.0</Version>
-    <VoloAbpPackageVersion>10.6.0</VoloAbpPackageVersion>
+    <Version>10.6.1</Version>
+    <VoloAbpPackageVersion>10.6.1</VoloAbpPackageVersion>
     <MicrosoftAspNetCorePackageVersion>10.0.9</MicrosoftAspNetCorePackageVersion>
     <Description>Abp DataPermission Module</Description>
     <Authors>zhaofenglee</Authors>
